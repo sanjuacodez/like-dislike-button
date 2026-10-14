@@ -7,7 +7,7 @@
 	var be = wp.blockEditor;
 	var c = wp.components;
 	var ServerSideRender = wp.serverSideRender;
-	var opts = window.ldbBlockOptions || {};
+	var opts = window.ldbtnBlockOptions || {};
 
 	function choices( list ) {
 		return [ { label: __( 'Use plugin setting', 'like-dislike-button' ), value: '' } ].concat( list || [] );

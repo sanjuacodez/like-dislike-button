@@ -7,7 +7,7 @@
 ( function () {
 	'use strict';
 
-	var config = window.ldbConfig || {};
+	var config = window.ldbtnConfig || {};
 	var i18n = config.i18n || {};
 	var state = {};
 	var busy = {};
@@ -25,11 +25,11 @@
 	}
 
 	function keyOf( el ) {
-		return el.getAttribute( 'data-ldb-type' ) + ':' + el.getAttribute( 'data-ldb-id' );
+		return el.getAttribute( 'data-ldbtn-type' ) + ':' + el.getAttribute( 'data-ldbtn-id' );
 	}
 
 	function widgets( key ) {
-		var all = document.querySelectorAll( '.ldb[data-ldb-id]' );
+		var all = document.querySelectorAll( '.ldbtn[data-ldbtn-id]' );
 		return Array.prototype.filter.call( all, function ( el ) {
 			return ! key || keyOf( el ) === key;
 		} );
@@ -37,9 +37,9 @@
 
 	function readState( el ) {
 		return {
-			likes: parseInt( el.getAttribute( 'data-ldb-likes' ), 10 ) || 0,
-			dislikes: parseInt( el.getAttribute( 'data-ldb-dislikes' ), 10 ) || 0,
-			vote: el.getAttribute( 'data-ldb-vote' ) || '',
+			likes: parseInt( el.getAttribute( 'data-ldbtn-likes' ), 10 ) || 0,
+			dislikes: parseInt( el.getAttribute( 'data-ldbtn-dislikes' ), 10 ) || 0,
+			vote: el.getAttribute( 'data-ldbtn-vote' ) || '',
 		};
 	}
 
@@ -59,19 +59,19 @@
 	 * Draws counts and the pressed state into one widget.
 	 */
 	function paint( el, s, animate ) {
-		var mode = el.getAttribute( 'data-ldb-counts' );
+		var mode = el.getAttribute( 'data-ldbtn-counts' );
 		var total = s.likes + s.dislikes;
 
-		el.setAttribute( 'data-ldb-likes', s.likes );
-		el.setAttribute( 'data-ldb-dislikes', s.dislikes );
-		el.setAttribute( 'data-ldb-vote', s.vote );
+		el.setAttribute( 'data-ldbtn-likes', s.likes );
+		el.setAttribute( 'data-ldbtn-dislikes', s.dislikes );
+		el.setAttribute( 'data-ldbtn-vote', s.vote );
 		el.classList.toggle( 'has-voted', !! s.vote );
 
-		el.querySelectorAll( '.ldb-btn' ).forEach( function ( btn ) {
-			var reaction = btn.getAttribute( 'data-ldb-reaction' );
+		el.querySelectorAll( '.ldbtn-btn' ).forEach( function ( btn ) {
+			var reaction = btn.getAttribute( 'data-ldbtn-reaction' );
 			var n = 'like' === reaction ? s.likes : s.dislikes;
 			var active = s.vote === reaction;
-			var count = btn.querySelector( '.ldb-count' );
+			var count = btn.querySelector( '.ldbtn-count' );
 
 			btn.classList.toggle( 'is-active', active );
 			btn.setAttribute( 'aria-pressed', active ? 'true' : 'false' );
@@ -89,16 +89,16 @@
 			}
 		} );
 
-		setText( el.querySelector( '.ldb-score' ), format( s.likes - s.dislikes ), animate );
+		setText( el.querySelector( '.ldbtn-score' ), format( s.likes - s.dislikes ), animate );
 
-		var bar = el.querySelector( '.ldb-bar span' );
+		var bar = el.querySelector( '.ldbtn-bar span' );
 		if ( bar ) {
 			bar.style.width = ( total ? ( s.likes / total ) * 100 : 0 ) + '%';
 		}
 	}
 
 	function message( el, html ) {
-		var node = el.querySelector( '.ldb-msg' );
+		var node = el.querySelector( '.ldbtn-msg' );
 		if ( node ) {
 			node.innerHTML = html;
 		}
@@ -111,7 +111,7 @@
 	}
 
 	function animate( el, btn ) {
-		if ( el.classList.contains( 'ldb--anim-none' ) || window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) {
+		if ( el.classList.contains( 'ldbtn--anim-none' ) || window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) {
 			return;
 		}
 		btn.classList.remove( 'is-animating' );
@@ -122,17 +122,17 @@
 			btn.removeEventListener( 'animationend', done );
 		} );
 
-		if ( el.classList.contains( 'ldb--anim-burst' ) ) {
-			var icon = btn.querySelector( '.ldb-icon' );
+		if ( el.classList.contains( 'ldbtn--anim-burst' ) ) {
+			var icon = btn.querySelector( '.ldbtn-icon' );
 			var x = icon ? icon.offsetLeft + icon.offsetWidth / 2 + 'px' : '50%';
 			for ( var i = 0; i < 8; i++ ) {
 				var p = document.createElement( 'span' );
 				var angle = ( Math.PI * 2 * i ) / 8;
-				p.className = 'ldb-particle';
+				p.className = 'ldbtn-particle';
 				p.setAttribute( 'aria-hidden', 'true' );
-				p.style.setProperty( '--ldb-x', x );
-				p.style.setProperty( '--ldb-dx', Math.cos( angle ) * 1.6 + 'em' );
-				p.style.setProperty( '--ldb-dy', Math.sin( angle ) * 1.6 + 'em' );
+				p.style.setProperty( '--ldbtn-x', x );
+				p.style.setProperty( '--ldbtn-dx', Math.cos( angle ) * 1.6 + 'em' );
+				p.style.setProperty( '--ldbtn-dy', Math.sin( angle ) * 1.6 + 'em' );
 				btn.appendChild( p );
 				setTimeout( p.remove.bind( p ), 600 );
 			}
@@ -197,10 +197,10 @@
 		var keys = [];
 		var list = widgets();
 		if ( root && root.querySelectorAll ) {
-			list = root.matches( '.ldb[data-ldb-id]' ) ? [ root ] : Array.prototype.slice.call( root.querySelectorAll( '.ldb[data-ldb-id]' ) );
+			list = root.matches( '.ldbtn[data-ldbtn-id]' ) ? [ root ] : Array.prototype.slice.call( root.querySelectorAll( '.ldbtn[data-ldbtn-id]' ) );
 		}
 		list.forEach( function ( el ) {
-			if ( el.hasAttribute( 'data-ldb-preview' ) ) {
+			if ( el.hasAttribute( 'data-ldbtn-preview' ) ) {
 				return;
 			}
 			var key = keyOf( el );
@@ -224,15 +224,15 @@
 	}
 
 	function onClick( event ) {
-		var btn = event.target.closest( '.ldb .ldb-btn' );
+		var btn = event.target.closest( '.ldbtn .ldbtn-btn' );
 		if ( ! btn ) {
 			return;
 		}
-		var el = btn.closest( '.ldb' );
+		var el = btn.closest( '.ldbtn' );
 		var key = keyOf( el );
-		var reaction = btn.getAttribute( 'data-ldb-reaction' );
-		var login = el.getAttribute( 'data-ldb-login' );
-		var preview = el.hasAttribute( 'data-ldb-preview' );
+		var reaction = btn.getAttribute( 'data-ldbtn-reaction' );
+		var login = el.getAttribute( 'data-ldbtn-login' );
+		var preview = el.hasAttribute( 'data-ldbtn-preview' );
 
 		event.preventDefault();
 
@@ -267,7 +267,7 @@
 			animate( el, btn );
 		}
 
-		var thanks = el.getAttribute( 'data-ldb-thanks' );
+		var thanks = el.getAttribute( 'data-ldbtn-thanks' );
 		var note = after.vote ? ( thanks ? escapeHtml( thanks ) : '' ) : escapeHtml( i18n.removed || '' );
 
 		if ( preview ) {
@@ -280,7 +280,7 @@
 
 		api( 'vote', {
 			method: 'POST',
-			body: { type: el.getAttribute( 'data-ldb-type' ), id: parseInt( el.getAttribute( 'data-ldb-id' ), 10 ), reaction: reaction },
+			body: { type: el.getAttribute( 'data-ldbtn-type' ), id: parseInt( el.getAttribute( 'data-ldbtn-id' ), 10 ), reaction: reaction },
 		} )
 			.then( function ( data ) {
 				state[ key ] = data;
@@ -312,9 +312,9 @@
 	}
 
 	/**
-	 * For themes that add posts with infinite scroll: `ldb.refresh( container )`.
+	 * For themes that add posts with infinite scroll: `ldbtn.refresh( container )`.
 	 */
-	window.ldb = {
+	window.ldbtn = {
 		refresh: load,
 		paint: paint,
 	};

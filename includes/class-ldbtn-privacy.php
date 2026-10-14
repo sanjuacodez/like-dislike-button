@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Connects votes to the WordPress privacy tools.
  */
-class LDB_Privacy {
+class LDBTN_Privacy {
 
 	/**
 	 * Hooks into WordPress.
@@ -28,7 +28,7 @@ class LDB_Privacy {
 		if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
 			return;
 		}
-		$text = '<p>' . __( 'When you like or dislike a post or comment, we store your reaction and the date. If you are logged in, the vote is linked to your account. If you are not, we store either a random ID from a cookie named ldb_vid or a one-way hash of your IP address, so each person votes once. Your IP address itself is never stored. No vote data is sent to other services.', 'like-dislike-button' ) . '</p>';
+		$text = '<p>' . __( 'When you like or dislike a post or comment, we store your reaction and the date. If you are logged in, the vote is linked to your account. If you are not, we store either a random ID from a cookie named ldbtn_vid or a one-way hash of your IP address, so each person votes once. Your IP address itself is never stored. No vote data is sent to other services.', 'like-dislike-button' ) . '</p>';
 		wp_add_privacy_policy_content( 'Like Dislike Button', wp_kses_post( $text ) );
 	}
 
@@ -75,16 +75,16 @@ class LDB_Privacy {
 		$rows  = array();
 
 		if ( $user ) {
-			$table = esc_sql( LDB_DB::table() );
+			$table = esc_sql( LDBTN_DB::table() );
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table name.
 			$rows = $wpdb->get_results( $wpdb->prepare( "SELECT id, object_type, object_id, reaction, created_at FROM {$table} WHERE user_id = %d ORDER BY id ASC LIMIT %d OFFSET %d", $user->ID, $limit, ( max( 1, (int) $page ) - 1 ) * $limit ) );
 
 			foreach ( $rows as $row ) {
 				$link    = 'comment' === $row->object_type ? get_comment_link( (int) $row->object_id ) : get_permalink( (int) $row->object_id );
 				$items[] = array(
-					'group_id'    => 'ldb-votes',
+					'group_id'    => 'ldbtn-votes',
 					'group_label' => __( 'Likes and dislikes', 'like-dislike-button' ),
-					'item_id'     => 'ldb-vote-' . $row->id,
+					'item_id'     => 'ldbtn-vote-' . $row->id,
 					'data'        => array(
 						array(
 							'name'  => __( 'Item', 'like-dislike-button' ),
@@ -121,12 +121,12 @@ class LDB_Privacy {
 		$removed = 0;
 
 		if ( $user ) {
-			$table = esc_sql( LDB_DB::table() );
+			$table = esc_sql( LDBTN_DB::table() );
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table name.
 			$items = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT object_type, object_id FROM {$table} WHERE user_id = %d", $user->ID ) );
 			$removed = (int) $wpdb->delete( $table, array( 'user_id' => $user->ID ), array( '%d' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			foreach ( $items as $item ) {
-				LDB_Votes::recount( $item->object_type, (int) $item->object_id );
+				LDBTN_Votes::recount( $item->object_type, (int) $item->object_id );
 			}
 		}
 

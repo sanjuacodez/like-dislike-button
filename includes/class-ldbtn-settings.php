@@ -8,11 +8,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Holds the single `ldb_settings` option.
+ * Holds the single `ldbtn_settings` option.
  */
-class LDB_Settings {
+class LDBTN_Settings {
 
-	const OPTION = 'ldb_settings';
+	const OPTION = 'ldbtn_settings';
 
 	/**
 	 * Settings for this request, merged over the defaults.
@@ -81,7 +81,7 @@ class LDB_Settings {
 			'position'       => array( 'after', 'before', 'both', 'manual' ),
 			'buttons'        => array( 'both', 'like', 'dislike' ),
 			'order'          => array( 'like_first', 'dislike_first' ),
-			'icon_set'       => array_keys( LDB_Icons::sets() ),
+			'icon_set'       => array_keys( LDBTN_Icons::sets() ),
 			'style'          => array( 'soft', 'outline', 'pill', 'minimal', 'solid', 'glass' ),
 			'size'           => array( 'sm', 'md', 'lg' ),
 			'align'          => array( 'left', 'center', 'right' ),

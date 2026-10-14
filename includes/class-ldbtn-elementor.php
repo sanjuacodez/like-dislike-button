@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Adds the widget only when Elementor is active.
  */
-class LDB_Elementor {
+class LDBTN_Elementor {
 
 	/**
 	 * Hooks into Elementor.
@@ -25,7 +25,7 @@ class LDB_Elementor {
 	 * @param \Elementor\Widgets_Manager $manager Widgets manager.
 	 */
 	public static function register( $manager ) {
-		require_once LDB_PATH . 'includes/class-ldb-elementor-widget.php';
-		$manager->register( new LDB_Elementor_Widget() );
+		require_once LDBTN_PATH . 'includes/class-ldbtn-elementor-widget.php';
+		$manager->register( new LDBTN_Elementor_Widget() );
 	}
 }

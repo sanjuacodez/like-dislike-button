@@ -28,7 +28,7 @@ blueprint = {
         "author": "sanju-shankar",
         "categories": ["Engagement"],
     },
-    "landingPage": "/wp-admin/admin.php?page=ldb",
+    "landingPage": "/wp-admin/admin.php?page=ldbtn",
     "preferredVersions": {"php": "8.3", "wp": "latest"},
     "features": {"networking": False},
     "login": True,

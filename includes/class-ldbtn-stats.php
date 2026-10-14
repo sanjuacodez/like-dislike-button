@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Totals, time series and top lists for the dashboard.
  */
-class LDB_Stats {
+class LDBTN_Stats {
 
 	/**
 	 * Dashboard periods: slug => days (0 = all time).
@@ -62,14 +62,14 @@ class LDB_Stats {
 			foreach ( array( $wpdb->postmeta, $wpdb->commentmeta ) as $meta_table ) {
 				$meta_table = esc_sql( $meta_table );
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Core table names.
-				$row                 = $wpdb->get_row( $wpdb->prepare( "SELECT SUM(CASE WHEN meta_key = %s THEN meta_value ELSE 0 END) AS likes, SUM(CASE WHEN meta_key = %s THEN meta_value ELSE 0 END) AS dislikes FROM {$meta_table} WHERE meta_key IN (%s, %s)", LDB_Votes::META_LIKES, LDB_Votes::META_DISLIKES, LDB_Votes::META_LIKES, LDB_Votes::META_DISLIKES ) );
+				$row                 = $wpdb->get_row( $wpdb->prepare( "SELECT SUM(CASE WHEN meta_key = %s THEN meta_value ELSE 0 END) AS likes, SUM(CASE WHEN meta_key = %s THEN meta_value ELSE 0 END) AS dislikes FROM {$meta_table} WHERE meta_key IN (%s, %s)", LDBTN_Votes::META_LIKES, LDBTN_Votes::META_DISLIKES, LDBTN_Votes::META_LIKES, LDBTN_Votes::META_DISLIKES ) );
 				$totals['likes']    += (int) $row->likes;
 				$totals['dislikes'] += (int) $row->dislikes;
 			}
 			return $totals;
 		}
 
-		$table = esc_sql( LDB_DB::table() );
+		$table = esc_sql( LDBTN_DB::table() );
 		list( $start, $end ) = self::range( $days, $offset );
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table name.
 		$row = $wpdb->get_row( $wpdb->prepare( "SELECT SUM(reaction = 'like') AS likes, SUM(reaction = 'dislike') AS dislikes FROM {$table} WHERE created_at >= %s AND created_at < %s", $start, $end ) );
@@ -88,7 +88,7 @@ class LDB_Stats {
 	 */
 	public static function series( $days ) {
 		global $wpdb;
-		$table   = esc_sql( LDB_DB::table() );
+		$table   = esc_sql( LDBTN_DB::table() );
 		$offset  = (int) wp_timezone()->getOffset( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) );
 		$monthly = ! $days || $days > 90;
 		$format  = $monthly ? '%Y-%m' : '%Y-%m-%d';
@@ -151,7 +151,7 @@ class LDB_Stats {
 		$order = 'like' === $reaction ? 'likes' : 'dislikes';
 
 		if ( ! $days ) {
-			$key = 'like' === $reaction ? LDB_Votes::META_LIKES : LDB_Votes::META_DISLIKES;
+			$key = 'like' === $reaction ? LDBTN_Votes::META_LIKES : LDBTN_Votes::META_DISLIKES;
 			// phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Order column is fixed above.
 			return $wpdb->get_results(
 				$wpdb->prepare(
@@ -165,15 +165,15 @@ class LDB_Stats {
 					WHERE CAST(s.meta_value AS UNSIGNED) > 0
 					ORDER BY {$order} DESC, p.ID DESC LIMIT %d",
 					$key,
-					LDB_Votes::META_LIKES,
-					LDB_Votes::META_DISLIKES,
+					LDBTN_Votes::META_LIKES,
+					LDBTN_Votes::META_DISLIKES,
 					$limit
 				)
 			);
 			// phpcs:enable
 		}
 
-		$table           = esc_sql( LDB_DB::table() );
+		$table           = esc_sql( LDBTN_DB::table() );
 		list( $start )   = self::range( $days );
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table name; order column is fixed above.
 		return $wpdb->get_results(

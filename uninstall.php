@@ -10,32 +10,32 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 /**
  * Cleans up one site.
  */
-function ldb_uninstall_site() {
+function ldbtn_uninstall_site() {
 	global $wpdb;
 
-	$settings = get_option( 'ldb_settings' );
+	$settings = get_option( 'ldbtn_settings' );
 	if ( empty( $settings['delete_data'] ) ) {
 		return;
 	}
 
-	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}ldb_votes" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange
+	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}ldbtn_votes" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange
 
-	foreach ( array( '_ldb_likes', '_ldb_dislikes', '_ldb_score', '_ldb_imported', '_ldb_hide' ) as $key ) {
+	foreach ( array( '_ldbtn_likes', '_ldbtn_dislikes', '_ldbtn_score', '_ldbtn_imported', '_ldbtn_hide' ) as $key ) {
 		delete_metadata( 'post', 0, $key, '', true );
 		delete_metadata( 'comment', 0, $key, '', true );
 	}
 
-	delete_option( 'ldb_settings' );
-	delete_option( 'ldb_db_version' );
-	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_ldb\_%' OR option_name LIKE '\_transient\_timeout\_ldb\_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	delete_option( 'ldbtn_settings' );
+	delete_option( 'ldbtn_db_version' );
+	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_ldbtn\_%' OR option_name LIKE '\_transient\_timeout\_ldbtn\_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 }
 
 if ( is_multisite() ) {
-	foreach ( get_sites( array( 'fields' => 'ids' ) ) as $ldb_site ) {
-		switch_to_blog( $ldb_site );
-		ldb_uninstall_site();
+	foreach ( get_sites( array( 'fields' => 'ids' ) ) as $ldbtn_site ) {
+		switch_to_blog( $ldbtn_site );
+		ldbtn_uninstall_site();
 		restore_current_blog();
 	}
 } else {
-	ldb_uninstall_site();
+	ldbtn_uninstall_site();
 }

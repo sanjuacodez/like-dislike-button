@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Batch importer used by the Tools screen and WP-CLI.
  */
-class LDB_Importer {
+class LDBTN_Importer {
 
 	const BATCH = 1000;
 
@@ -45,7 +45,7 @@ class LDB_Importer {
 				'kind'  => 'meta',
 				'keys'  => array( 'pld_like_count', 'pld_dislike_count' ),
 			),
-			'ldb-2'              => array(
+			'ldbtn-2'              => array(
 				'label' => __( 'Like / Dislike Button 2.x (this plugin’s old version)', 'like-dislike-button' ),
 				'kind'  => 'meta',
 				'keys'  => array( '_ld_like_count', '_ld_dislike_count' ),
@@ -54,7 +54,7 @@ class LDB_Importer {
 
 		// WP ULike 5+ keeps every vote in one ledger table; older versions use one table per item type.
 		$pulse = $wpdb->prefix . 'ulike_pulse';
-		if ( LDB_DB::table_exists( $pulse ) ) {
+		if ( LDBTN_DB::table_exists( $pulse ) ) {
 			$sources['wp-ulike']['steps'][] = array(
 				'table'  => $pulse,
 				'sql'    => "SELECT id, item_type AS type, item_id AS object_id, engagement_key AS reaction, status, user_id, ip, fingerprint AS token, date_time FROM {$pulse} WHERE id > %d AND engagement_kind = 'vote' ORDER BY id ASC LIMIT %d",
@@ -62,7 +62,7 @@ class LDB_Importer {
 		} else {
 			foreach ( array( 'ulike' => array( 'post', 'post_id' ), 'ulike_comments' => array( 'comment', 'comment_id' ), 'ulike_forums' => array( 'post', 'topic_id' ) ) as $suffix => $map ) {
 				$table = $wpdb->prefix . $suffix;
-				if ( LDB_DB::table_exists( $table ) ) {
+				if ( LDBTN_DB::table_exists( $table ) ) {
 					$sources['wp-ulike']['steps'][] = array(
 						'table' => $table,
 						'sql'   => "SELECT id, '{$map[0]}' AS type, {$map[1]} AS object_id, status AS reaction, 'active' AS status, user_id, ip, '' AS token, date_time FROM {$table} WHERE id > %d ORDER BY id ASC LIMIT %d",
@@ -72,7 +72,7 @@ class LDB_Importer {
 		}
 
 		$ldfw = $wpdb->prefix . 'likedislikewp';
-		if ( LDB_DB::table_exists( $ldfw ) ) {
+		if ( LDBTN_DB::table_exists( $ldfw ) ) {
 			$sources['like-dislike-for-wp']['steps'][] = array(
 				'table' => $ldfw,
 				'sql'   => "SELECT id, object_type AS type, post_id AS object_id, status AS reaction, 'active' AS status, user_id, ip, token, date_time FROM {$ldfw} WHERE id > %d ORDER BY id ASC LIMIT %d",
@@ -117,7 +117,7 @@ class LDB_Importer {
 	public static function run_batch( $slug, $cursor = array() ) {
 		$sources = self::sources( false );
 		if ( ! isset( $sources[ $slug ] ) || ( 'rows' === $sources[ $slug ]['kind'] && ! $sources[ $slug ]['steps'] ) ) {
-			return new WP_Error( 'ldb_source', __( 'Nothing to import from this plugin.', 'like-dislike-button' ) );
+			return new WP_Error( 'ldbtn_source', __( 'Nothing to import from this plugin.', 'like-dislike-button' ) );
 		}
 		$source = $sources[ $slug ];
 		$cursor = wp_parse_args(
@@ -135,7 +135,7 @@ class LDB_Importer {
 	}
 
 	/**
-	 * Copies per-post totals into `_ldb_imported`.
+	 * Copies per-post totals into `_ldbtn_imported`.
 	 *
 	 * @param string $slug   Source slug.
 	 * @param array  $source Source definition.
@@ -153,7 +153,7 @@ class LDB_Importer {
 			$id       = (int) $id;
 			$likes    = (int) get_post_meta( $id, $source['keys'][0], true );
 			$dislikes = (int) get_post_meta( $id, $source['keys'][1], true );
-			$imported = get_post_meta( $id, LDB_Votes::META_IMPORTED, true );
+			$imported = get_post_meta( $id, LDBTN_Votes::META_IMPORTED, true );
 			$imported = is_array( $imported ) ? $imported : array();
 			if ( $likes || $dislikes ) {
 				$imported[ $slug ] = array( $likes, $dislikes );
@@ -161,11 +161,11 @@ class LDB_Importer {
 				unset( $imported[ $slug ] );
 			}
 			if ( $imported ) {
-				update_post_meta( $id, LDB_Votes::META_IMPORTED, $imported );
+				update_post_meta( $id, LDBTN_Votes::META_IMPORTED, $imported );
 			} else {
-				delete_post_meta( $id, LDB_Votes::META_IMPORTED );
+				delete_post_meta( $id, LDBTN_Votes::META_IMPORTED );
 			}
-			LDB_Votes::recount( 'post', $id );
+			LDBTN_Votes::recount( 'post', $id );
 		}
 
 		$done = count( $ids ) < $limit;
@@ -216,13 +216,13 @@ class LDB_Importer {
 				$key = 'i:' . substr( hash( 'sha256', $slug . '|' . $who ), 0, 62 );
 			}
 
-			$reaction = in_array( $row->reaction, LDB_Votes::REACTIONS, true ) && 'active' === $row->status ? $row->reaction : '';
+			$reaction = in_array( $row->reaction, LDBTN_Votes::REACTIONS, true ) && 'active' === $row->status ? $row->reaction : '';
 			$date     = preg_match( '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', (string) $row->date_time ) ? $row->date_time : current_time( 'mysql', true );
 
 			$final[ $type . ':' . $id . ':' . $key ] = array( $type, $id, $key, $user, $reaction, $date );
 		}
 
-		$table    = esc_sql( LDB_DB::table() );
+		$table    = esc_sql( LDBTN_DB::table() );
 		$affected = array();
 		foreach ( $final as $vote ) {
 			list( $type, $id, $key, $user, $reaction, $date ) = $vote;
@@ -236,7 +236,7 @@ class LDB_Importer {
 		}
 
 		foreach ( $affected as $item ) {
-			LDB_Votes::recount( $item[0], $item[1] );
+			LDBTN_Votes::recount( $item[0], $item[1] );
 		}
 
 		$last = $rows ? (int) end( $rows )->id : 0;
@@ -266,7 +266,7 @@ class LDB_Importer {
 	 * After an import, keeps the old plugin's shortcodes working.
 	 */
 	public static function finish() {
-		LDB_Settings::update( array( 'compat_shortcodes' => true ) );
-		delete_transient( 'ldb_admin_counts' );
+		LDBTN_Settings::update( array( 'compat_shortcodes' => true ) );
+		delete_transient( 'ldbtn_admin_counts' );
 	}
 }

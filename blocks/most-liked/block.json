@@ -23,5 +23,5 @@
 		"typography": { "fontSize": true }
 	},
 	"editorScript": "file:./index.js",
-	"style": "ldb"
+	"style": "ldbtn"
 }

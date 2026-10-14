@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Builds the buttons markup and puts it on the page.
  */
-class LDB_Render {
+class LDBTN_Render {
 
 	/**
 	 * Settings that blocks, shortcodes and widgets may override per instance.
@@ -33,19 +33,19 @@ class LDB_Render {
 	 * Registers the script and stylesheet used wherever buttons appear.
 	 */
 	public static function register_assets() {
-		wp_register_style( 'ldb', LDB_URL . 'assets/css/ldb.css', array(), LDB_VERSION );
-		wp_add_inline_style( 'ldb', self::inline_css() );
+		wp_register_style( 'ldbtn', LDBTN_URL . 'assets/css/ldbtn.css', array(), LDBTN_VERSION );
+		wp_add_inline_style( 'ldbtn', self::inline_css() );
 
-		wp_register_script( 'ldb', LDB_URL . 'assets/js/ldb.js', array(), LDB_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
+		wp_register_script( 'ldbtn', LDBTN_URL . 'assets/js/ldbtn.js', array(), LDBTN_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
 		wp_localize_script(
-			'ldb',
-			'ldbConfig',
+			'ldbtn',
+			'ldbtnConfig',
 			array(
-				'rest'        => esc_url_raw( rest_url( 'ldb/v1/' ) ),
+				'rest'        => esc_url_raw( rest_url( 'ldbtn/v1/' ) ),
 				'nonce'       => wp_create_nonce( 'wp_rest' ),
 				'ajax'        => admin_url( 'admin-ajax.php' ),
-				'allowChange' => (bool) LDB_Settings::get( 'allow_change' ),
-				'short'       => (bool) LDB_Settings::get( 'short_numbers' ),
+				'allowChange' => (bool) LDBTN_Settings::get( 'allow_change' ),
+				'short'       => (bool) LDBTN_Settings::get( 'short_numbers' ),
 				'i18n'        => array(
 					'error'   => __( 'Something went wrong. Please try again.', 'like-dislike-button' ),
 					'voted'   => __( 'You have already voted.', 'like-dislike-button' ),
@@ -65,12 +65,23 @@ class LDB_Render {
 	 * @return string
 	 */
 	public static function inline_css( $settings = null ) {
-		$settings = $settings ? $settings : LDB_Settings::all();
+		$vars = self::css_vars( $settings );
+		return $vars ? '.ldbtn.ldbtn{' . $vars . '}' : '';
+	}
+
+	/**
+	 * The colour custom properties alone, e.g. for a style attribute.
+	 *
+	 * @param array $settings Settings to read, defaults to saved settings.
+	 * @return string
+	 */
+	public static function css_vars( $settings = null ) {
+		$settings = $settings ? $settings : LDBTN_Settings::all();
 		$map      = array(
-			'like_color'    => '--ldb-like',
-			'dislike_color' => '--ldb-dislike',
-			'text_color'    => '--ldb-fg',
-			'bg_color'      => '--ldb-bg',
+			'like_color'    => '--ldbtn-like',
+			'dislike_color' => '--ldbtn-dislike',
+			'text_color'    => '--ldbtn-fg',
+			'bg_color'      => '--ldbtn-bg',
 		);
 		$vars     = '';
 		foreach ( $map as $key => $var ) {
@@ -78,15 +89,15 @@ class LDB_Render {
 				$vars .= $var . ':' . $settings[ $key ] . ';';
 			}
 		}
-		return $vars ? '.ldb.ldb{' . $vars . '}' : '';
+		return $vars;
 	}
 
 	/**
 	 * Loads assets early on pages where buttons are likely, so styles land in the head.
 	 */
 	public static function maybe_enqueue() {
-		$likely = is_singular() && ( LDB_Settings::type_enabled( get_post_type() ) || ( LDB_Settings::get( 'comments' ) && comments_open() ) );
-		$likely = $likely || ( LDB_Settings::get( 'archives' ) && ( is_home() || is_archive() ) );
+		$likely = is_singular() && ( LDBTN_Settings::type_enabled( get_post_type() ) || ( LDBTN_Settings::get( 'comments' ) && comments_open() ) );
+		$likely = $likely || ( LDBTN_Settings::get( 'archives' ) && ( is_home() || is_archive() ) );
 		if ( $likely ) {
 			self::enqueue();
 		}
@@ -96,8 +107,8 @@ class LDB_Render {
 	 * Enqueues the front-end assets.
 	 */
 	public static function enqueue() {
-		wp_enqueue_style( 'ldb' );
-		wp_enqueue_script( 'ldb' );
+		wp_enqueue_style( 'ldbtn' );
+		wp_enqueue_script( 'ldbtn' );
 	}
 
 	/**
@@ -107,10 +118,10 @@ class LDB_Render {
 	 * @return bool
 	 */
 	private static function auto_applies( $post ) {
-		if ( ! $post || 'manual' === LDB_Settings::get( 'position' ) || ! LDB_Settings::type_enabled( $post->post_type ) ) {
+		if ( ! $post || 'manual' === LDBTN_Settings::get( 'position' ) || ! LDBTN_Settings::type_enabled( $post->post_type ) ) {
 			return false;
 		}
-		if ( get_post_meta( $post->ID, LDB_Votes::META_HIDE, true ) || post_password_required( $post ) ) {
+		if ( get_post_meta( $post->ID, LDBTN_Votes::META_HIDE, true ) || post_password_required( $post ) ) {
 			return false;
 		}
 		// Placed by hand already, so don't add a second set.
@@ -142,12 +153,12 @@ class LDB_Render {
 		}
 
 		$singular = is_singular() && is_main_query() && get_queried_object_id() === $post->ID;
-		if ( ! $singular && ! ( LDB_Settings::get( 'archives' ) && ! is_singular() ) ) {
+		if ( ! $singular && ! ( LDBTN_Settings::get( 'archives' ) && ! is_singular() ) ) {
 			return $content;
 		}
 
 		$buttons  = self::render( 'post', $post->ID );
-		$position = LDB_Settings::get( 'position' );
+		$position = LDBTN_Settings::get( 'position' );
 
 		if ( 'before' === $position || 'both' === $position ) {
 			$content = $buttons . $content;
@@ -176,7 +187,7 @@ class LDB_Render {
 	 * @return string
 	 */
 	public static function filter_comment( $text, $comment = null ) {
-		if ( is_admin() || is_feed() || ! $comment || ! LDB_Settings::get( 'comments' ) || '1' !== (string) $comment->comment_approved ) {
+		if ( is_admin() || is_feed() || ! $comment || ! LDBTN_Settings::get( 'comments' ) || '1' !== (string) $comment->comment_approved ) {
 			return $text;
 		}
 		if ( wp_is_json_request() || doing_filter( 'get_comment_excerpt' ) ) {
@@ -200,11 +211,12 @@ class LDB_Render {
 	 * @param int    $id   Item ID.
 	 * @param array  $args Per-instance overrides of look settings, plus
 	 *                     `preview` (bool), `likes`/`dislikes` (for previews),
-	 *                     `block` (bool, inside a block render) and `class`.
+	 *                     `block` (bool, inside a block render), `class` and
+	 *                     `style` (inline CSS for the wrapper).
 	 * @return string
 	 */
 	public static function render( $type, $id, $args = array() ) {
-		$settings = isset( $args['settings'] ) ? $args['settings'] : LDB_Settings::all();
+		$settings = isset( $args['settings'] ) ? $args['settings'] : LDBTN_Settings::all();
 		foreach ( self::OVERRIDABLE as $key ) {
 			// Empty choices inherit the saved setting; an empty question or thank-you text clears it.
 			if ( ! isset( $args[ $key ] ) || ( '' === $args[ $key ] && ! in_array( $key, array( 'question', 'thanks' ), true ) ) ) {
@@ -212,7 +224,7 @@ class LDB_Render {
 			}
 			$settings[ $key ] = $args[ $key ];
 		}
-		$settings = LDB_Settings::sanitize( $settings );
+		$settings = LDBTN_Settings::sanitize( $settings );
 		$preview  = ! empty( $args['preview'] );
 
 		if ( $preview ) {
@@ -221,7 +233,7 @@ class LDB_Render {
 				'dislikes' => isset( $args['dislikes'] ) ? (int) $args['dislikes'] : 14,
 			);
 		} else {
-			$counts = LDB_Votes::counts( $type, $id );
+			$counts = LDBTN_Votes::counts( $type, $id );
 			self::enqueue();
 		}
 
@@ -236,38 +248,38 @@ class LDB_Render {
 		$labels = $settings['show_labels'] || 'none' === $settings['icon_set'];
 
 		$classes = array(
-			'ldb',
-			'ldb--' . $type,
-			'ldb--style-' . $settings['style'],
-			'ldb--size-' . $settings['size'],
-			'ldb--align-' . $settings['align'],
-			'ldb--layout-' . $settings['layout'],
-			'ldb--icons-' . $settings['icon_set'],
-			'ldb--counts-' . $counts_mode,
-			'ldb--anim-' . $settings['animation'],
+			'ldbtn',
+			'ldbtn--' . $type,
+			'ldbtn--style-' . $settings['style'],
+			'ldbtn--size-' . $settings['size'],
+			'ldbtn--align-' . $settings['align'],
+			'ldbtn--layout-' . $settings['layout'],
+			'ldbtn--icons-' . $settings['icon_set'],
+			'ldbtn--counts-' . $counts_mode,
+			'ldbtn--anim-' . $settings['animation'],
 		);
 		if ( $labels ) {
-			$classes[] = 'ldb--labels';
+			$classes[] = 'ldbtn--labels';
 		}
 		if ( ! empty( $args['class'] ) ) {
 			$classes[] = $args['class'];
 		}
 
 		$data = array(
-			'data-ldb-type'     => $type,
-			'data-ldb-id'       => $id,
-			'data-ldb-likes'    => $counts['likes'],
-			'data-ldb-dislikes' => $counts['dislikes'],
-			'data-ldb-counts'   => $counts_mode,
+			'data-ldbtn-type'     => $type,
+			'data-ldbtn-id'       => $id,
+			'data-ldbtn-likes'    => $counts['likes'],
+			'data-ldbtn-dislikes' => $counts['dislikes'],
+			'data-ldbtn-counts'   => $counts_mode,
 		);
 		if ( '' !== $settings['thanks'] ) {
-			$data['data-ldb-thanks'] = $settings['thanks'];
+			$data['data-ldbtn-thanks'] = $settings['thanks'];
 		}
 		if ( $preview ) {
-			$data['data-ldb-preview'] = '1';
+			$data['data-ldbtn-preview'] = '1';
 		}
 		if ( 'logged_in' === $settings['who'] && ! is_user_logged_in() && ! $preview ) {
-			$data['data-ldb-login'] = wp_login_url( self::current_url() );
+			$data['data-ldbtn-login'] = wp_login_url( self::current_url() );
 		}
 
 		if ( ! empty( $args['block'] ) ) {
@@ -275,6 +287,9 @@ class LDB_Render {
 			$attributes = get_block_wrapper_attributes( array( 'class' => implode( ' ', $classes ) ) );
 		} else {
 			$attributes = 'class="' . esc_attr( implode( ' ', $classes ) ) . '"';
+		}
+		if ( ! empty( $args['style'] ) ) {
+			$attributes .= ' style="' . esc_attr( $args['style'] ) . '"';
 		}
 		foreach ( $data as $name => $value ) {
 			$attributes .= ' ' . $name . '="' . esc_attr( $value ) . '"';
@@ -284,13 +299,13 @@ class LDB_Render {
 
 		$html = '<div ' . $attributes . '>';
 		if ( '' !== $settings['question'] ) {
-			$html .= '<p class="ldb-question">' . esc_html( $settings['question'] ) . '</p>';
+			$html .= '<p class="ldbtn-question">' . esc_html( $settings['question'] ) . '</p>';
 		}
-		$html .= '<div class="ldb-buttons" role="group" aria-label="' . esc_attr( '' !== $settings['question'] ? $settings['question'] : $group_label ) . '">';
+		$html .= '<div class="ldbtn-buttons" role="group" aria-label="' . esc_attr( '' !== $settings['question'] ? $settings['question'] : $group_label ) . '">';
 
 		foreach ( $reactions as $index => $reaction ) {
 			if ( 'score' === $counts_mode && 1 === $index ) {
-				$html .= '<span class="ldb-score" aria-live="polite">' . esc_html( self::format_number( $counts['likes'] - $counts['dislikes'], $settings['short_numbers'] ) ) . '</span>';
+				$html .= '<span class="ldbtn-score" aria-live="polite">' . esc_html( self::format_number( $counts['likes'] - $counts['dislikes'], $settings['short_numbers'] ) ) . '</span>';
 			}
 			$html .= self::button( $reaction, $counts, $counts_mode, $labels, $settings );
 		}
@@ -300,10 +315,10 @@ class LDB_Render {
 		if ( $settings['ratio_bar'] && 'both' === $settings['buttons'] ) {
 			$total  = $counts['likes'] + $counts['dislikes'];
 			$share  = $total ? round( $counts['likes'] / $total * 100, 1 ) : 0;
-			$html  .= '<div class="ldb-bar" aria-hidden="true"><span style="width:' . esc_attr( $share ) . '%"></span></div>';
+			$html  .= '<div class="ldbtn-bar" aria-hidden="true"><span style="width:' . esc_attr( $share ) . '%"></span></div>';
 		}
 
-		$html .= '<p class="ldb-msg" role="status" aria-live="polite"></p>';
+		$html .= '<p class="ldbtn-msg" role="status" aria-live="polite"></p>';
 		$html .= '</div>';
 
 		/**
@@ -314,7 +329,7 @@ class LDB_Render {
 		 * @param int    $id       Item ID.
 		 * @param array  $settings Settings used, after overrides.
 		 */
-		return apply_filters( 'ldb_buttons_html', $html, $type, $id, $settings );
+		return apply_filters( 'ldbtn_buttons_html', $html, $type, $id, $settings );
 	}
 
 	/**
@@ -328,7 +343,7 @@ class LDB_Render {
 	 * @return string
 	 */
 	private static function button( $reaction, $counts, $counts_mode, $labels, $settings ) {
-		$label = LDB_Settings::label( $reaction, $settings );
+		$label = LDBTN_Settings::label( $reaction, $settings );
 		$count = 'like' === $reaction ? $counts['likes'] : $counts['dislikes'];
 		$total = $counts['likes'] + $counts['dislikes'];
 
@@ -339,11 +354,11 @@ class LDB_Render {
 			$text = $total ? round( $count / $total * 100 ) . '%' : '';
 		}
 
-		$html  = '<button type="button" class="ldb-btn ldb-btn--' . esc_attr( $reaction ) . '" data-ldb-reaction="' . esc_attr( $reaction ) . '" aria-pressed="false">';
-		$html .= LDB_Icons::get( $settings['icon_set'], $reaction, $settings );
-		$html .= '<span class="' . ( $labels ? 'ldb-label' : 'ldb-sr' ) . '">' . esc_html( $label ) . '</span>';
+		$html  = '<button type="button" class="ldbtn-btn ldbtn-btn--' . esc_attr( $reaction ) . '" data-ldbtn-reaction="' . esc_attr( $reaction ) . '" aria-pressed="false">';
+		$html .= LDBTN_Icons::get( $settings['icon_set'], $reaction, $settings );
+		$html .= '<span class="' . ( $labels ? 'ldbtn-label' : 'ldbtn-sr' ) . '">' . esc_html( $label ) . '</span>';
 		if ( in_array( $counts_mode, array( 'show', 'percent', 'after_vote' ), true ) ) {
-			$html .= '<span class="ldb-count"' . ( 'after_vote' === $counts_mode ? ' hidden' : '' ) . '>' . esc_html( $text ) . '</span>';
+			$html .= '<span class="ldbtn-count"' . ( 'after_vote' === $counts_mode ? ' hidden' : '' ) . '>' . esc_html( $text ) . '</span>';
 		}
 		$html .= '</button>';
 		return $html;
@@ -383,9 +398,9 @@ class LDB_Render {
 	 */
 	public static function register_shortcodes() {
 		add_shortcode( 'like_dislike_button', array( __CLASS__, 'shortcode_buttons' ) );
-		add_shortcode( 'ldb_most_liked', array( 'LDB_Most_Liked', 'shortcode' ) );
+		add_shortcode( 'ldbtn_most_liked', array( 'LDBTN_Most_Liked', 'shortcode' ) );
 
-		if ( LDB_Settings::get( 'compat_shortcodes' ) ) {
+		if ( LDBTN_Settings::get( 'compat_shortcodes' ) ) {
 			foreach ( array( 'posts_like_dislike', 'like_dislike', 'wp_ulike' ) as $tag ) {
 				if ( ! shortcode_exists( $tag ) ) {
 					add_shortcode( $tag, array( __CLASS__, 'shortcode_buttons' ) );

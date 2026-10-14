@@ -1,6 +1,6 @@
 <?php
 /**
- * REST API: `ldb/v1/state`, `ldb/v1/vote` and the `ldb_votes` field.
+ * REST API: `ldbtn/v1/state`, `ldbtn/v1/vote` and the `ldbtn_votes` field.
  *
  * @package LikeDislikeButton
  */
@@ -10,9 +10,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * REST routes used by the buttons, open to visitors by design.
  */
-class LDB_Rest {
+class LDBTN_Rest {
 
-	const NS = 'ldb/v1';
+	const NS = 'ldbtn/v1';
 
 	/**
 	 * Hooks into WordPress.
@@ -48,12 +48,12 @@ class LDB_Rest {
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( __CLASS__, 'vote' ),
-				// Anyone may vote; LDB_Votes::cast() applies the login and role rules from settings.
+				// Anyone may vote; LDBTN_Votes::cast() applies the login and role rules from settings.
 				'permission_callback' => '__return_true',
 				'args'                => array(
 					'type'     => array(
 						'type'    => 'string',
-						'enum'    => LDB_Votes::object_types(),
+						'enum'    => LDBTN_Votes::object_types(),
 						'default' => 'post',
 					),
 					'id'       => array(
@@ -63,20 +63,20 @@ class LDB_Rest {
 					),
 					'reaction' => array(
 						'type'     => 'string',
-						'enum'     => LDB_Votes::REACTIONS,
+						'enum'     => LDBTN_Votes::REACTIONS,
 						'required' => true,
 					),
 				),
 			)
 		);
 
-		if ( LDB_Settings::get( 'rest_field' ) ) {
+		if ( LDBTN_Settings::get( 'rest_field' ) ) {
 			register_rest_field(
-				(array) LDB_Settings::get( 'post_types' ),
-				'ldb_votes',
+				(array) LDBTN_Settings::get( 'post_types' ),
+				'ldbtn_votes',
 				array(
 					'get_callback' => function ( $post ) {
-						return LDB_Votes::counts( 'post', (int) $post['id'] );
+						return LDBTN_Votes::counts( 'post', (int) $post['id'] );
 					},
 					'schema'       => array(
 						'description' => __( 'Like and dislike totals.', 'like-dislike-button' ),
@@ -103,7 +103,7 @@ class LDB_Rest {
 		$items = array();
 		foreach ( array_slice( explode( ',', (string) $request['items'] ), 0, 100 ) as $pair ) {
 			$parts = explode( ':', trim( $pair ) );
-			if ( 2 === count( $parts ) && in_array( $parts[0], LDB_Votes::object_types(), true ) && absint( $parts[1] ) ) {
+			if ( 2 === count( $parts ) && in_array( $parts[0], LDBTN_Votes::object_types(), true ) && absint( $parts[1] ) ) {
 				$items[ $parts[0] . ':' . absint( $parts[1] ) ] = array( $parts[0], absint( $parts[1] ) );
 			}
 		}
@@ -116,12 +116,12 @@ class LDB_Rest {
 			update_meta_cache( $type, $list );
 		}
 
-		$voter = LDB_Votes::voter();
-		$votes = LDB_Votes::votes_for( array_values( $items ), $voter['key'] );
+		$voter = LDBTN_Votes::voter();
+		$votes = LDBTN_Votes::votes_for( array_values( $items ), $voter['key'] );
 
 		$out = array();
 		foreach ( $items as $key => $item ) {
-			$out[ $key ] = LDB_Votes::counts( $item[0], $item[1] ) + array( 'vote' => isset( $votes[ $key ] ) ? $votes[ $key ] : '' );
+			$out[ $key ] = LDBTN_Votes::counts( $item[0], $item[1] ) + array( 'vote' => isset( $votes[ $key ] ) ? $votes[ $key ] : '' );
 		}
 
 		$response = rest_ensure_response( array( 'items' => (object) $out ) );
@@ -136,7 +136,7 @@ class LDB_Rest {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function vote( WP_REST_Request $request ) {
-		$result = LDB_Votes::cast( $request['type'], (int) $request['id'], $request['reaction'] );
+		$result = LDBTN_Votes::cast( $request['type'], (int) $request['id'], $request['reaction'] );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}

@@ -76,11 +76,11 @@ Import your existing votes from **WP ULike**, **Like Dislike for WP** and **Post
 
 = For developers =
 
-* REST API: `GET /wp-json/ldb/v1/state` and `POST /wp-json/ldb/v1/vote`, plus an `ldb_votes` field on post endpoints.
-* Template tags: `ldb_buttons()`, `ldb_get_buttons()`, `ldb_get_counts()`.
-* Action: `ldb_vote_recorded`. Filters: `ldb_buttons_html`, `ldb_can_vote`, `ldb_icon_sets`, `ldb_visitor_ip`, `ldb_rate_limit`, `ldb_schema_statistics`.
-* WP-CLI: `wp ldb stats`, `wp ldb recount`, `wp ldb import <source>`, `wp ldb reset`.
-* CSS custom properties such as `--ldb-like`, `--ldb-dislike` and `--ldb-radius`.
+* REST API: `GET /wp-json/ldbtn/v1/state` and `POST /wp-json/ldbtn/v1/vote`, plus an `ldbtn_votes` field on post endpoints.
+* Template tags: `ldbtn_buttons()`, `ldbtn_get_buttons()`, `ldbtn_get_counts()`.
+* Action: `ldbtn_vote_recorded`. Filters: `ldbtn_buttons_html`, `ldbtn_can_vote`, `ldbtn_icon_sets`, `ldbtn_visitor_ip`, `ldbtn_rate_limit`, `ldbtn_schema_statistics`.
+* WP-CLI: `wp ldbtn stats`, `wp ldbtn recount`, `wp ldbtn import <source>`, `wp ldbtn reset`.
+* CSS custom properties such as `--ldbtn-like`, `--ldbtn-dislike` and `--ldbtn-radius`.
 
 = Credits =
 
@@ -96,7 +96,7 @@ Icons are adapted from [Lucide](https://lucide.dev) (ISC licence).
 
 = The buttons don't appear =
 
-Check that the post type is ticked under **Like Dislike → Settings → Placement**, and that Position isn't set to "Only where I place them". Some themes don't use the standard post content. In that case, add the Like Dislike Buttons block, the `[like_dislike_button]` shortcode, or `<?php if ( function_exists( 'ldb_buttons' ) ) { ldb_buttons(); } ?>` to your template.
+Check that the post type is ticked under **Like Dislike → Settings → Placement**, and that Position isn't set to "Only where I place them". Some themes don't use the standard post content. In that case, add the Like Dislike Buttons block, the `[like_dislike_button]` shortcode, or `<?php if ( function_exists( 'ldbtn_buttons' ) ) { ldbtn_buttons(); } ?>` to your template.
 
 = Does it work with caching plugins? =
 
@@ -124,7 +124,7 @@ Your site is probably behind Cloudflare or a proxy. Under Voting, set "Visitor I
 
 = How do I move my votes from another like plugin? =
 
-Go to **Like Dislike → Tools** and click Import next to the plugin. You can run it again safely: it updates rather than doubles. On very large sites, use `wp ldb import wp-ulike`.
+Go to **Like Dislike → Tools** and click Import next to the plugin. You can run it again safely: it updates rather than doubles. On very large sites, use `wp ldbtn import wp-ulike`.
 
 = Does it add structured data? =
 

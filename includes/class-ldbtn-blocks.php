@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Registers the blocks and renders them on the server.
  */
-class LDB_Blocks {
+class LDBTN_Blocks {
 
 	/**
 	 * Hooks into WordPress.
@@ -23,11 +23,11 @@ class LDB_Blocks {
 	 * Registers both blocks.
 	 */
 	public static function register() {
-		register_block_type( LDB_PATH . 'blocks/buttons', array( 'render_callback' => array( __CLASS__, 'render_buttons' ) ) );
-		register_block_type( LDB_PATH . 'blocks/most-liked', array( 'render_callback' => array( __CLASS__, 'render_most_liked' ) ) );
+		register_block_type( LDBTN_PATH . 'blocks/buttons', array( 'render_callback' => array( __CLASS__, 'render_buttons' ) ) );
+		register_block_type( LDBTN_PATH . 'blocks/most-liked', array( 'render_callback' => array( __CLASS__, 'render_most_liked' ) ) );
 
 		$handle = generate_block_asset_handle( 'like-dislike-button/buttons', 'editorScript' );
-		wp_add_inline_script( $handle, 'window.ldbBlockOptions = ' . wp_json_encode( self::editor_options() ) . ';', 'before' );
+		wp_add_inline_script( $handle, 'window.ldbtnBlockOptions = ' . wp_json_encode( self::editor_options() ) . ';', 'before' );
 
 		foreach ( array( 'buttons', 'most-liked' ) as $block ) {
 			wp_set_script_translations( generate_block_asset_handle( 'like-dislike-button/' . $block, 'editorScript' ), 'like-dislike-button' );
@@ -52,7 +52,7 @@ class LDB_Blocks {
 		};
 
 		return array(
-			'iconSets' => $options( wp_list_pluck( LDB_Icons::sets(), 'label' ) ),
+			'iconSets' => $options( wp_list_pluck( LDBTN_Icons::sets(), 'label' ) ),
 			'styles'   => $options( self::style_labels() ),
 			'sizes'    => $options(
 				array(
@@ -136,7 +136,7 @@ class LDB_Blocks {
 			}
 		}
 
-		return LDB_Render::render( 'post', $post_id, $args );
+		return LDBTN_Render::render( 'post', $post_id, $args );
 	}
 
 	/**
@@ -146,7 +146,7 @@ class LDB_Blocks {
 	 * @return string
 	 */
 	public static function render_most_liked( $attributes ) {
-		return LDB_Most_Liked::render(
+		return LDBTN_Most_Liked::render(
 			array(
 				'number'         => isset( $attributes['number'] ) ? (int) $attributes['number'] : 5,
 				'post_type'      => isset( $attributes['postType'] ) ? $attributes['postType'] : 'post',
@@ -154,7 +154,7 @@ class LDB_Blocks {
 				'show_count'     => ! empty( $attributes['showCount'] ),
 				'show_thumbnail' => ! empty( $attributes['showThumbnail'] ),
 			),
-			get_block_wrapper_attributes( array( 'class' => 'ldb-most-liked' ) )
+			get_block_wrapper_attributes( array( 'class' => 'ldbtn-most-liked' ) )
 		);
 	}
 }

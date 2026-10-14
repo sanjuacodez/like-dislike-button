@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Lists the posts with the most likes, all time or for a recent period.
  */
-class LDB_Most_Liked {
+class LDBTN_Most_Liked {
 
 	/**
 	 * Period slugs and their length in days (0 = all time).
@@ -39,7 +39,7 @@ class LDB_Most_Liked {
 		$post_type = sanitize_key( $args['post_type'] );
 		$periods   = self::periods();
 		$days      = isset( $periods[ $args['period'] ] ) ? $periods[ $args['period'] ] : 0;
-		$cache_key = 'ldb_ml_' . md5( $number . '|' . $post_type . '|' . $days );
+		$cache_key = 'ldbtn_ml_' . md5( $number . '|' . $post_type . '|' . $days );
 		$cached    = get_transient( $cache_key );
 		if ( is_array( $cached ) ) {
 			return $cached;
@@ -47,7 +47,7 @@ class LDB_Most_Liked {
 
 		$rows = array();
 		if ( $days ) {
-			$table = esc_sql( LDB_DB::table() );
+			$table = esc_sql( LDBTN_DB::table() );
 			$since = gmdate( 'Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS );
 			// phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table name.
 			$rows = $wpdb->get_results(
@@ -71,7 +71,7 @@ class LDB_Most_Liked {
 					WHERE m.meta_key = %s AND CAST(m.meta_value AS UNSIGNED) > 0
 						AND p.post_type = %s AND p.post_status = 'publish' AND p.post_password = ''
 					ORDER BY likes DESC, p.ID DESC LIMIT %d",
-					LDB_Votes::META_LIKES,
+					LDBTN_Votes::META_LIKES,
 					$post_type,
 					$number
 				)
@@ -111,11 +111,11 @@ class LDB_Most_Liked {
 			return '';
 		}
 
-		wp_enqueue_style( 'ldb' );
+		wp_enqueue_style( 'ldbtn' );
 		_prime_post_caches( wp_list_pluck( $list, 0 ) );
 
-		$attributes = $wrapper_attributes ? $wrapper_attributes : 'class="ldb-most-liked"';
-		$icon       = LDB_Icons::get( LDB_Settings::get( 'icon_set' ), 'like' );
+		$attributes = $wrapper_attributes ? $wrapper_attributes : 'class="ldbtn-most-liked"';
+		$icon       = LDBTN_Icons::get( LDBTN_Settings::get( 'icon_set' ), 'like' );
 
 		$html = '<ol ' . $attributes . '>';
 		foreach ( $list as $item ) {
@@ -125,13 +125,13 @@ class LDB_Most_Liked {
 			}
 			$html .= '<li>';
 			if ( $args['show_thumbnail'] && has_post_thumbnail( $post ) ) {
-				$html .= '<a class="ldb-most-liked__thumb" href="' . esc_url( get_permalink( $post ) ) . '" tabindex="-1" aria-hidden="true">' . get_the_post_thumbnail( $post, 'thumbnail', array( 'alt' => '' ) ) . '</a>';
+				$html .= '<a class="ldbtn-most-liked__thumb" href="' . esc_url( get_permalink( $post ) ) . '" tabindex="-1" aria-hidden="true">' . get_the_post_thumbnail( $post, 'thumbnail', array( 'alt' => '' ) ) . '</a>';
 			}
-			$html .= '<a class="ldb-most-liked__title" href="' . esc_url( get_permalink( $post ) ) . '">' . esc_html( get_the_title( $post ) ) . '</a>';
+			$html .= '<a class="ldbtn-most-liked__title" href="' . esc_url( get_permalink( $post ) ) . '">' . esc_html( get_the_title( $post ) ) . '</a>';
 			if ( $args['show_count'] ) {
-				$html .= '<span class="ldb-most-liked__count">' . $icon . '<span>' . esc_html(
+				$html .= '<span class="ldbtn-most-liked__count">' . $icon . '<span>' . esc_html(
 					/* translators: %s: number of likes */
-					sprintf( _n( '%s like', '%s likes', $item[1], 'like-dislike-button' ), LDB_Render::format_number( $item[1] ) )
+					sprintf( _n( '%s like', '%s likes', $item[1], 'like-dislike-button' ), LDBTN_Render::format_number( $item[1] ) )
 				) . '</span></span>';
 			}
 			$html .= '</li>';
@@ -142,7 +142,7 @@ class LDB_Most_Liked {
 	}
 
 	/**
-	 * [ldb_most_liked number="5" post_type="post" period="all|week|month|year" show_count="yes" show_thumbnail="no"]
+	 * [ldbtn_most_liked number="5" post_type="post" period="all|week|month|year" show_count="yes" show_thumbnail="no"]
 	 *
 	 * @param array|string $atts Attributes.
 	 * @return string
@@ -157,7 +157,7 @@ class LDB_Most_Liked {
 				'show_thumbnail' => 'no',
 			),
 			$atts,
-			'ldb_most_liked'
+			'ldbtn_most_liked'
 		);
 		return self::render(
 			array(

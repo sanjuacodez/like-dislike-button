@@ -38,9 +38,9 @@ Most like plugins break in one of three places.
 
 ```
 Page (cacheable)                       REST API (never cached)
-  .ldb[data-ldb-type][data-ldb-id]  ─→  GET  /ldb/v1/state?items=post:12,comment:5
+  .ldbtn[data-ldbtn-type][data-ldbtn-id]  ─→  GET  /ldbtn/v1/state?items=post:12,comment:5
                                      ←─  totals + this visitor's vote for each item
-  click                             ─→  POST /ldb/v1/vote {type, id, reaction}
+  click                             ─→  POST /ldbtn/v1/vote {type, id, reaction}
                                          └─ checks: item public, reaction on,
                                             login/role rules, 30 votes/min per network
                                          └─ insert / switch / remove one row
@@ -53,9 +53,9 @@ settings. Cookie IDs and IPs are only ever stored as a keyed HMAC, never as-is.
 One row per voter per item is enforced by a unique key, and a short MySQL lock
 stops double clicks from counting twice.
 
-**Storage.** `{prefix}ldb_votes` holds one row per current vote. Totals live in
-`_ldb_likes`, `_ldb_dislikes` and `_ldb_score` (post or comment meta). Imports
-from plugins that only kept totals sit in `_ldb_imported`, so a recount never
+**Storage.** `{prefix}ldbtn_votes` holds one row per current vote. Totals live in
+`_ldbtn_likes`, `_ldbtn_dislikes` and `_ldbtn_score` (post or comment meta). Imports
+from plugins that only kept totals sit in `_ldbtn_imported`, so a recount never
 loses them.
 
 **Structured data.** Totals are added to the page's existing Article or WebPage
@@ -85,7 +85,7 @@ light and dark themes.
 | **Analytics** | 7/30/90 days, 12 months or all time, change vs previous period, votes per day, most liked and disliked, sortable posts column, dashboard widget, CSV export |
 | **Import** | WP ULike (vote by vote), Like Dislike for WP (vote by vote), Posts Like Dislike (totals), Like / Dislike Button 2.x |
 | **Privacy** | hashed IPs only, cookie set only on voting, WordPress export and erase tools, privacy policy text, no external requests |
-| **Developers** | REST API, `ldb_votes` REST field, hooks, WP-CLI, template tags, CSS custom properties |
+| **Developers** | REST API, `ldbtn_votes` REST field, hooks, WP-CLI, template tags, CSS custom properties |
 
 ### Shortcodes and template tags
 
@@ -93,34 +93,34 @@ light and dark themes.
 [like_dislike_button]
 [like_dislike_button id="42" icons="hearts" style="pill" counts="percent"]
 [like_dislike_button style="outline" labels="yes" like_label="Yes" dislike_label="No" question="Was this helpful?"]
-[ldb_most_liked number="5" period="month" show_thumbnail="yes"]
+[ldbtn_most_liked number="5" period="month" show_thumbnail="yes"]
 ```
 
 ```php
-<?php if ( function_exists( 'ldb_buttons' ) ) { ldb_buttons(); } ?>
-<?php $counts = ldb_get_counts( get_the_ID() ); // ['likes' => 12, 'dislikes' => 3] ?>
+<?php if ( function_exists( 'ldbtn_buttons' ) ) { ldbtn_buttons(); } ?>
+<?php $counts = ldbtn_get_counts( get_the_ID() ); // ['likes' => 12, 'dislikes' => 3] ?>
 ```
 
 ### Hooks
 
 | Hook | Type | Use |
 |---|---|---|
-| `ldb_vote_recorded` | action | `( $type, $id, $vote, $previous, $user_id, $counts )` after any vote change |
-| `ldb_can_vote` | filter | return a `WP_Error` to block a vote |
-| `ldb_buttons_html` | filter | change the buttons markup |
-| `ldb_icon_sets` | filter | add an icon set (24×24 stroked SVG paths) |
-| `ldb_visitor_ip` | filter | supply the real visitor IP behind a proxy |
-| `ldb_rate_limit` | filter | votes per minute per network, `0` to turn off |
-| `ldb_schema_statistics` | filter | change or remove the `interactionStatistic` entries |
+| `ldbtn_vote_recorded` | action | `( $type, $id, $vote, $previous, $user_id, $counts )` after any vote change |
+| `ldbtn_can_vote` | filter | return a `WP_Error` to block a vote |
+| `ldbtn_buttons_html` | filter | change the buttons markup |
+| `ldbtn_icon_sets` | filter | add an icon set (24×24 stroked SVG paths) |
+| `ldbtn_visitor_ip` | filter | supply the real visitor IP behind a proxy |
+| `ldbtn_rate_limit` | filter | votes per minute per network, `0` to turn off |
+| `ldbtn_schema_statistics` | filter | change or remove the `interactionStatistic` entries |
 
 ### WP-CLI
 
 ```bash
-wp ldb stats --days=30         # totals and top posts
-wp ldb sources                 # other like plugins found on this site
-wp ldb import wp-ulike         # import votes
-wp ldb recount                 # rebuild every total
-wp ldb reset --post=42         # delete one post's votes
+wp ldbtn stats --days=30         # totals and top posts
+wp ldbtn sources                 # other like plugins found on this site
+wp ldbtn import wp-ulike         # import votes
+wp ldbtn recount                 # rebuild every total
+wp ldbtn reset --post=42         # delete one post's votes
 ```
 
 ---
@@ -133,13 +133,13 @@ No build step. The blocks are plain JavaScript (`blocks/*/index.js`) using the
 ```
 like-dislike-button.php      bootstrap
 includes/
-  class-ldb-votes.php        casting, counting, recounting, voter identity
-  class-ldb-render.php       button markup, automatic placement, shortcodes
-  class-ldb-rest.php         ldb/v1/state, ldb/v1/vote, ldb_votes field
-  class-ldb-schema.php       interactionStatistic in schema.org markup
-  class-ldb-blocks.php       Buttons and Most Liked blocks
-  class-ldb-stats.php        dashboard queries
-  class-ldb-importer.php     imports from other plugins
+  class-ldbtn-votes.php        casting, counting, recounting, voter identity
+  class-ldbtn-render.php       button markup, automatic placement, shortcodes
+  class-ldbtn-rest.php         ldbtn/v1/state, ldbtn/v1/vote, ldbtn_votes field
+  class-ldbtn-schema.php       interactionStatistic in schema.org markup
+  class-ldbtn-blocks.php       Buttons and Most Liked blocks
+  class-ldbtn-stats.php        dashboard queries
+  class-ldbtn-importer.php     imports from other plugins
   admin/                     dashboard, settings, tools, meta box, list column
 assets/                      front-end and admin CSS/JS
 blocks/                      block.json + editor scripts
@@ -157,14 +157,14 @@ next to the plugin folder rather than inside it.
 To try the Live Preview locally with your working copy mounted:
 
 ```bash
-./bin/build-blueprint --local /tmp/ldb-blueprint.json
-npx @wp-playground/cli@latest server --blueprint=/tmp/ldb-blueprint.json \
+./bin/build-blueprint --local /tmp/ldbtn-blueprint.json
+npx @wp-playground/cli@latest server --blueprint=/tmp/ldbtn-blueprint.json \
   --mount="$PWD:/wordpress/wp-content/plugins/like-dislike-button"
 ```
 
 ## Release
 
-1. Bump `Version` in `like-dislike-button.php`, `LDB_VERSION`, and `Stable tag` in `readme.txt`.
+1. Bump `Version` in `like-dislike-button.php`, `LDBTN_VERSION`, and `Stable tag` in `readme.txt`.
 2. Commit and push to `main`.
 3. Tag it: `git tag v3.0.0 && git push origin v3.0.0`.
 

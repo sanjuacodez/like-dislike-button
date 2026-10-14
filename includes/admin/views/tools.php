@@ -7,22 +7,22 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$ldb_sources = LDB_Importer::sources();
-$ldb_notice  = isset( $_GET['ldb_notice'] ) ? sanitize_key( wp_unslash( $_GET['ldb_notice'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.
+$ldbtn_sources = LDBTN_Importer::sources();
+$ldbtn_notice  = isset( $_GET['ldbtn_notice'] ) ? sanitize_key( wp_unslash( $_GET['ldbtn_notice'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.
 ?>
-<div class="wrap ldb-admin">
-	<?php LDB_Admin::header( 'ldb-tools' ); ?>
+<div class="wrap ldbtn-admin">
+	<?php LDBTN_Admin::header( 'ldbtn-tools' ); ?>
 	<h1 class="screen-reader-text"><?php esc_html_e( 'Like Dislike Tools', 'like-dislike-button' ); ?></h1>
 
-	<?php if ( 'reset' === $ldb_notice ) : ?>
+	<?php if ( 'reset' === $ldbtn_notice ) : ?>
 		<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Votes deleted.', 'like-dislike-button' ); ?></p></div>
 	<?php endif; ?>
 
-	<div class="ldb-card">
-		<h2 class="ldb-card__title"><?php esc_html_e( 'Import from another plugin', 'like-dislike-button' ); ?></h2>
-		<p class="ldb-card__intro"><?php esc_html_e( 'Bring your existing likes over. Vote-by-vote imports keep dates and let logged-in users see their earlier votes. The other plugin can be active or inactive; its data is only read, never changed. Running an import again updates it rather than doubling it.', 'like-dislike-button' ); ?></p>
+	<div class="ldbtn-card">
+		<h2 class="ldbtn-card__title"><?php esc_html_e( 'Import from another plugin', 'like-dislike-button' ); ?></h2>
+		<p class="ldbtn-card__intro"><?php esc_html_e( 'Bring your existing likes over. Vote-by-vote imports keep dates and let logged-in users see their earlier votes. The other plugin can be active or inactive; its data is only read, never changed. Running an import again updates it rather than doubling it.', 'like-dislike-button' ); ?></p>
 
-		<table class="ldb-table ldb-sources">
+		<table class="ldbtn-table ldbtn-sources">
 			<thead>
 				<tr>
 					<th scope="col"><?php esc_html_e( 'Plugin', 'like-dislike-button' ); ?></th>
@@ -32,65 +32,65 @@ $ldb_notice  = isset( $_GET['ldb_notice'] ) ? sanitize_key( wp_unslash( $_GET['l
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ( $ldb_sources as $ldb_slug => $ldb_source ) : ?>
+				<?php foreach ( $ldbtn_sources as $ldbtn_slug => $ldbtn_source ) : ?>
 					<tr>
-						<td><strong><?php echo esc_html( $ldb_source['label'] ); ?></strong></td>
-						<td><?php echo 'rows' === $ldb_source['kind'] ? esc_html__( 'Every vote, with dates', 'like-dislike-button' ) : esc_html__( 'Totals per post', 'like-dislike-button' ); ?></td>
+						<td><strong><?php echo esc_html( $ldbtn_source['label'] ); ?></strong></td>
+						<td><?php echo 'rows' === $ldbtn_source['kind'] ? esc_html__( 'Every vote, with dates', 'like-dislike-button' ) : esc_html__( 'Totals per post', 'like-dislike-button' ); ?></td>
 						<td class="num">
 							<?php
-							if ( $ldb_source['count'] ) {
+							if ( $ldbtn_source['count'] ) {
 								echo esc_html(
-									'rows' === $ldb_source['kind']
+									'rows' === $ldbtn_source['kind']
 										/* translators: %s: number of votes */
-										? sprintf( _n( '%s vote', '%s votes', $ldb_source['count'], 'like-dislike-button' ), number_format_i18n( $ldb_source['count'] ) )
+										? sprintf( _n( '%s vote', '%s votes', $ldbtn_source['count'], 'like-dislike-button' ), number_format_i18n( $ldbtn_source['count'] ) )
 										/* translators: %s: number of posts */
-										: sprintf( _n( '%s post', '%s posts', $ldb_source['count'], 'like-dislike-button' ), number_format_i18n( $ldb_source['count'] ) )
+										: sprintf( _n( '%s post', '%s posts', $ldbtn_source['count'], 'like-dislike-button' ), number_format_i18n( $ldbtn_source['count'] ) )
 								);
 							} else {
-								echo '<span class="ldb-muted">' . esc_html__( 'Nothing found', 'like-dislike-button' ) . '</span>';
+								echo '<span class="ldbtn-muted">' . esc_html__( 'Nothing found', 'like-dislike-button' ) . '</span>';
 							}
 							?>
 						</td>
-						<td class="ldb-sources__action">
-							<button type="button" class="button ldb-import" data-source="<?php echo esc_attr( $ldb_slug ); ?>" <?php disabled( ! $ldb_source['count'] ); ?>><?php esc_html_e( 'Import', 'like-dislike-button' ); ?></button>
-							<span class="ldb-progress" role="status" aria-live="polite"></span>
+						<td class="ldbtn-sources__action">
+							<button type="button" class="button ldbtn-import" data-source="<?php echo esc_attr( $ldbtn_slug ); ?>" <?php disabled( ! $ldbtn_source['count'] ); ?>><?php esc_html_e( 'Import', 'like-dislike-button' ); ?></button>
+							<span class="ldbtn-progress" role="status" aria-live="polite"></span>
 						</td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>
 		</table>
-		<p class="ldb-help">
+		<p class="ldbtn-help">
 			<?php
 			/* translators: %s: WP-CLI command */
-			printf( esc_html__( 'Very large sites can import from the command line instead: %s', 'like-dislike-button' ), '<code>wp ldb import wp-ulike</code>' );
+			printf( esc_html__( 'Very large sites can import from the command line instead: %s', 'like-dislike-button' ), '<code>wp ldbtn import wp-ulike</code>' );
 			?>
 		</p>
 	</div>
 
-	<div class="ldb-columns">
-		<div class="ldb-card">
-			<h2 class="ldb-card__title"><?php esc_html_e( 'Recount totals', 'like-dislike-button' ); ?></h2>
+	<div class="ldbtn-columns">
+		<div class="ldbtn-card">
+			<h2 class="ldbtn-card__title"><?php esc_html_e( 'Recount totals', 'like-dislike-button' ); ?></h2>
 			<p><?php esc_html_e( 'Rebuilds every like and dislike total from the stored votes. Useful after editing the database by hand.', 'like-dislike-button' ); ?></p>
 			<p>
-				<button type="button" class="button" id="ldb-recount"><?php esc_html_e( 'Recount now', 'like-dislike-button' ); ?></button>
-				<span class="ldb-progress" role="status" aria-live="polite"></span>
+				<button type="button" class="button" id="ldbtn-recount"><?php esc_html_e( 'Recount now', 'like-dislike-button' ); ?></button>
+				<span class="ldbtn-progress" role="status" aria-live="polite"></span>
 			</p>
 		</div>
 
-		<div class="ldb-card">
-			<h2 class="ldb-card__title"><?php esc_html_e( 'Export', 'like-dislike-button' ); ?></h2>
+		<div class="ldbtn-card">
+			<h2 class="ldbtn-card__title"><?php esc_html_e( 'Export', 'like-dislike-button' ); ?></h2>
 			<p><?php esc_html_e( 'Download a CSV of every post with votes: likes, dislikes, score and link.', 'like-dislike-button' ); ?></p>
-			<p><a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=ldb_export' ), 'ldb_export' ) ); ?>"><?php esc_html_e( 'Download CSV', 'like-dislike-button' ); ?></a></p>
+			<p><a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=ldbtn_export' ), 'ldbtn_export' ) ); ?>"><?php esc_html_e( 'Download CSV', 'like-dislike-button' ); ?></a></p>
 		</div>
 	</div>
 
-	<div class="ldb-card ldb-card--danger">
-		<h2 class="ldb-card__title"><?php esc_html_e( 'Delete all votes', 'like-dislike-button' ); ?></h2>
+	<div class="ldbtn-card ldbtn-card--danger">
+		<h2 class="ldbtn-card__title"><?php esc_html_e( 'Delete all votes', 'like-dislike-button' ); ?></h2>
 		<p><?php esc_html_e( 'Removes every like and dislike on this site, including imported totals. Settings are kept. This can’t be undone, so export first if you might need the numbers.', 'like-dislike-button' ); ?></p>
-		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="ldb-reset-form">
-			<input type="hidden" name="action" value="ldb_reset_all">
-			<?php wp_nonce_field( 'ldb_reset_all' ); ?>
-			<button type="submit" class="button ldb-button-danger"><?php esc_html_e( 'Delete all votes', 'like-dislike-button' ); ?></button>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="ldbtn-reset-form">
+			<input type="hidden" name="action" value="ldbtn_reset_all">
+			<?php wp_nonce_field( 'ldbtn_reset_all' ); ?>
+			<button type="submit" class="button ldbtn-button-danger"><?php esc_html_e( 'Delete all votes', 'like-dislike-button' ); ?></button>
 		</form>
 	</div>
 </div>

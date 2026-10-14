@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Manage likes and dislikes.
  */
-class LDB_CLI {
+class LDBTN_CLI {
 
 	/**
 	 * Shows vote totals for a period.
@@ -25,19 +25,19 @@ class LDB_CLI {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp ldb stats --days=7
+	 *     wp ldbtn stats --days=7
 	 *
 	 * @param array $args       Positional arguments.
 	 * @param array $assoc_args Options.
 	 */
 	public function stats( $args, $assoc_args ) {
 		$days   = (int) $assoc_args['days'];
-		$totals = LDB_Stats::totals( $days );
+		$totals = LDBTN_Stats::totals( $days );
 		WP_CLI::log( sprintf( 'Likes: %d', $totals['likes'] ) );
 		WP_CLI::log( sprintf( 'Dislikes: %d', $totals['dislikes'] ) );
 
 		$rows = array();
-		foreach ( LDB_Stats::top( $days, 'like', 10 ) as $row ) {
+		foreach ( LDBTN_Stats::top( $days, 'like', 10 ) as $row ) {
 			$rows[] = array(
 				'ID'       => $row->id,
 				'title'    => get_the_title( (int) $row->id ),
@@ -55,13 +55,13 @@ class LDB_CLI {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp ldb recount
+	 *     wp ldbtn recount
 	 */
 	public function recount() {
-		foreach ( LDB_Votes::object_types() as $type ) {
+		foreach ( LDBTN_Votes::object_types() as $type ) {
 			$after = 0;
 			do {
-				$after = LDB_Votes::recount_batch( $type, $after );
+				$after = LDBTN_Votes::recount_batch( $type, $after );
 			} while ( $after );
 		}
 		WP_CLI::success( 'Totals recounted.' );
@@ -80,20 +80,20 @@ class LDB_CLI {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp ldb reset --post=42
-	 *     wp ldb reset --yes
+	 *     wp ldbtn reset --post=42
+	 *     wp ldbtn reset --yes
 	 *
 	 * @param array $args       Positional arguments.
 	 * @param array $assoc_args Options.
 	 */
 	public function reset( $args, $assoc_args ) {
 		if ( ! empty( $assoc_args['post'] ) ) {
-			LDB_Votes::reset( 'post', (int) $assoc_args['post'] );
+			LDBTN_Votes::reset( 'post', (int) $assoc_args['post'] );
 			WP_CLI::success( 'Votes for that post were deleted.' );
 			return;
 		}
 		WP_CLI::confirm( 'Delete every like and dislike on this site?', $assoc_args );
-		LDB_Votes::reset();
+		LDBTN_Votes::reset();
 		WP_CLI::success( 'All votes were deleted.' );
 	}
 
@@ -103,11 +103,11 @@ class LDB_CLI {
 	 * ## OPTIONS
 	 *
 	 * <source>
-	 * : wp-ulike, like-dislike-for-wp, posts-like-dislike or ldb-2.
+	 * : wp-ulike, like-dislike-for-wp, posts-like-dislike or ldbtn-2.
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp ldb import wp-ulike
+	 *     wp ldbtn import wp-ulike
 	 *
 	 * @param array $args Positional arguments.
 	 */
@@ -115,7 +115,7 @@ class LDB_CLI {
 		$cursor = array();
 		$total  = 0;
 		do {
-			$result = LDB_Importer::run_batch( $args[0], $cursor );
+			$result = LDBTN_Importer::run_batch( $args[0], $cursor );
 			if ( is_wp_error( $result ) ) {
 				WP_CLI::error( $result->get_error_message() );
 			}
@@ -124,7 +124,7 @@ class LDB_CLI {
 			WP_CLI::log( sprintf( 'Processed %d…', $total ) );
 		} while ( ! $result['done'] );
 
-		LDB_Importer::finish();
+		LDBTN_Importer::finish();
 		WP_CLI::success( sprintf( 'Imported %d records.', $total ) );
 	}
 
@@ -133,13 +133,13 @@ class LDB_CLI {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp ldb sources
+	 *     wp ldbtn sources
 	 *
 	 * @subcommand sources
 	 */
 	public function sources() {
 		$rows = array();
-		foreach ( LDB_Importer::sources() as $slug => $source ) {
+		foreach ( LDBTN_Importer::sources() as $slug => $source ) {
 			$rows[] = array(
 				'source' => $slug,
 				'name'   => $source['label'],

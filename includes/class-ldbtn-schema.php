@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Adds interactionStatistic to the current post's schema.
  */
-class LDB_Schema {
+class LDBTN_Schema {
 
 	/**
 	 * Entity types that describe the post itself, best match first.
@@ -75,7 +75,7 @@ class LDB_Schema {
 	 * @return array|null
 	 */
 	public static function statistics() {
-		if ( ! LDB_Settings::get( 'schema' ) || ! is_singular() ) {
+		if ( ! LDBTN_Settings::get( 'schema' ) || ! is_singular() ) {
 			return null;
 		}
 		$post = get_queried_object();
@@ -83,16 +83,16 @@ class LDB_Schema {
 			return null;
 		}
 
-		$counts = LDB_Votes::counts( 'post', $post->ID );
+		$counts = LDBTN_Votes::counts( 'post', $post->ID );
 		$list   = array();
-		if ( LDB_Votes::reaction_enabled( 'like' ) && $counts['likes'] ) {
+		if ( LDBTN_Votes::reaction_enabled( 'like' ) && $counts['likes'] ) {
 			$list[] = array(
 				'@type'                => 'InteractionCounter',
 				'interactionType'      => 'https://schema.org/LikeAction',
 				'userInteractionCount' => $counts['likes'],
 			);
 		}
-		if ( LDB_Votes::reaction_enabled( 'dislike' ) && $counts['dislikes'] ) {
+		if ( LDBTN_Votes::reaction_enabled( 'dislike' ) && $counts['dislikes'] ) {
 			$list[] = array(
 				'@type'                => 'InteractionCounter',
 				'interactionType'      => 'https://schema.org/DislikeAction',
@@ -108,7 +108,7 @@ class LDB_Schema {
 		 * @param WP_Post $post   Post.
 		 * @param array   $counts Like and dislike totals.
 		 */
-		$list = apply_filters( 'ldb_schema_statistics', $list, $post, $counts );
+		$list = apply_filters( 'ldbtn_schema_statistics', $list, $post, $counts );
 		return $list ? $list : null;
 	}
 
@@ -120,11 +120,11 @@ class LDB_Schema {
 	 */
 	private static function shows_buttons( $post ) {
 		// Hidden counts, or counts shown only after voting, aren't visible to everyone.
-		if ( ! in_array( LDB_Settings::get( 'counts' ), array( 'show', 'percent', 'score' ), true ) || 'product' === $post->post_type || post_password_required( $post ) ) {
+		if ( ! in_array( LDBTN_Settings::get( 'counts' ), array( 'show', 'percent', 'score' ), true ) || 'product' === $post->post_type || post_password_required( $post ) ) {
 			return false;
 		}
 		$by_hand = has_block( 'like-dislike-button/buttons', $post ) || has_shortcode( $post->post_content, 'like_dislike_button' );
-		$auto    = LDB_Settings::type_enabled( $post->post_type ) && 'manual' !== LDB_Settings::get( 'position' ) && ! get_post_meta( $post->ID, LDB_Votes::META_HIDE, true );
+		$auto    = LDBTN_Settings::type_enabled( $post->post_type ) && 'manual' !== LDBTN_Settings::get( 'position' ) && ! get_post_meta( $post->ID, LDBTN_Votes::META_HIDE, true );
 		return $by_hand || $auto;
 	}
 
@@ -378,6 +378,12 @@ class LDB_Schema {
 			'interactionStatistic' => $stats,
 		);
 		self::$added = true;
-		return '<script type="application/ld+json" class="ldb-schema">' . wp_json_encode( $node, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG ) . "</script>\n";
+		return wp_get_inline_script_tag(
+			wp_json_encode( $node, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG ),
+			array(
+				'type'  => 'application/ld+json',
+				'class' => 'ldbtn-schema',
+			)
+		);
 	}
 }

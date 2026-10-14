@@ -10,16 +10,16 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Vote logic shared by the REST API, admin tools, importers and WP-CLI.
  */
-class LDB_Votes {
+class LDBTN_Votes {
 
-	const COOKIE    = 'ldb_vid';
+	const COOKIE    = 'ldbtn_vid';
 	const REACTIONS = array( 'like', 'dislike' );
 
-	const META_LIKES    = '_ldb_likes';
-	const META_DISLIKES = '_ldb_dislikes';
-	const META_SCORE    = '_ldb_score';
-	const META_IMPORTED = '_ldb_imported';
-	const META_HIDE     = '_ldb_hide';
+	const META_LIKES    = '_ldbtn_likes';
+	const META_DISLIKES = '_ldbtn_dislikes';
+	const META_SCORE    = '_ldbtn_score';
+	const META_IMPORTED = '_ldbtn_imported';
+	const META_HIDE     = '_ldbtn_hide';
 
 	/**
 	 * Object types that can be voted on.
@@ -54,7 +54,7 @@ class LDB_Votes {
 	 */
 	public static function recount( $type, $id ) {
 		global $wpdb;
-		$table = esc_sql( LDB_DB::table() );
+		$table = esc_sql( LDBTN_DB::table() );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table name.
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT reaction, COUNT(*) AS total FROM {$table} WHERE object_type = %s AND object_id = %d GROUP BY reaction", $type, $id ) );
@@ -100,11 +100,11 @@ class LDB_Votes {
 	 * @return true|WP_Error
 	 */
 	public static function validate_object( $type, $id ) {
-		$missing = new WP_Error( 'ldb_missing', __( 'This item can no longer be voted on.', 'like-dislike-button' ), array( 'status' => 404 ) );
+		$missing = new WP_Error( 'ldbtn_missing', __( 'This item can no longer be voted on.', 'like-dislike-button' ), array( 'status' => 404 ) );
 
 		if ( 'comment' === $type ) {
 			$comment = get_comment( $id );
-			if ( ! $comment || '1' !== (string) $comment->comment_approved || ! LDB_Settings::get( 'comments' ) ) {
+			if ( ! $comment || '1' !== (string) $comment->comment_approved || ! LDBTN_Settings::get( 'comments' ) ) {
 				return $missing;
 			}
 			$id = (int) $comment->comment_post_ID;
@@ -130,13 +130,13 @@ class LDB_Votes {
 	public static function can_vote( $type, $id ) {
 		$result = true;
 
-		if ( 'logged_in' === LDB_Settings::get( 'who' ) ) {
+		if ( 'logged_in' === LDBTN_Settings::get( 'who' ) ) {
 			if ( ! is_user_logged_in() ) {
-				$result = new WP_Error( 'ldb_login', __( 'Please log in to vote.', 'like-dislike-button' ), array( 'status' => 401 ) );
+				$result = new WP_Error( 'ldbtn_login', __( 'Please log in to vote.', 'like-dislike-button' ), array( 'status' => 401 ) );
 			} else {
-				$roles = (array) LDB_Settings::get( 'roles' );
+				$roles = (array) LDBTN_Settings::get( 'roles' );
 				if ( $roles && ! array_intersect( $roles, (array) wp_get_current_user()->roles ) ) {
-					$result = new WP_Error( 'ldb_role', __( 'Your account can’t vote on this site.', 'like-dislike-button' ), array( 'status' => 403 ) );
+					$result = new WP_Error( 'ldbtn_role', __( 'Your account can’t vote on this site.', 'like-dislike-button' ), array( 'status' => 403 ) );
 				}
 			}
 		}
@@ -148,7 +148,7 @@ class LDB_Votes {
 		 * @param string        $type   post|comment.
 		 * @param int           $id     Item ID.
 		 */
-		return apply_filters( 'ldb_can_vote', $result, $type, $id );
+		return apply_filters( 'ldbtn_can_vote', $result, $type, $id );
 	}
 
 	/**
@@ -158,7 +158,7 @@ class LDB_Votes {
 	 * @return bool
 	 */
 	public static function reaction_enabled( $reaction ) {
-		$buttons = LDB_Settings::get( 'buttons' );
+		$buttons = LDBTN_Settings::get( 'buttons' );
 		return in_array( $reaction, self::REACTIONS, true ) && ( 'both' === $buttons || $reaction === $buttons );
 	}
 
@@ -169,7 +169,7 @@ class LDB_Votes {
 	 */
 	public static function ip() {
 		$ip     = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-		$header = LDB_Settings::get( 'ip_header' );
+		$header = LDBTN_Settings::get( 'ip_header' );
 
 		if ( $header && ! empty( $_SERVER[ $header ] ) ) {
 			$list      = explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) ) );
@@ -185,7 +185,7 @@ class LDB_Votes {
 		 *
 		 * @param string $ip IP address.
 		 */
-		return (string) apply_filters( 'ldb_visitor_ip', $ip );
+		return (string) apply_filters( 'ldbtn_visitor_ip', $ip );
 	}
 
 	/**
@@ -216,7 +216,7 @@ class LDB_Votes {
 			);
 		}
 
-		if ( 'ip' === LDB_Settings::get( 'guest_tracking' ) ) {
+		if ( 'ip' === LDBTN_Settings::get( 'guest_tracking' ) ) {
 			$ip = self::ip();
 			return array(
 				'key'  => $ip ? self::hash( 'ip|' . $ip ) : '',
@@ -284,7 +284,7 @@ class LDB_Votes {
 			$args[]  = $item[1];
 		}
 
-		$table = esc_sql( LDB_DB::table() );
+		$table = esc_sql( LDBTN_DB::table() );
 		$sql   = "SELECT object_type, object_id, reaction FROM {$table} WHERE voter_key = %s AND (" . implode( ' OR ', $where ) . ')';
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Placeholders are built above.
 		$rows = $wpdb->get_results( $wpdb->prepare( $sql, $args ) );
@@ -311,7 +311,7 @@ class LDB_Votes {
 		global $wpdb;
 
 		if ( ! self::reaction_enabled( $reaction ) ) {
-			return new WP_Error( 'ldb_reaction', __( 'This reaction is turned off.', 'like-dislike-button' ), array( 'status' => 400 ) );
+			return new WP_Error( 'ldbtn_reaction', __( 'This reaction is turned off.', 'like-dislike-button' ), array( 'status' => 400 ) );
 		}
 
 		$valid = self::validate_object( $type, $id );
@@ -331,11 +331,11 @@ class LDB_Votes {
 
 		$voter = self::voter( true );
 		if ( '' === $voter['key'] ) {
-			return new WP_Error( 'ldb_unknown', __( 'Your vote could not be recorded. Please allow cookies and try again.', 'like-dislike-button' ), array( 'status' => 400 ) );
+			return new WP_Error( 'ldbtn_unknown', __( 'Your vote could not be recorded. Please allow cookies and try again.', 'like-dislike-button' ), array( 'status' => 400 ) );
 		}
 
-		$table = esc_sql( LDB_DB::table() );
-		$lock  = 'ldb_' . md5( $type . '|' . $id . '|' . $voter['key'] );
+		$table = esc_sql( LDBTN_DB::table() );
+		$lock  = 'ldbtn_' . md5( $type . '|' . $id . '|' . $voter['key'] );
 
 		// One click at a time per voter and item, so double clicks can't double count.
 		$wpdb->query( $wpdb->prepare( 'SELECT GET_LOCK(%s, 5)', $lock ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
@@ -349,8 +349,8 @@ class LDB_Votes {
 		);
 		$result   = null;
 
-		if ( $existing && ! LDB_Settings::get( 'allow_change' ) ) {
-			$result = new WP_Error( 'ldb_voted', __( 'You have already voted.', 'like-dislike-button' ), array( 'status' => 409 ) );
+		if ( $existing && ! LDBTN_Settings::get( 'allow_change' ) ) {
+			$result = new WP_Error( 'ldbtn_voted', __( 'You have already voted.', 'like-dislike-button' ), array( 'status' => 409 ) );
 		} elseif ( $existing === $reaction ) {
 			$wpdb->delete( $table, $where, array( '%s', '%d', '%s' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$vote = '';
@@ -397,7 +397,7 @@ class LDB_Votes {
 		 * @param int    $user_id  Voter's user ID, 0 for visitors.
 		 * @param array  $counts   New totals.
 		 */
-		do_action( 'ldb_vote_recorded', $type, $id, $vote, (string) $existing, $voter['user'], $counts );
+		do_action( 'ldbtn_vote_recorded', $type, $id, $vote, (string) $existing, $voter['user'], $counts );
 
 		return $counts + array( 'vote' => $vote );
 	}
@@ -413,16 +413,16 @@ class LDB_Votes {
 		 *
 		 * @param int $limit Votes per minute.
 		 */
-		$limit = (int) apply_filters( 'ldb_rate_limit', 30 );
+		$limit = (int) apply_filters( 'ldbtn_rate_limit', 30 );
 		$ip    = self::ip();
 		if ( $limit < 1 || '' === $ip ) {
 			return true;
 		}
 
-		$key   = 'ldb_rl_' . substr( self::hash( 'rl|' . $ip ), 0, 20 );
+		$key   = 'ldbtn_rl_' . substr( self::hash( 'rl|' . $ip ), 0, 20 );
 		$count = (int) get_transient( $key );
 		if ( $count >= $limit ) {
-			return new WP_Error( 'ldb_flood', __( 'Too many votes in a short time. Please wait a minute and try again.', 'like-dislike-button' ), array( 'status' => 429 ) );
+			return new WP_Error( 'ldbtn_flood', __( 'Too many votes in a short time. Please wait a minute and try again.', 'like-dislike-button' ), array( 'status' => 429 ) );
 		}
 		set_transient( $key, $count + 1, MINUTE_IN_SECONDS );
 		return true;
@@ -436,7 +436,7 @@ class LDB_Votes {
 	 */
 	public static function reset( $type = null, $id = null ) {
 		global $wpdb;
-		$table = esc_sql( LDB_DB::table() );
+		$table = esc_sql( LDBTN_DB::table() );
 
 		if ( $type && $id ) {
 			$wpdb->delete( $table, array( 'object_type' => $type, 'object_id' => $id ), array( '%s', '%d' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
@@ -463,7 +463,7 @@ class LDB_Votes {
 	 */
 	public static function recount_batch( $type, $after, $limit = 500 ) {
 		global $wpdb;
-		$table      = esc_sql( LDB_DB::table() );
+		$table      = esc_sql( LDBTN_DB::table() );
 		$meta_table = esc_sql( 'comment' === $type ? $wpdb->commentmeta : $wpdb->postmeta );
 		$id_column  = esc_sql( 'comment' === $type ? 'comment_id' : 'post_id' );
 

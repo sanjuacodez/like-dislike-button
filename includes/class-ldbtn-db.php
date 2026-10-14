@@ -8,15 +8,15 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Creates and upgrades the `{prefix}ldb_votes` table.
+ * Creates and upgrades the `{prefix}ldbtn_votes` table.
  *
  * One row per voter per item holds that voter's current reaction. Totals are
- * cached in post or comment meta (`_ldb_likes`, `_ldb_dislikes`, `_ldb_score`)
+ * cached in post or comment meta (`_ldbtn_likes`, `_ldbtn_dislikes`, `_ldbtn_score`)
  * so lists and sorting never touch this table.
  */
-class LDB_DB {
+class LDBTN_DB {
 
-	const VERSION_OPTION = 'ldb_db_version';
+	const VERSION_OPTION = 'ldbtn_db_version';
 
 	/**
 	 * Full table name.
@@ -25,7 +25,7 @@ class LDB_DB {
 	 */
 	public static function table() {
 		global $wpdb;
-		return $wpdb->prefix . 'ldb_votes';
+		return $wpdb->prefix . 'ldbtn_votes';
 	}
 
 	/**
@@ -55,7 +55,7 @@ KEY user_id (user_id)
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 
-		update_option( self::VERSION_OPTION, LDB_DB_VERSION, false );
+		update_option( self::VERSION_OPTION, LDBTN_DB_VERSION, false );
 	}
 
 	/**
@@ -63,7 +63,7 @@ KEY user_id (user_id)
 	 * updates that skip the activation hook.
 	 */
 	public static function maybe_upgrade() {
-		if ( get_option( self::VERSION_OPTION ) !== LDB_DB_VERSION ) {
+		if ( get_option( self::VERSION_OPTION ) !== LDBTN_DB_VERSION ) {
 			self::install();
 		}
 	}

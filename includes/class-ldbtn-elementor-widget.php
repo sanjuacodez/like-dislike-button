@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Like Dislike Buttons widget for Elementor.
  */
-class LDB_Elementor_Widget extends \Elementor\Widget_Base {
+class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 
 	/**
 	 * Widget slug.
@@ -18,7 +18,7 @@ class LDB_Elementor_Widget extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	public function get_name() {
-		return 'ldb_buttons';
+		return 'ldbtn_buttons';
 	}
 
 	/**
@@ -63,7 +63,7 @@ class LDB_Elementor_Widget extends \Elementor\Widget_Base {
 	 * @return string[]
 	 */
 	public function get_style_depends() {
-		return array( 'ldb' );
+		return array( 'ldbtn' );
 	}
 
 	/**
@@ -72,7 +72,7 @@ class LDB_Elementor_Widget extends \Elementor\Widget_Base {
 	 * @return string[]
 	 */
 	public function get_script_depends() {
-		return array( 'ldb' );
+		return array( 'ldbtn' );
 	}
 
 	/**
@@ -115,8 +115,8 @@ class LDB_Elementor_Widget extends \Elementor\Widget_Base {
 			)
 		);
 
-		$this->choice( 'icon_set', esc_html__( 'Icons', 'like-dislike-button' ), wp_list_pluck( LDB_Icons::sets(), 'label' ) );
-		$this->choice( 'style', esc_html__( 'Button style', 'like-dislike-button' ), LDB_Blocks::style_labels() );
+		$this->choice( 'icon_set', esc_html__( 'Icons', 'like-dislike-button' ), wp_list_pluck( LDBTN_Icons::sets(), 'label' ) );
+		$this->choice( 'style', esc_html__( 'Button style', 'like-dislike-button' ), LDBTN_Blocks::style_labels() );
 		$this->choice(
 			'size',
 			esc_html__( 'Size', 'like-dislike-button' ),
@@ -135,7 +135,7 @@ class LDB_Elementor_Widget extends \Elementor\Widget_Base {
 				'right'  => esc_html__( 'Right', 'like-dislike-button' ),
 			)
 		);
-		$this->choice( 'counts', esc_html__( 'Counts', 'like-dislike-button' ), LDB_Blocks::count_labels() );
+		$this->choice( 'counts', esc_html__( 'Counts', 'like-dislike-button' ), LDBTN_Blocks::count_labels() );
 
 		$this->end_controls_section();
 	}
@@ -155,6 +155,6 @@ class LDB_Elementor_Widget extends \Elementor\Widget_Base {
 			$args[ $key ] = isset( $settings[ $key ] ) ? $settings[ $key ] : '';
 		}
 
-		echo LDB_Render::render( 'post', $post_id, $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped while building.
+		echo LDBTN_Render::render( 'post', $post_id, $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped while building.
 	}
 }
