@@ -1,0 +1,35 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "like-dislike-button/buttons",
+	"version": "3.0.0",
+	"title": "Like Dislike Buttons",
+	"category": "widgets",
+	"icon": "thumbs-up",
+	"description": "Like and dislike buttons for this post. Works inside Query Loop too.",
+	"keywords": [ "like", "dislike", "vote", "reaction", "helpful" ],
+	"textdomain": "like-dislike-button",
+	"usesContext": [ "postId", "postType" ],
+	"attributes": {
+		"iconSet": { "type": "string", "default": "" },
+		"buttonStyle": { "type": "string", "default": "" },
+		"size": { "type": "string", "default": "" },
+		"alignment": { "type": "string", "default": "" },
+		"layout": { "type": "string", "default": "" },
+		"counts": { "type": "string", "default": "" },
+		"showLabels": { "type": "string", "default": "" },
+		"ratioBar": { "type": "string", "default": "" },
+		"question": { "type": "string" },
+		"thanks": { "type": "string" },
+		"likeLabel": { "type": "string" },
+		"dislikeLabel": { "type": "string" }
+	},
+	"supports": {
+		"html": false,
+		"color": { "text": true, "background": false },
+		"spacing": { "margin": true },
+		"typography": { "fontSize": true }
+	},
+	"editorScript": "file:./index.js",
+	"style": "ldb"
+}

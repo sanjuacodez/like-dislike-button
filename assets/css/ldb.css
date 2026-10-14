@@ -1,0 +1,429 @@
+/**
+ * Like Dislike Button — front end.
+ *
+ * Colours are custom properties, so themes can restyle everything with
+ * `.ldb { --ldb-like: …; }`. Neutral colours mix from currentColor, which
+ * keeps the buttons readable on light and dark themes alike.
+ */
+
+.ldb {
+	--ldb-like: #2563eb;
+	--ldb-dislike: #dc2626;
+	--ldb-fg: currentColor;
+	--ldb-bg: color-mix(in srgb, currentColor 7%, transparent);
+	--ldb-bg-hover: color-mix(in srgb, currentColor 12%, transparent);
+	--ldb-border: color-mix(in srgb, currentColor 20%, transparent);
+	--ldb-radius: 0.6em;
+	--ldb-gap: 0.5em;
+	--ldb-pad-y: 0.5em;
+	--ldb-pad-x: 0.85em;
+	--ldb-icon: 1.25em;
+
+	margin: 1.5em 0;
+	font-size: 1rem;
+	line-height: 1.2;
+	text-align: left;
+}
+
+.ldb--icons-hearts { --ldb-like: #e11d48; --ldb-dislike: #64748b; }
+.ldb--icons-arrows { --ldb-like: #ea580c; --ldb-dislike: #4f46e5; }
+.ldb--icons-smileys { --ldb-like: #ca8a04; --ldb-dislike: #64748b; }
+.ldb--icons-checks { --ldb-like: #16a34a; --ldb-dislike: #dc2626; }
+.ldb--icons-flames { --ldb-like: #ea580c; --ldb-dislike: #0284c7; }
+
+.ldb--size-sm { font-size: 0.875rem; }
+.ldb--size-lg { font-size: 1.125rem; }
+.ldb--comment { margin: 0.75em 0 0; }
+
+.ldb--align-center { text-align: center; }
+.ldb--align-right { text-align: right; }
+
+.ldb-question {
+	margin: 0 0 0.6em;
+	font-weight: 600;
+	font-size: 1em;
+}
+
+.ldb-buttons {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--ldb-gap);
+	vertical-align: middle;
+}
+
+.ldb--layout-stack .ldb-buttons {
+	flex-direction: column;
+	flex-wrap: nowrap;
+	gap: 0.25em;
+}
+
+/* Reset theme button styles, then apply ours. */
+.ldb .ldb-btn {
+	-webkit-appearance: none;
+	appearance: none;
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.4em;
+	width: auto;
+	min-width: 0;
+	min-height: 2.5em;
+	margin: 0;
+	padding: var(--ldb-pad-y) var(--ldb-pad-x);
+	border: 1px solid transparent;
+	border-radius: var(--ldb-radius);
+	background: var(--ldb-bg);
+	box-shadow: none;
+	color: var(--ldb-fg);
+	font: inherit;
+	font-size: 1em;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: normal;
+	text-transform: none;
+	text-decoration: none;
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.ldb .ldb-btn:hover {
+	background: var(--ldb-bg-hover);
+	color: var(--ldb-fg);
+}
+
+.ldb .ldb-btn:active {
+	transform: scale(0.96);
+}
+
+.ldb .ldb-btn:focus-visible {
+	outline: 2px solid var(--ldb-like);
+	outline-offset: 2px;
+}
+
+.ldb .ldb-btn[aria-busy="true"] {
+	cursor: progress;
+}
+
+.ldb-icon {
+	display: inline-flex;
+	flex: none;
+	width: var(--ldb-icon);
+	height: var(--ldb-icon);
+}
+
+.ldb-icon svg,
+.ldb-icon img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	object-fit: contain;
+}
+
+.ldb-icon svg .ldb-f,
+.ldb-icon svg .ldb-t {
+	fill: transparent;
+	transition: fill 0.2s ease;
+}
+
+.ldb-icon--emoji {
+	align-items: center;
+	justify-content: center;
+	font-size: 1.15em;
+	line-height: 1;
+	font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.ldb-count,
+.ldb-score {
+	font-variant-numeric: tabular-nums;
+	font-weight: 600;
+	min-width: 1ch;
+}
+
+.ldb-count:empty {
+	display: none;
+}
+
+.ldb-count[hidden] {
+	display: none;
+}
+
+.ldb-score {
+	padding: 0.15em 0;
+	text-align: center;
+}
+
+.ldb-sr {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Active (voted) state, shared by all styles. */
+.ldb .ldb-btn--like.is-active { --ldb-c: var(--ldb-like); }
+.ldb .ldb-btn--dislike.is-active { --ldb-c: var(--ldb-dislike); }
+
+.ldb .ldb-btn.is-active {
+	color: var(--ldb-c);
+	background: color-mix(in srgb, var(--ldb-c) 13%, transparent);
+}
+
+.ldb .ldb-btn.is-active .ldb-f { fill: currentColor; }
+.ldb .ldb-btn.is-active .ldb-t { fill: color-mix(in srgb, currentColor 22%, transparent); }
+
+/* Outline */
+.ldb--style-outline .ldb-btn,
+.ldb--style-outline .ldb-btn:hover {
+	border-color: var(--ldb-border);
+	background: transparent;
+}
+
+.ldb--style-outline .ldb-btn:hover {
+	border-color: color-mix(in srgb, currentColor 40%, transparent);
+}
+
+.ldb--style-outline .ldb-btn.is-active {
+	border-color: var(--ldb-c);
+	background: color-mix(in srgb, var(--ldb-c) 8%, transparent);
+}
+
+/* Pill: one segmented control. */
+.ldb--style-pill .ldb-buttons {
+	gap: 0;
+	padding: 0.2em;
+	border-radius: 999px;
+	background: var(--ldb-bg);
+}
+
+.ldb--style-pill .ldb-btn {
+	border-radius: 999px;
+	background: transparent;
+}
+
+.ldb--style-pill.ldb--layout-row .ldb-btn + .ldb-btn::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 25%;
+	height: 50%;
+	border-left: 1px solid var(--ldb-border);
+}
+
+.ldb--style-pill .ldb-btn.is-active::before,
+.ldb--style-pill .ldb-btn.is-active + .ldb-btn::before {
+	display: none;
+}
+
+/* Minimal */
+.ldb--style-minimal .ldb-buttons { gap: 0.15em; }
+
+.ldb--style-minimal .ldb-btn {
+	--ldb-pad-x: 0.5em;
+	background: transparent;
+}
+
+.ldb--style-minimal .ldb-btn.is-active {
+	background: transparent;
+}
+
+.ldb--style-minimal .ldb-btn.is-active:hover,
+.ldb--style-minimal .ldb-btn:hover {
+	background: var(--ldb-bg);
+}
+
+/* Solid: the active button fills with its colour. */
+.ldb--style-solid .ldb-btn {
+	background: var(--ldb-bg-hover);
+}
+
+.ldb--style-solid .ldb-btn:hover {
+	background: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.ldb--style-solid .ldb-btn.is-active,
+.ldb--style-solid .ldb-btn.is-active:hover {
+	background: var(--ldb-c);
+	color: #fff;
+}
+
+/* Glass: for buttons over images or colour. */
+.ldb--style-glass .ldb-btn {
+	border-color: rgba(255, 255, 255, 0.35);
+	background: rgba(255, 255, 255, 0.18);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 24px -12px rgba(0, 0, 0, 0.25);
+	-webkit-backdrop-filter: blur(12px) saturate(1.4);
+	backdrop-filter: blur(12px) saturate(1.4);
+}
+
+.ldb--style-glass .ldb-btn:hover {
+	background: rgba(255, 255, 255, 0.3);
+}
+
+.ldb--style-glass .ldb-btn.is-active,
+.ldb--style-glass .ldb-btn.is-active:hover {
+	border-color: rgba(255, 255, 255, 0.9);
+	background: rgba(255, 255, 255, 0.85);
+	color: var(--ldb-c);
+}
+
+/* Icon-only buttons become square. */
+.ldb:not(.ldb--labels).ldb--counts-hide .ldb-btn,
+.ldb:not(.ldb--labels).ldb--counts-score .ldb-btn {
+	--ldb-pad-x: var(--ldb-pad-y);
+	min-width: 2.5em;
+}
+
+/* Like ratio bar */
+.ldb-bar {
+	position: relative;
+	width: 100%;
+	max-width: 14em;
+	height: 0.3em;
+	margin-top: 0.6em;
+	overflow: hidden;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ldb-dislike) 35%, transparent);
+}
+
+.ldb--align-center .ldb-bar { margin-left: auto; margin-right: auto; }
+.ldb--align-right .ldb-bar { margin-left: auto; }
+
+.ldb-bar span {
+	display: block;
+	height: 100%;
+	border-radius: inherit;
+	background: var(--ldb-like);
+	transition: width 0.4s ease;
+}
+
+.ldb-msg {
+	margin: 0.5em 0 0;
+	font-size: 0.875em;
+	opacity: 0.8;
+}
+
+.ldb-msg:empty {
+	display: none;
+}
+
+.ldb-msg a {
+	color: inherit;
+	text-decoration: underline;
+}
+
+/* Animations */
+.ldb-btn.is-animating .ldb-icon { animation: ldb-pop 0.35s ease; }
+.ldb--anim-bounce .ldb-btn.is-animating .ldb-icon { animation-name: ldb-bounce; animation-duration: 0.45s; }
+.ldb--anim-burst .ldb-btn.is-animating .ldb-icon { animation-name: ldb-pop; }
+.ldb-count.is-changed, .ldb-score.is-changed { animation: ldb-roll 0.3s ease; }
+
+.ldb-particle {
+	position: absolute;
+	top: 50%;
+	left: var(--ldb-x, 50%);
+	width: 0.35em;
+	height: 0.35em;
+	margin: -0.175em;
+	border-radius: 50%;
+	background: var(--ldb-c, var(--ldb-like));
+	pointer-events: none;
+	animation: ldb-burst 0.55s ease-out forwards;
+}
+
+@keyframes ldb-pop {
+	0% { transform: scale(1); }
+	45% { transform: scale(1.35); }
+	100% { transform: scale(1); }
+}
+
+@keyframes ldb-bounce {
+	0%, 100% { transform: translateY(0); }
+	35% { transform: translateY(-0.35em); }
+	65% { transform: translateY(0.08em); }
+}
+
+@keyframes ldb-roll {
+	0% { transform: translateY(0.5em); opacity: 0; }
+	100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes ldb-burst {
+	0% { transform: translate(0, 0) scale(1); opacity: 1; }
+	100% { transform: translate(var(--ldb-dx), var(--ldb-dy)) scale(0.3); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ldb .ldb-btn,
+	.ldb-bar span,
+	.ldb-icon svg .ldb-f,
+	.ldb-icon svg .ldb-t { transition: none; }
+	.ldb-btn.is-animating .ldb-icon,
+	.ldb-count.is-changed,
+	.ldb-score.is-changed,
+	.ldb-particle { animation: none; }
+	.ldb-particle { display: none; }
+	.ldb .ldb-btn:active { transform: none; }
+}
+
+/* Most liked list */
+.ldb-most-liked {
+	margin: 0 0 1.5em;
+	padding: 0;
+	list-style: none;
+}
+
+.ldb-most-liked li {
+	display: flex;
+	align-items: center;
+	gap: 0.75em;
+	padding: 0.55em 0;
+	border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.ldb-most-liked li:last-child {
+	border-bottom: 0;
+}
+
+.ldb-most-liked__thumb {
+	flex: none;
+	width: 3.5em;
+	height: 3.5em;
+	overflow: hidden;
+	border-radius: 0.4em;
+}
+
+.ldb-most-liked__thumb img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.ldb-most-liked__title {
+	flex: 1;
+	min-width: 0;
+}
+
+.ldb-most-liked__count {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	gap: 0.3em;
+	font-size: 0.875em;
+	font-variant-numeric: tabular-nums;
+	opacity: 0.75;
+}
+
+.ldb-most-liked__count .ldb-icon {
+	--ldb-icon: 1.1em;
+}

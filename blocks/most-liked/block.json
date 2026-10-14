@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "like-dislike-button/most-liked",
+	"version": "3.0.0",
+	"title": "Most Liked Posts",
+	"category": "widgets",
+	"icon": "heart",
+	"description": "A list of the posts with the most likes, all time or for a recent period.",
+	"keywords": [ "popular", "top", "likes", "ranking" ],
+	"textdomain": "like-dislike-button",
+	"attributes": {
+		"number": { "type": "number", "default": 5 },
+		"postType": { "type": "string", "default": "post" },
+		"period": { "type": "string", "default": "all" },
+		"showCount": { "type": "boolean", "default": true },
+		"showThumbnail": { "type": "boolean", "default": false }
+	},
+	"supports": {
+		"html": false,
+		"color": { "text": true, "background": true, "link": true },
+		"spacing": { "margin": true, "padding": true },
+		"typography": { "fontSize": true }
+	},
+	"editorScript": "file:./index.js",
+	"style": "ldb"
+}
