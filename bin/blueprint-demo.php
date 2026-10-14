@@ -7,10 +7,12 @@
  * turns on comment buttons, so the preview opens on a populated dashboard and
  * every post shows buttons with real counts.
  *
- * Not shipped with the plugin.
+ * Not shipped with the plugin. bin/build-blueprint puts the wp-load.php
+ * require in front of this file when it embeds it, so WordPress is loaded
+ * before the guard below.
  */
 
-require_once '/wordpress/wp-load.php';
+defined( 'ABSPATH' ) || exit;
 
 global $wp_rewrite, $wpdb;
 $wp_rewrite->set_permalink_structure( '/%postname%/' );
@@ -30,7 +32,6 @@ wp_delete_post( 1, true );
 wp_delete_post( 2, true );
 
 $table = LDB_DB::table();
-mt_srand( 42 );
 
 foreach ( $posts as $i => $post ) {
 	$paragraphs = '';
@@ -49,16 +50,16 @@ foreach ( $posts as $i => $post ) {
 
 	// Votes spread over the last 60 days, a little busier towards today.
 	for ( $v = 0; $v < $post[2]; $v++ ) {
-		$age = (int) floor( 60 * pow( mt_rand() / mt_getrandmax(), 1.4 ) );
-		$wpdb->insert(
+		$age = (int) floor( 60 * pow( wp_rand( 0, 1000 ) / 1000, 1.4 ) );
+		$wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Seeds the plugin's own table with demo votes.
 			$table,
 			array(
 				'object_type' => 'post',
 				'object_id'   => $id,
-				'reaction'    => ( mt_rand() / mt_getrandmax() ) < $post[3] ? 'like' : 'dislike',
+				'reaction'    => wp_rand( 0, 1000 ) / 1000 < $post[3] ? 'like' : 'dislike',
 				'voter_key'   => 'demo:' . $i . ':' . $v,
 				'user_id'     => 0,
-				'created_at'  => gmdate( 'Y-m-d H:i:s', time() - $age * DAY_IN_SECONDS - mt_rand( 0, 80000 ) ),
+				'created_at'  => gmdate( 'Y-m-d H:i:s', time() - $age * DAY_IN_SECONDS - wp_rand( 0, 80000 ) ),
 			)
 		);
 	}
@@ -73,7 +74,17 @@ foreach ( $posts as $i => $post ) {
 				'comment_approved' => 1,
 			)
 		);
-		$wpdb->insert( $table, array( 'object_type' => 'comment', 'object_id' => $comment, 'reaction' => 'like', 'voter_key' => 'demo:c', 'user_id' => 0, 'created_at' => gmdate( 'Y-m-d H:i:s' ) ) );
+		$wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Seeds the plugin's own table with a demo comment vote.
+			$table,
+			array(
+				'object_type' => 'comment',
+				'object_id'   => $comment,
+				'reaction'    => 'like',
+				'voter_key'   => 'demo:c',
+				'user_id'     => 0,
+				'created_at'  => gmdate( 'Y-m-d H:i:s' ),
+			)
+		);
 		LDB_Votes::recount( 'comment', $comment );
 	}
 }

@@ -10,7 +10,8 @@ script embeds that PHP into the blueprint JSON.
 import json, pathlib, sys
 
 root = pathlib.Path(__file__).resolve().parent.parent
-php = (root / "bin" / "blueprint-demo.php").read_text()
+# The demo file starts with the usual ABSPATH guard; load WordPress in front of it.
+php = (root / "bin" / "blueprint-demo.php").read_text().replace("<?php", "<?php\nrequire_once '/wordpress/wp-load.php';", 1)
 local = "--local" in sys.argv
 
 install = (
