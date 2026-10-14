@@ -111,7 +111,12 @@ class LDBTN_Blocks {
 	 * @return string
 	 */
 	public static function render_buttons( $attributes, $content, $block ) {
-		$post_id = isset( $block->context['postId'] ) ? (int) $block->context['postId'] : (int) get_the_ID();
+		// In a widget area the block context is just the last post listed; use the viewed post instead.
+		if ( LDBTN_Render::in_sidebar() || ! isset( $block->context['postId'] ) ) {
+			$post_id = LDBTN_Render::current_post_id();
+		} else {
+			$post_id = (int) $block->context['postId'];
+		}
 		if ( ! $post_id ) {
 			return '';
 		}

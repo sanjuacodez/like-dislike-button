@@ -58,8 +58,14 @@
 	gap: 0.25em;
 }
 
-/* Reset theme button styles, then apply ours. */
-.ldbtn .ldbtn-btn {
+/*
+ * Reset theme button styles, then apply ours. Themes often style every
+ * <button> through long selectors (Twenty Twenty-One:
+ * `.site button:not(:hover):not(:active):not(.has-background)`), so button
+ * rules carry :not(#ldbtn-x), which counts as an ID and wins over class-based
+ * theme rules without !important.
+ */
+.ldbtn .ldbtn-btn:not(#ldbtn-x) {
 	-webkit-appearance: none;
 	appearance: none;
 	position: relative;
@@ -89,21 +95,25 @@
 	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
 }
 
-.ldbtn .ldbtn-btn:hover {
+.ldbtn .ldbtn-btn:not(#ldbtn-x):hover {
 	background: var(--ldbtn-bg-hover);
 	color: var(--ldbtn-fg);
 }
 
-.ldbtn .ldbtn-btn:active {
+.ldbtn .ldbtn-btn:not(#ldbtn-x):active {
 	transform: scale(0.96);
 }
 
-.ldbtn .ldbtn-btn:focus-visible {
+.ldbtn .ldbtn-btn:not(#ldbtn-x):focus:not(:focus-visible) {
+	outline: none;
+}
+
+.ldbtn .ldbtn-btn:not(#ldbtn-x):focus-visible {
 	outline: 2px solid var(--ldbtn-like);
 	outline-offset: 2px;
 }
 
-.ldbtn .ldbtn-btn[aria-busy="true"] {
+.ldbtn .ldbtn-btn:not(#ldbtn-x)[aria-busy="true"] {
 	cursor: progress;
 }
 
@@ -173,26 +183,26 @@
 .ldbtn .ldbtn-btn--like.is-active { --ldbtn-c: var(--ldbtn-like); }
 .ldbtn .ldbtn-btn--dislike.is-active { --ldbtn-c: var(--ldbtn-dislike); }
 
-.ldbtn .ldbtn-btn.is-active {
+.ldbtn .ldbtn-btn:not(#ldbtn-x).is-active {
 	color: var(--ldbtn-c);
 	background: color-mix(in srgb, var(--ldbtn-c) 13%, transparent);
 }
 
-.ldbtn .ldbtn-btn.is-active .ldbtn-f { fill: currentColor; }
-.ldbtn .ldbtn-btn.is-active .ldbtn-t { fill: color-mix(in srgb, currentColor 22%, transparent); }
+.ldbtn .ldbtn-btn:not(#ldbtn-x).is-active .ldbtn-f { fill: currentColor; }
+.ldbtn .ldbtn-btn:not(#ldbtn-x).is-active .ldbtn-t { fill: color-mix(in srgb, currentColor 22%, transparent); }
 
 /* Outline */
-.ldbtn--style-outline .ldbtn-btn,
-.ldbtn--style-outline .ldbtn-btn:hover {
+.ldbtn--style-outline .ldbtn-btn:not(#ldbtn-x),
+.ldbtn--style-outline .ldbtn-btn:not(#ldbtn-x):hover {
 	border-color: var(--ldbtn-border);
 	background: transparent;
 }
 
-.ldbtn--style-outline .ldbtn-btn:hover {
+.ldbtn--style-outline .ldbtn-btn:not(#ldbtn-x):hover {
 	border-color: color-mix(in srgb, currentColor 40%, transparent);
 }
 
-.ldbtn--style-outline .ldbtn-btn.is-active {
+.ldbtn--style-outline .ldbtn-btn:not(#ldbtn-x).is-active {
 	border-color: var(--ldbtn-c);
 	background: color-mix(in srgb, var(--ldbtn-c) 8%, transparent);
 }
@@ -205,12 +215,12 @@
 	background: var(--ldbtn-bg);
 }
 
-.ldbtn--style-pill .ldbtn-btn {
+.ldbtn--style-pill .ldbtn-btn:not(#ldbtn-x) {
 	border-radius: 999px;
 	background: transparent;
 }
 
-.ldbtn--style-pill.ldbtn--layout-row .ldbtn-btn + .ldbtn-btn::before {
+.ldbtn--style-pill.ldbtn--layout-row .ldbtn-btn:not(#ldbtn-x) + .ldbtn-btn:not(#ldbtn-x)::before {
 	content: "";
 	position: absolute;
 	left: 0;
@@ -219,45 +229,45 @@
 	border-left: 1px solid var(--ldbtn-border);
 }
 
-.ldbtn--style-pill .ldbtn-btn.is-active::before,
-.ldbtn--style-pill .ldbtn-btn.is-active + .ldbtn-btn::before {
+.ldbtn--style-pill .ldbtn-btn:not(#ldbtn-x).is-active::before,
+.ldbtn--style-pill .ldbtn-btn:not(#ldbtn-x).is-active + .ldbtn-btn:not(#ldbtn-x)::before {
 	display: none;
 }
 
 /* Minimal */
 .ldbtn--style-minimal .ldbtn-buttons { gap: 0.15em; }
 
-.ldbtn--style-minimal .ldbtn-btn {
+.ldbtn--style-minimal .ldbtn-btn:not(#ldbtn-x) {
 	--ldbtn-pad-x: 0.5em;
 	background: transparent;
 }
 
-.ldbtn--style-minimal .ldbtn-btn.is-active {
+.ldbtn--style-minimal .ldbtn-btn:not(#ldbtn-x).is-active {
 	background: transparent;
 }
 
-.ldbtn--style-minimal .ldbtn-btn.is-active:hover,
-.ldbtn--style-minimal .ldbtn-btn:hover {
+.ldbtn--style-minimal .ldbtn-btn:not(#ldbtn-x).is-active:hover,
+.ldbtn--style-minimal .ldbtn-btn:not(#ldbtn-x):hover {
 	background: var(--ldbtn-bg);
 }
 
 /* Solid: the active button fills with its colour. */
-.ldbtn--style-solid .ldbtn-btn {
+.ldbtn--style-solid .ldbtn-btn:not(#ldbtn-x) {
 	background: var(--ldbtn-bg-hover);
 }
 
-.ldbtn--style-solid .ldbtn-btn:hover {
+.ldbtn--style-solid .ldbtn-btn:not(#ldbtn-x):hover {
 	background: color-mix(in srgb, currentColor 18%, transparent);
 }
 
-.ldbtn--style-solid .ldbtn-btn.is-active,
-.ldbtn--style-solid .ldbtn-btn.is-active:hover {
+.ldbtn--style-solid .ldbtn-btn:not(#ldbtn-x).is-active,
+.ldbtn--style-solid .ldbtn-btn:not(#ldbtn-x).is-active:hover {
 	background: var(--ldbtn-c);
 	color: #fff;
 }
 
 /* Glass: for buttons over images or colour. */
-.ldbtn--style-glass .ldbtn-btn {
+.ldbtn--style-glass .ldbtn-btn:not(#ldbtn-x) {
 	border-color: rgba(255, 255, 255, 0.35);
 	background: rgba(255, 255, 255, 0.18);
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 24px -12px rgba(0, 0, 0, 0.25);
@@ -265,20 +275,20 @@
 	backdrop-filter: blur(12px) saturate(1.4);
 }
 
-.ldbtn--style-glass .ldbtn-btn:hover {
+.ldbtn--style-glass .ldbtn-btn:not(#ldbtn-x):hover {
 	background: rgba(255, 255, 255, 0.3);
 }
 
-.ldbtn--style-glass .ldbtn-btn.is-active,
-.ldbtn--style-glass .ldbtn-btn.is-active:hover {
+.ldbtn--style-glass .ldbtn-btn:not(#ldbtn-x).is-active,
+.ldbtn--style-glass .ldbtn-btn:not(#ldbtn-x).is-active:hover {
 	border-color: rgba(255, 255, 255, 0.9);
 	background: rgba(255, 255, 255, 0.85);
 	color: var(--ldbtn-c);
 }
 
 /* Icon-only buttons become square. */
-.ldbtn:not(.ldbtn--labels).ldbtn--counts-hide .ldbtn-btn,
-.ldbtn:not(.ldbtn--labels).ldbtn--counts-score .ldbtn-btn {
+.ldbtn:not(.ldbtn--labels).ldbtn--counts-hide .ldbtn-btn:not(#ldbtn-x),
+.ldbtn:not(.ldbtn--labels).ldbtn--counts-score .ldbtn-btn:not(#ldbtn-x) {
 	--ldbtn-pad-x: var(--ldbtn-pad-y);
 	min-width: 2.5em;
 }
@@ -322,9 +332,9 @@
 }
 
 /* Animations */
-.ldbtn-btn.is-animating .ldbtn-icon { animation: ldbtn-pop 0.35s ease; }
-.ldbtn--anim-bounce .ldbtn-btn.is-animating .ldbtn-icon { animation-name: ldbtn-bounce; animation-duration: 0.45s; }
-.ldbtn--anim-burst .ldbtn-btn.is-animating .ldbtn-icon { animation-name: ldbtn-pop; }
+.ldbtn-btn:not(#ldbtn-x).is-animating .ldbtn-icon { animation: ldbtn-pop 0.35s ease; }
+.ldbtn--anim-bounce .ldbtn-btn:not(#ldbtn-x).is-animating .ldbtn-icon { animation-name: ldbtn-bounce; animation-duration: 0.45s; }
+.ldbtn--anim-burst .ldbtn-btn:not(#ldbtn-x).is-animating .ldbtn-icon { animation-name: ldbtn-pop; }
 .ldbtn-count.is-changed, .ldbtn-score.is-changed { animation: ldbtn-roll 0.3s ease; }
 
 .ldbtn-particle {
@@ -363,16 +373,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.ldbtn .ldbtn-btn,
+	.ldbtn .ldbtn-btn:not(#ldbtn-x),
 	.ldbtn-bar span,
 	.ldbtn-icon svg .ldbtn-f,
 	.ldbtn-icon svg .ldbtn-t { transition: none; }
-	.ldbtn-btn.is-animating .ldbtn-icon,
+	.ldbtn-btn:not(#ldbtn-x).is-animating .ldbtn-icon,
 	.ldbtn-count.is-changed,
 	.ldbtn-score.is-changed,
 	.ldbtn-particle { animation: none; }
 	.ldbtn-particle { display: none; }
-	.ldbtn .ldbtn-btn:active { transform: none; }
+	.ldbtn .ldbtn-btn:not(#ldbtn-x):active { transform: none; }
 }
 
 /* Most liked list */

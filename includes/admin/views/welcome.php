@@ -177,14 +177,14 @@ $ldbtn_arrow = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stro
 			<li>
 				<span class="ldbtn-places__icon dashicons dashicons-block-default" aria-hidden="true"></span>
 				<div>
-					<strong><?php esc_html_e( 'Blocks', 'like-dislike-button' ); ?></strong>
-					<p><?php esc_html_e( 'Search “Like Dislike” in the block inserter. Works inside Query Loop and the site editor.', 'like-dislike-button' ); ?></p>
+					<strong><?php esc_html_e( 'Blocks and widgets', 'like-dislike-button' ); ?></strong>
+					<p><?php esc_html_e( 'Search “Like Dislike” in the block inserter. Works in Query Loop, the site editor and sidebars, and Elementor has its own widgets.', 'like-dislike-button' ); ?></p>
 				</div>
 			</li>
 			<li>
 				<span class="ldbtn-places__icon dashicons dashicons-shortcode" aria-hidden="true"></span>
 				<div>
-					<strong><?php esc_html_e( 'Shortcode', 'like-dislike-button' ); ?></strong>
+					<strong><?php esc_html_e( 'Shortcode, for any page builder', 'like-dislike-button' ); ?></strong>
 					<p class="ldbtn-copy">
 						<code>[like_dislike_button]</code>
 						<button type="button" class="button-link ldbtn-copy__btn" data-copy="[like_dislike_button]"><?php esc_html_e( 'Copy', 'like-dislike-button' ); ?></button>

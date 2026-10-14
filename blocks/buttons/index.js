@@ -122,6 +122,13 @@
 						attributes: a,
 						urlQueryArgs: postId ? { post_id: postId } : {},
 						skipBlockSupportAttributes: true,
+						EmptyResponsePlaceholder: function () {
+							return el( c.Placeholder, {
+								icon: 'thumbs-up',
+								label: __( 'Like Dislike Buttons', 'like-dislike-button' ),
+								instructions: __( 'Shows the buttons for the post being viewed. In a sidebar they appear on single posts and pages, not on blog or archive pages.', 'like-dislike-button' ),
+							} );
+						},
 					} )
 				)
 			);

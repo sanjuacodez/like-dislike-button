@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-14T09:22:51+00:00\n"
+"POT-Creation-Date: 2026-10-14T09:45:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: like-dislike-button\n"
@@ -105,7 +105,7 @@ msgid "All totals are up to date."
 msgstr ""
 
 #: includes/admin/class-ldbtn-admin.php:130
-#: includes/class-ldbtn-render.php:50
+#: includes/class-ldbtn-render.php:107
 msgid "Something went wrong. Please try again."
 msgstr ""
 
@@ -279,6 +279,8 @@ msgid "12 months"
 msgstr ""
 
 #: includes/admin/views/dashboard.php:15
+#: includes/class-ldbtn-elementor-most-liked.php:114
+#: includes/class-ldbtn-widgets.php:333
 #: blocks/most-liked/index.js:68
 msgid "All time"
 msgstr ""
@@ -318,6 +320,7 @@ msgid "Deleted item #%d"
 msgstr ""
 
 #: includes/admin/views/dashboard.php:134
+#: includes/class-ldbtn-elementor-most-liked.php:110
 #: blocks/most-liked/index.js:65
 msgid "Period"
 msgstr ""
@@ -344,11 +347,14 @@ msgid "Imported totals without dates count in the figures above but not in the c
 msgstr ""
 
 #: includes/admin/views/dashboard.php:180
+#: includes/class-ldbtn-widgets.php:268
+#: includes/class-ldbtn-widgets.php:310
 msgid "Most liked"
 msgstr ""
 
 #: includes/admin/views/dashboard.php:181
 #: includes/admin/views/welcome.php:197
+#: includes/class-ldbtn-elementor-most-liked.php:84
 msgid "Most liked posts"
 msgstr ""
 
@@ -377,7 +383,7 @@ msgid "Voting"
 msgstr ""
 
 #: includes/admin/views/settings.php:103
-#: includes/admin/views/settings.php:418
+#: includes/admin/views/settings.php:422
 msgid "Advanced"
 msgstr ""
 
@@ -438,18 +444,21 @@ msgstr ""
 #: includes/admin/views/settings.php:201
 #: includes/class-ldbtn-blocks.php:59
 #: includes/class-ldbtn-elementor-widget.php:124
+#: includes/class-ldbtn-widgets.php:183
 msgid "Small"
 msgstr ""
 
 #: includes/admin/views/settings.php:202
 #: includes/class-ldbtn-blocks.php:60
 #: includes/class-ldbtn-elementor-widget.php:125
+#: includes/class-ldbtn-widgets.php:184
 msgid "Medium"
 msgstr ""
 
 #: includes/admin/views/settings.php:203
 #: includes/class-ldbtn-blocks.php:61
 #: includes/class-ldbtn-elementor-widget.php:126
+#: includes/class-ldbtn-widgets.php:185
 msgid "Large"
 msgstr ""
 
@@ -460,31 +469,39 @@ msgstr ""
 
 #: includes/admin/views/settings.php:210
 #: includes/class-ldbtn-elementor-widget.php:133
+#: includes/class-ldbtn-widgets.php:196
 msgid "Left"
 msgstr ""
 
 #: includes/admin/views/settings.php:211
 #: includes/class-ldbtn-elementor-widget.php:134
+#: includes/class-ldbtn-widgets.php:197
 msgid "Center"
 msgstr ""
 
 #: includes/admin/views/settings.php:212
 #: includes/class-ldbtn-elementor-widget.php:135
+#: includes/class-ldbtn-widgets.php:198
 msgid "Right"
 msgstr ""
 
 #: includes/admin/views/settings.php:217
+#: includes/class-ldbtn-elementor-widget.php:140
 #: blocks/buttons/index.js:66
 msgid "Layout"
 msgstr ""
 
 #: includes/admin/views/settings.php:219
 #: includes/class-ldbtn-blocks.php:66
+#: includes/class-ldbtn-elementor-widget.php:142
+#: includes/class-ldbtn-widgets.php:209
 msgid "Side by side"
 msgstr ""
 
 #: includes/admin/views/settings.php:220
 #: includes/class-ldbtn-blocks.php:67
+#: includes/class-ldbtn-elementor-widget.php:143
+#: includes/class-ldbtn-widgets.php:210
 msgid "Stacked"
 msgstr ""
 
@@ -525,29 +542,33 @@ msgid "Screen readers always hear the labels, even when they are hidden."
 msgstr ""
 
 #: includes/admin/views/settings.php:243
+#: includes/class-ldbtn-elementor-widget.php:175
 #: blocks/buttons/index.js:89
 msgid "Like label"
 msgstr ""
 
 #: includes/admin/views/settings.php:243
 #: includes/admin/views/settings.php:275
+#: includes/class-ldbtn-elementor-widget.php:201
 #: includes/class-ldbtn-settings.php:163
 msgid "Like"
 msgstr ""
 
 #: includes/admin/views/settings.php:244
+#: includes/class-ldbtn-elementor-widget.php:176
 #: blocks/buttons/index.js:99
 msgid "Dislike label"
 msgstr ""
 
 #: includes/admin/views/settings.php:244
 #: includes/admin/views/settings.php:276
+#: includes/class-ldbtn-elementor-widget.php:202
 #: includes/class-ldbtn-settings.php:163
 msgid "Dislike"
 msgstr ""
 
 #: includes/admin/views/settings.php:249
-#: includes/class-ldbtn-elementor-widget.php:138
+#: includes/class-ldbtn-elementor-widget.php:146
 #: blocks/buttons/index.js:67
 msgid "Counts"
 msgstr ""
@@ -565,6 +586,7 @@ msgid "Question and thank-you"
 msgstr ""
 
 #: includes/admin/views/settings.php:263
+#: includes/class-ldbtn-elementor-widget.php:177
 #: blocks/buttons/index.js:78
 msgid "Question above the buttons"
 msgstr ""
@@ -578,6 +600,7 @@ msgid "Message after voting"
 msgstr ""
 
 #: includes/admin/views/settings.php:269
+#: includes/class-ldbtn-elementor-widget.php:195
 msgid "Colours"
 msgstr ""
 
@@ -586,11 +609,14 @@ msgid "Leave empty to use colours that suit the icon set and your theme. Text an
 msgstr ""
 
 #: includes/admin/views/settings.php:277
+#: includes/class-ldbtn-elementor-widget.php:169
+#: includes/class-ldbtn-elementor-widget.php:203
 #: blocks/buttons/index.js:74
 msgid "Text"
 msgstr ""
 
 #: includes/admin/views/settings.php:278
+#: includes/class-ldbtn-elementor-widget.php:204
 msgid "Button background"
 msgstr ""
 
@@ -679,184 +705,199 @@ msgid "Block"
 msgstr ""
 
 #: includes/admin/views/settings.php:347
-msgid "Like Dislike Buttons and Most Liked Posts, in the Widgets category. Both work in the site editor and inside Query Loop."
+msgid "Like Dislike Buttons and Most Liked Posts, in the Widgets category. Both work in posts, Query Loop, the site editor and widget areas."
 msgstr ""
 
 #: includes/admin/views/settings.php:348
-#: includes/admin/views/welcome.php:187
-msgid "Shortcode"
+msgid "Widgets"
+msgstr ""
+
+#: includes/admin/views/settings.php:349
+msgid "Classic themes get Like Dislike Buttons and Most Liked Posts widgets. In a sidebar, the buttons belong to the post being viewed and hide on blog and archive pages."
 msgstr ""
 
 #: includes/admin/views/settings.php:350
+msgid "Page builders"
+msgstr ""
+
+#: includes/admin/views/settings.php:351
+msgid "Elementor has its own widgets. In Divi, Bricks, Beaver Builder, WPBakery, Oxygen and others, use the shortcode in a shortcode or text module."
+msgstr ""
+
+#: includes/admin/views/settings.php:352
+msgid "Shortcode"
+msgstr ""
+
+#: includes/admin/views/settings.php:354
 msgid "Theme template"
 msgstr ""
 
-#: includes/admin/views/settings.php:358
+#: includes/admin/views/settings.php:362
 msgid "Who can vote"
 msgstr ""
 
-#: includes/admin/views/settings.php:362
+#: includes/admin/views/settings.php:366
 msgid "Voters"
 msgstr ""
 
-#: includes/admin/views/settings.php:364
+#: includes/admin/views/settings.php:368
 msgid "Everyone"
 msgstr ""
 
-#: includes/admin/views/settings.php:365
+#: includes/admin/views/settings.php:369
 msgid "Logged-in users only"
 msgstr ""
 
-#: includes/admin/views/settings.php:367
+#: includes/admin/views/settings.php:371
 msgid "Visitors who can’t vote still see the buttons and counts, and get a link to log in when they click."
 msgstr ""
 
-#: includes/admin/views/settings.php:371
+#: includes/admin/views/settings.php:375
 msgid "Only these roles (leave empty for all)"
 msgstr ""
 
-#: includes/admin/views/settings.php:378
+#: includes/admin/views/settings.php:382
 msgid "Let people change or remove their vote"
 msgstr ""
 
-#: includes/admin/views/settings.php:378
+#: includes/admin/views/settings.php:382
 msgid "Clicking the same button again removes the vote; clicking the other one switches it."
 msgstr ""
 
-#: includes/admin/views/settings.php:382
+#: includes/admin/views/settings.php:386
 msgid "One vote per visitor"
 msgstr ""
 
-#: includes/admin/views/settings.php:383
+#: includes/admin/views/settings.php:387
 msgid "Logged-in users always get one vote per item, tied to their account. For visitors, choose how to recognise them:"
 msgstr ""
 
-#: includes/admin/views/settings.php:385
+#: includes/admin/views/settings.php:389
 msgid "Visitor tracking"
 msgstr ""
 
-#: includes/admin/views/settings.php:389
+#: includes/admin/views/settings.php:393
 msgid "Per browser (recommended)"
 msgstr ""
 
-#: includes/admin/views/settings.php:390
+#: includes/admin/views/settings.php:394
 msgid "A random ID is stored in a cookie when someone votes. People sharing an office or school network can each vote."
 msgstr ""
 
-#: includes/admin/views/settings.php:394
+#: includes/admin/views/settings.php:398
 msgid "Per IP address"
 msgstr ""
 
-#: includes/admin/views/settings.php:395
+#: includes/admin/views/settings.php:399
 msgid "Harder to get around by clearing cookies, but everyone on a shared network counts as one voter."
 msgstr ""
 
-#: includes/admin/views/settings.php:398
+#: includes/admin/views/settings.php:402
 msgid "IP addresses are never stored, only a keyed one-way hash. Votes are also limited to 30 per minute per network."
 msgstr ""
 
-#: includes/admin/views/settings.php:403
+#: includes/admin/views/settings.php:407
 msgid "Visitor IP comes from"
 msgstr ""
 
-#: includes/admin/views/settings.php:405
+#: includes/admin/views/settings.php:409
 msgid "The connection (default)"
 msgstr ""
 
-#: includes/admin/views/settings.php:406
+#: includes/admin/views/settings.php:410
 msgid "Cloudflare header (CF-Connecting-IP)"
 msgstr ""
 
-#: includes/admin/views/settings.php:407
+#: includes/admin/views/settings.php:411
 msgid "Proxy header (X-Forwarded-For)"
 msgstr ""
 
-#: includes/admin/views/settings.php:408
+#: includes/admin/views/settings.php:412
 msgid "Proxy header (X-Real-IP)"
 msgstr ""
 
-#: includes/admin/views/settings.php:410
+#: includes/admin/views/settings.php:414
 msgid "Change this only if your site is behind Cloudflare or a proxy and every visitor shows the same IP. Headers can be faked when the site isn’t behind that proxy."
 msgstr ""
 
-#: includes/admin/views/settings.php:420
+#: includes/admin/views/settings.php:424
 msgid "Add like counts to structured data (schema.org)"
 msgstr ""
 
-#: includes/admin/views/settings.php:420
+#: includes/admin/views/settings.php:424
 msgid "Adds interactionStatistic (LikeAction and DislikeAction counts) to the page’s existing Article or WebPage markup. Works with Yoast SEO, Rank Math, All in One SEO and themes that print their own JSON-LD. Only added when vote results are visible (counts, percentages or score), because search engines expect marked-up data to be visible."
 msgstr ""
 
-#: includes/admin/views/settings.php:421
+#: includes/admin/views/settings.php:425
 msgid "Add like and dislike totals to the REST API"
 msgstr ""
 
-#: includes/admin/views/settings.php:421
+#: includes/admin/views/settings.php:425
 msgid "Adds an ldbtn_votes field to enabled post types, for headless sites and apps."
 msgstr ""
 
-#: includes/admin/views/settings.php:422
+#: includes/admin/views/settings.php:426
 msgid "Keep shortcodes from other like plugins working"
 msgstr ""
 
-#: includes/admin/views/settings.php:422
+#: includes/admin/views/settings.php:426
 msgid "Shows these buttons wherever [posts_like_dislike], [like_dislike] or [wp_ulike] appear, as long as those plugins are inactive. Switched on automatically after an import."
 msgstr ""
 
-#: includes/admin/views/settings.php:423
+#: includes/admin/views/settings.php:427
 msgid "Delete all votes and settings when the plugin is deleted"
 msgstr ""
 
-#: includes/admin/views/settings.php:428
+#: includes/admin/views/settings.php:432
 msgid "For developers"
 msgstr ""
 
-#: includes/admin/views/settings.php:430
+#: includes/admin/views/settings.php:434
 msgid "Template tags"
 msgstr ""
 
-#: includes/admin/views/settings.php:432
+#: includes/admin/views/settings.php:436
 msgid "REST API"
 msgstr ""
 
-#: includes/admin/views/settings.php:434
+#: includes/admin/views/settings.php:438
 msgid "Actions"
 msgstr ""
 
-#: includes/admin/views/settings.php:436
+#: includes/admin/views/settings.php:440
 msgid "Filters"
 msgstr ""
 
-#: includes/admin/views/settings.php:438
+#: includes/admin/views/settings.php:442
 msgid "CSS"
 msgstr ""
 
-#: includes/admin/views/settings.php:447
+#: includes/admin/views/settings.php:451
 msgid "Save settings"
 msgstr ""
 
-#: includes/admin/views/settings.php:451
-#: includes/admin/views/settings.php:454
+#: includes/admin/views/settings.php:455
+#: includes/admin/views/settings.php:458
 msgid "Live preview"
 msgstr ""
 
-#: includes/admin/views/settings.php:455
+#: includes/admin/views/settings.php:459
 msgid "Preview background"
 msgstr ""
 
-#: includes/admin/views/settings.php:456
+#: includes/admin/views/settings.php:460
 msgid "Light"
 msgstr ""
 
-#: includes/admin/views/settings.php:457
+#: includes/admin/views/settings.php:461
 msgid "Dark"
 msgstr ""
 
-#: includes/admin/views/settings.php:458
+#: includes/admin/views/settings.php:462
 msgid "Image"
 msgstr ""
 
-#: includes/admin/views/settings.php:469
+#: includes/admin/views/settings.php:473
 msgid "Click the buttons to try them. Nothing is recorded here."
 msgstr ""
 
@@ -1086,11 +1127,15 @@ msgid "More ways to show them"
 msgstr ""
 
 #: includes/admin/views/welcome.php:180
-msgid "Blocks"
+msgid "Blocks and widgets"
 msgstr ""
 
 #: includes/admin/views/welcome.php:181
-msgid "Search “Like Dislike” in the block inserter. Works inside Query Loop and the site editor."
+msgid "Search “Like Dislike” in the block inserter. Works in Query Loop, the site editor and sidebars, and Elementor has its own widgets."
+msgstr ""
+
+#: includes/admin/views/welcome.php:187
+msgid "Shortcode, for any page builder"
 msgstr ""
 
 #: includes/admin/views/welcome.php:190
@@ -1150,11 +1195,66 @@ msgstr ""
 msgid "Score (likes minus dislikes)"
 msgstr ""
 
+#: includes/class-ldbtn-elementor-most-liked.php:31
+#: includes/class-ldbtn-widgets.php:250
+#: blocks/most-liked/index.js:106
+msgid "Most Liked Posts"
+msgstr ""
+
+#: includes/class-ldbtn-elementor-most-liked.php:91
+#: blocks/most-liked/index.js:44
+msgid "Number of posts"
+msgstr ""
+
+#: includes/class-ldbtn-elementor-most-liked.php:101
+#: blocks/most-liked/index.js:55
+msgid "Post type"
+msgstr ""
+
+#: includes/class-ldbtn-elementor-most-liked.php:115
+#: includes/class-ldbtn-widgets.php:334
+#: blocks/most-liked/index.js:69
+msgid "Last 7 days"
+msgstr ""
+
+#: includes/class-ldbtn-elementor-most-liked.php:116
+#: includes/class-ldbtn-widgets.php:335
+#: blocks/most-liked/index.js:70
+msgid "Last 30 days"
+msgstr ""
+
+#: includes/class-ldbtn-elementor-most-liked.php:117
+#: includes/class-ldbtn-widgets.php:336
+#: blocks/most-liked/index.js:71
+msgid "Last 12 months"
+msgstr ""
+
+#: includes/class-ldbtn-elementor-most-liked.php:124
+#: includes/class-ldbtn-widgets.php:339
+#: blocks/most-liked/index.js:79
+msgid "Show like count"
+msgstr ""
+
+#: includes/class-ldbtn-elementor-most-liked.php:132
+#: includes/class-ldbtn-widgets.php:340
+#: blocks/most-liked/index.js:87
+msgid "Show featured image"
+msgstr ""
+
+#: includes/class-ldbtn-elementor-most-liked.php:155
+#: blocks/most-liked/index.js:107
+msgid "No liked posts yet for this post type and period. The list fills in as visitors vote."
+msgstr ""
+
 #: includes/class-ldbtn-elementor-widget.php:30
+#: includes/class-ldbtn-widgets.php:129
+#: blocks/buttons/index.js:128
 msgid "Like Dislike Buttons"
 msgstr ""
 
 #: includes/class-ldbtn-elementor-widget.php:92
+#: includes/class-ldbtn-elementor-widget.php:186
+#: includes/class-ldbtn-widgets.php:114
 #: blocks/buttons/index.js:13
 msgid "Use plugin setting"
 msgstr ""
@@ -1170,6 +1270,33 @@ msgstr ""
 #: includes/class-ldbtn-elementor-widget.php:119
 #: blocks/buttons/index.js:64
 msgid "Button style"
+msgstr ""
+
+#: includes/class-ldbtn-elementor-widget.php:149
+#: blocks/buttons/index.js:68
+msgid "Labels"
+msgstr ""
+
+#: includes/class-ldbtn-elementor-widget.php:151
+#: includes/class-ldbtn-elementor-widget.php:159
+#: blocks/buttons/index.js:37
+msgid "Show"
+msgstr ""
+
+#: includes/class-ldbtn-elementor-widget.php:152
+#: includes/class-ldbtn-elementor-widget.php:160
+#: blocks/buttons/index.js:38
+msgid "Hide"
+msgstr ""
+
+#: includes/class-ldbtn-elementor-widget.php:157
+#: blocks/buttons/index.js:69
+msgid "Like ratio bar"
+msgstr ""
+
+#: includes/class-ldbtn-elementor-widget.php:178
+#: blocks/buttons/index.js:109
+msgid "Thank-you message"
 msgstr ""
 
 #: includes/class-ldbtn-icons.php:26
@@ -1238,30 +1365,30 @@ msgstr ""
 msgid "Date (UTC)"
 msgstr ""
 
-#: includes/class-ldbtn-render.php:51
+#: includes/class-ldbtn-render.php:108
 #: includes/class-ldbtn-votes.php:353
 msgid "You have already voted."
 msgstr ""
 
 #. translators: %s: login link
-#: includes/class-ldbtn-render.php:53
+#: includes/class-ldbtn-render.php:110
 #, php-format
 msgid "Please %s to vote."
 msgstr ""
 
-#: includes/class-ldbtn-render.php:54
+#: includes/class-ldbtn-render.php:111
 msgid "log in"
 msgstr ""
 
-#: includes/class-ldbtn-render.php:55
+#: includes/class-ldbtn-render.php:112
 msgid "Your vote was removed."
 msgstr ""
 
-#: includes/class-ldbtn-render.php:298
+#: includes/class-ldbtn-render.php:355
 msgid "Rate this comment"
 msgstr ""
 
-#: includes/class-ldbtn-render.php:298
+#: includes/class-ldbtn-render.php:355
 msgid "Rate this content"
 msgstr ""
 
@@ -1293,72 +1420,73 @@ msgstr ""
 msgid "Too many votes in a short time. Please wait a minute and try again."
 msgstr ""
 
-#: blocks/buttons/index.js:37
-msgid "Show"
+#: includes/class-ldbtn-widgets.php:131
+msgid "Like and dislike buttons for the post being viewed. Hidden on blog and archive pages."
 msgstr ""
 
-#: blocks/buttons/index.js:38
-msgid "Hide"
+#: includes/class-ldbtn-widgets.php:172
+#: includes/class-ldbtn-widgets.php:324
+msgid "Title:"
+msgstr ""
+
+#: includes/class-ldbtn-widgets.php:173
+msgid "Question above the buttons (optional):"
+msgstr ""
+
+#: includes/class-ldbtn-widgets.php:174
+msgid "Icons:"
+msgstr ""
+
+#: includes/class-ldbtn-widgets.php:175
+msgid "Button style:"
+msgstr ""
+
+#: includes/class-ldbtn-widgets.php:180
+msgid "Size:"
+msgstr ""
+
+#: includes/class-ldbtn-widgets.php:193
+msgid "Alignment:"
+msgstr ""
+
+#: includes/class-ldbtn-widgets.php:206
+msgid "Layout:"
+msgstr ""
+
+#: includes/class-ldbtn-widgets.php:214
+msgid "Counts:"
+msgstr ""
+
+#: includes/class-ldbtn-widgets.php:252
+msgid "Your most liked posts, all time or for a recent period."
+msgstr ""
+
+#: includes/class-ldbtn-widgets.php:325
+msgid "Number of posts:"
+msgstr ""
+
+#: includes/class-ldbtn-widgets.php:326
+msgid "Post type:"
+msgstr ""
+
+#: includes/class-ldbtn-widgets.php:331
+msgid "Period:"
 msgstr ""
 
 #: blocks/buttons/index.js:59
 msgid "Look"
 msgstr ""
 
-#: blocks/buttons/index.js:68
-msgid "Labels"
-msgstr ""
-
-#: blocks/buttons/index.js:69
-msgid "Like ratio bar"
-msgstr ""
-
 #: blocks/buttons/index.js:79
 msgid "Leave empty to use the plugin setting."
 msgstr ""
 
-#: blocks/buttons/index.js:109
-msgid "Thank-you message"
+#: blocks/buttons/index.js:129
+msgid "Shows the buttons for the post being viewed. In a sidebar they appear on single posts and pages, not on blog or archive pages."
 msgstr ""
 
 #: blocks/most-liked/index.js:26
 msgid "Posts"
-msgstr ""
-
-#: blocks/most-liked/index.js:44
-msgid "Number of posts"
-msgstr ""
-
-#: blocks/most-liked/index.js:55
-msgid "Post type"
-msgstr ""
-
-#: blocks/most-liked/index.js:69
-msgid "Last 7 days"
-msgstr ""
-
-#: blocks/most-liked/index.js:70
-msgid "Last 30 days"
-msgstr ""
-
-#: blocks/most-liked/index.js:71
-msgid "Last 12 months"
-msgstr ""
-
-#: blocks/most-liked/index.js:79
-msgid "Show like count"
-msgstr ""
-
-#: blocks/most-liked/index.js:87
-msgid "Show featured image"
-msgstr ""
-
-#: blocks/most-liked/index.js:106
-msgid "Most Liked Posts"
-msgstr ""
-
-#: blocks/most-liked/index.js:107
-msgid "No liked posts yet for this post type and period. The list fills in as visitors vote."
 msgstr ""
 
 #: blocks/buttons/block.json
@@ -1368,7 +1496,7 @@ msgstr ""
 
 #: blocks/buttons/block.json
 msgctxt "block description"
-msgid "Like and dislike buttons for this post. Works inside Query Loop too."
+msgid "Like and dislike buttons for this post. Works in Query Loop, templates and sidebars."
 msgstr ""
 
 #: blocks/buttons/block.json

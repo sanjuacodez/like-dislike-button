@@ -36,6 +36,7 @@ require_once LDBTN_PATH . 'includes/class-ldbtn-stats.php';
 require_once LDBTN_PATH . 'includes/class-ldbtn-importer.php';
 require_once LDBTN_PATH . 'includes/class-ldbtn-privacy.php';
 require_once LDBTN_PATH . 'includes/class-ldbtn-schema.php';
+require_once LDBTN_PATH . 'includes/class-ldbtn-widgets.php';
 require_once LDBTN_PATH . 'includes/class-ldbtn-elementor.php';
 require_once LDBTN_PATH . 'includes/functions.php';
 
@@ -61,6 +62,7 @@ function ldbtn_boot() {
 	LDBTN_Blocks::init();
 	LDBTN_Privacy::init();
 	LDBTN_Schema::init();
+	LDBTN_Widgets::init();
 	LDBTN_Elementor::init();
 
 	if ( is_admin() ) {

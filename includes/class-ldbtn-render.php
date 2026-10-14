@@ -18,15 +18,72 @@ class LDBTN_Render {
 	const OVERRIDABLE = array( 'icon_set', 'style', 'size', 'align', 'layout', 'counts', 'show_labels', 'like_label', 'dislike_label', 'ratio_bar', 'animation', 'question', 'thanks' );
 
 	/**
+	 * Whether a sidebar (widget area) is being rendered.
+	 *
+	 * @var bool
+	 */
+	private static $in_sidebar = false;
+
+	/**
 	 * Hooks into WordPress.
 	 */
 	public static function init() {
+		add_action( 'dynamic_sidebar_before', array( __CLASS__, 'enter_sidebar' ) );
+		add_action( 'dynamic_sidebar_after', array( __CLASS__, 'leave_sidebar' ) );
 		add_action( 'init', array( __CLASS__, 'register_assets' ) );
 		add_action( 'init', array( __CLASS__, 'register_shortcodes' ), 20 );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'maybe_enqueue' ) );
 		add_filter( 'the_content', array( __CLASS__, 'filter_content' ), 20 );
 		add_filter( 'comment_text', array( __CLASS__, 'filter_comment' ), 20, 2 );
 		add_action( 'woocommerce_single_product_summary', array( __CLASS__, 'product_summary' ), 35 );
+	}
+
+	/**
+	 * Marks the start of a widget area.
+	 */
+	public static function enter_sidebar() {
+		self::$in_sidebar = true;
+	}
+
+	/**
+	 * Marks the end of a widget area.
+	 */
+	public static function leave_sidebar() {
+		self::$in_sidebar = false;
+	}
+
+	/**
+	 * Whether a widget area is being rendered.
+	 *
+	 * @return bool
+	 */
+	public static function in_sidebar() {
+		return self::$in_sidebar;
+	}
+
+	/**
+	 * The post that buttons placed without an ID belong to.
+	 *
+	 * Inside content, loops and templates that is the current post. In a
+	 * sidebar it is the post being viewed, and nothing on blog and archive
+	 * pages, where the "current" post would only be the last one listed.
+	 *
+	 * @return int Post ID, or 0.
+	 */
+	public static function current_post_id() {
+		if ( self::$in_sidebar ) {
+			$id = is_singular() ? (int) get_queried_object_id() : 0;
+		} else {
+			$id = (int) get_the_ID();
+		}
+
+		/**
+		 * Filters which post buttons without an explicit ID belong to.
+		 *
+		 * @param int  $id         Post ID, or 0 for none.
+		 * @param bool $in_sidebar Whether a widget area is being rendered.
+		 */
+		return (int) apply_filters( 'ldbtn_current_post_id', $id, self::$in_sidebar );
 	}
 
 	/**
@@ -440,7 +497,7 @@ class LDBTN_Render {
 		$type = 'comment' === $atts['type'] ? 'comment' : 'post';
 		$id   = absint( $atts['id'] );
 		if ( ! $id ) {
-			$id = 'comment' === $type ? get_comment_ID() : get_the_ID();
+			$id = 'comment' === $type ? get_comment_ID() : self::current_post_id();
 		}
 		if ( ! $id ) {
 			return '';

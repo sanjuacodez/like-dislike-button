@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @return string
  */
 function ldbtn_get_buttons( $post_id = 0, $args = array() ) {
-	$post_id = $post_id ? (int) $post_id : (int) get_the_ID();
+	$post_id = $post_id ? (int) $post_id : LDBTN_Render::current_post_id();
 	return $post_id ? LDBTN_Render::render( 'post', $post_id, $args ) : '';
 }
 
@@ -38,6 +38,6 @@ function ldbtn_buttons( $post_id = 0, $args = array() ) {
  * @return array{likes:int,dislikes:int}
  */
 function ldbtn_get_counts( $id = 0, $type = 'post' ) {
-	$id = $id ? (int) $id : (int) get_the_ID();
+	$id = $id ? (int) $id : LDBTN_Render::current_post_id();
 	return LDBTN_Votes::counts( 'comment' === $type ? 'comment' : 'post', $id );
 }

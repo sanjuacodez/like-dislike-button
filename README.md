@@ -13,6 +13,30 @@ page caching.
 <img src=".wordpress-org/screenshot-1.png" width="440" alt="Settings: presets, icon sets and button styles with a live preview.">
 </p>
 
+## Use cases
+
+- **Blogs and magazines:** readers like posts; a Most Liked Posts list in the sidebar sends them to more of your best writing.
+- **Documentation and help centres:** "Was this article helpful?" with Yes / No and a thank-you message; the Most disliked list shows which articles need work.
+- **WooCommerce stores:** likes on products, and a most liked products list.
+- **Recipe, travel and review sites:** heart or thumbs-up buttons show what other readers enjoyed.
+- **Communities:** like and dislike buttons on comments, or Reddit-style upvote / downvote scores.
+- **Courses, changelogs and feature ideas:** one-click feedback on lessons, release notes or requests.
+
+## Works with
+
+| | |
+|---|---|
+| **Block editor** | Like Dislike Buttons and Most Liked Posts blocks: posts, Query Loop, block theme templates and template parts, widget areas |
+| **Elementor** | Like Dislike Buttons and Most Liked Posts widgets with style, text and colour controls; editor clicks are preview-only |
+| **Widget areas** | both blocks, plus classic widgets for classic themes (also used by SiteOrigin, Elementor's WordPress panel and Beaver Builder's widget module) |
+| **Other builders** | Divi, Bricks, Beaver Builder, WPBakery, Oxygen, Breakdance: `[like_dislike_button]` in a shortcode or text module |
+| **Theme templates** | `ldbtn_buttons()` anywhere, or `do_shortcode()` |
+| **Themes** | classic and block themes; button rules carry `:not(#ldbtn-x)` so theme-wide `button` styles don't override them |
+
+Buttons placed without an ID belong to the current post. In a widget area that
+means the post being viewed, and nothing on blog and archive pages, where the
+"current" post would only be the last one in the list.
+
 ---
 
 ## The concept
@@ -112,6 +136,7 @@ light and dark themes.
 | `ldbtn_visitor_ip` | filter | supply the real visitor IP behind a proxy |
 | `ldbtn_rate_limit` | filter | votes per minute per network, `0` to turn off |
 | `ldbtn_schema_statistics` | filter | change or remove the `interactionStatistic` entries |
+| `ldbtn_current_post_id` | filter | which post buttons without an ID belong to |
 
 ### WP-CLI
 
@@ -138,6 +163,8 @@ includes/
   class-ldbtn-rest.php         ldbtn/v1/state, ldbtn/v1/vote, ldbtn_votes field
   class-ldbtn-schema.php       interactionStatistic in schema.org markup
   class-ldbtn-blocks.php       Buttons and Most Liked blocks
+  class-ldbtn-widgets.php      classic widgets
+  class-ldbtn-elementor*.php   Elementor widgets
   class-ldbtn-stats.php        dashboard queries
   class-ldbtn-importer.php     imports from other plugins
   admin/                     dashboard, settings, tools, meta box, list column

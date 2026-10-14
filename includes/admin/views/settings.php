@@ -344,9 +344,13 @@ unset( $ldbtn_types['attachment'] );
 						<h2 class="ldbtn-card__title"><?php esc_html_e( 'Placing buttons by hand', 'like-dislike-button' ); ?></h2>
 						<dl class="ldbtn-reference">
 							<dt><?php esc_html_e( 'Block', 'like-dislike-button' ); ?></dt>
-							<dd><?php esc_html_e( 'Like Dislike Buttons and Most Liked Posts, in the Widgets category. Both work in the site editor and inside Query Loop.', 'like-dislike-button' ); ?></dd>
+							<dd><?php esc_html_e( 'Like Dislike Buttons and Most Liked Posts, in the Widgets category. Both work in posts, Query Loop, the site editor and widget areas.', 'like-dislike-button' ); ?></dd>
+							<dt><?php esc_html_e( 'Widgets', 'like-dislike-button' ); ?></dt>
+							<dd><?php esc_html_e( 'Classic themes get Like Dislike Buttons and Most Liked Posts widgets. In a sidebar, the buttons belong to the post being viewed and hide on blog and archive pages.', 'like-dislike-button' ); ?></dd>
+							<dt><?php esc_html_e( 'Page builders', 'like-dislike-button' ); ?></dt>
+							<dd><?php esc_html_e( 'Elementor has its own widgets. In Divi, Bricks, Beaver Builder, WPBakery, Oxygen and others, use the shortcode in a shortcode or text module.', 'like-dislike-button' ); ?></dd>
 							<dt><?php esc_html_e( 'Shortcode', 'like-dislike-button' ); ?></dt>
-							<dd><code>[like_dislike_button]</code> <code>[like_dislike_button id="42" icons="hearts" style="pill"]</code> <code>[ldbtn_most_liked number="5" period="month"]</code></dd>
+							<dd><code>[like_dislike_button]</code> <code>[like_dislike_button id="42" icons="hearts" style="pill"]</code> <code>[ldbtn_most_liked number="5" period="month"]</code> <code>[like_dislike_button style="outline" labels="yes" like_label="Yes" dislike_label="No"]</code></dd>
 							<dt><?php esc_html_e( 'Theme template', 'like-dislike-button' ); ?></dt>
 							<dd><code>&lt;?php if ( function_exists( 'ldbtn_buttons' ) ) { ldbtn_buttons(); } ?&gt;</code></dd>
 						</dl>
