@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Build a distribution zip containing only what belongs in an installed plugin.
+# The plugin checker rejects hidden files, and GitHub-only files (README.md,
+# screenshots, this script) have no business in the directory download.
+set -euo pipefail
+
+SLUG="like-dislike-button"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Build outside the plugin folder. A zip sitting inside the plugin directory
+# gets picked up by the next scan ("Compressed files are not permitted") and,
+# worse, would end up inside the next zip.
+# Override in CI, where writing a sibling of the checkout is awkward:
+#   BUILD_OUTPUT="$GITHUB_WORKSPACE/build" ./bin/build-zip
+DIST="${BUILD_OUTPUT:-${ROOT}/../.like-dislike-button-build}"
+STAGE="${DIST}/${SLUG}"
+
+# Finder drops .DS_Store into any folder you open, and the plugin checker
+# treats them as errors. Sweep them from the source tree as well as excluding
+# them from the build, so a scan of either is clean.
+find "$ROOT" -name '.DS_Store' -not -path "*/.git/*" -delete 2>/dev/null || true
+
+rm -rf "$DIST"
+mkdir -p "$STAGE"
+
+rsync -a \
+  --exclude='.git' \
+  --exclude='.*' \
+  --exclude='bin' \
+  --exclude='/build' \
+  --exclude='README.md' \
+  --exclude='.wordpress-org' \
+  "${ROOT}/" "${STAGE}/"
+
+cd "$DIST"
+zip -qr "${SLUG}.zip" "$SLUG"
+echo "built ${DIST}/${SLUG}.zip"
+unzip -l "${SLUG}.zip" | tail -n 3
+

@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+"""Build .wordpress-org/blueprints/blueprint.json (the Playground "Live Preview").
+
+The demo content lives in bin/blueprint-demo.php so it stays readable; this
+script embeds that PHP into the blueprint JSON.
+
+  ./bin/build-blueprint                  -> installs the plugin from WordPress.org (what ships)
+  ./bin/build-blueprint --local OUT.json -> expects the plugin mounted at wp-content/plugins/like-dislike-button (for testing)
+"""
+import json, pathlib, sys
+
+root = pathlib.Path(__file__).resolve().parent.parent
+php = (root / "bin" / "blueprint-demo.php").read_text()
+local = "--local" in sys.argv
+
+install = (
+    {"step": "activatePlugin", "pluginPath": "like-dislike-button/like-dislike-button.php"}
+    if local
+    else {"step": "installPlugin", "pluginData": {"resource": "wordpress.org/plugins", "slug": "like-dislike-button"}, "options": {"activate": True}}
+)
+
+blueprint = {
+    "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+    "meta": {
+        "title": "Like Dislike Button demo: a travel blog with two months of votes",
+        "description": "Installs Like Dislike Button, adds sample posts with likes and dislikes, and opens the analytics dashboard.",
+        "author": "sanju-shankar",
+        "categories": ["Engagement"],
+    },
+    "landingPage": "/wp-admin/admin.php?page=ldb",
+    "preferredVersions": {"php": "8.3", "wp": "latest"},
+    "features": {"networking": False},
+    "login": True,
+    "steps": [
+        install,
+        {"step": "setSiteOptions", "options": {"blogname": "Wander Notes (Like Dislike Button demo)", "permalink_structure": "/%postname%/"}},
+        {"step": "runPHP", "code": php},
+    ],
+}
+
+out = (pathlib.Path(sys.argv[sys.argv.index("--local") + 1]) if local else root / ".wordpress-org/blueprints/blueprint.json")
+out.parent.mkdir(parents=True, exist_ok=True)
+out.write_text(json.dumps(blueprint, indent=2) + "\n")
+print(f"wrote {out}")

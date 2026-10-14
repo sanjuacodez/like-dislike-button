@@ -1,0 +1,57 @@
+name: Deploy to WordPress.org
+
+# Tag a release to publish it:
+#   git tag v0.1.0 && git push origin v0.1.0
+#
+# Needs two repository secrets: SVN_USERNAME and SVN_PASSWORD. The username is
+# the exact, case-sensitive WordPress.org LOGIN ("Sanju Shankar", with the space)
+# -- not the profile slug "sanju-shankar". The password is the SVN password from
+# WordPress.org profile -> Account & Security, not the login password.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the tag matches the plugin version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          stable=$(grep -m1 -i '^Stable tag:' readme.txt | awk '{print $NF}')
+          header=$(grep -m1 -i '^ \* Version:' like-dislike-button.php | awk '{print $NF}')
+          if [ "$tag" != "$stable" ] || [ "$tag" != "$header" ]; then
+            echo "::error::Tag $tag, Stable tag $stable and plugin Version $header must all match"
+            exit 1
+          fi
+
+      - name: Build the distributable plugin
+        # bin/build-zip is the single source of truth for what ships: it
+        # excludes the dev tooling, the screenshots and every hidden file.
+        run: BUILD_OUTPUT="${GITHUB_WORKSPACE}/build" ./bin/build-zip
+
+      - name: Verify nothing unwanted slipped in
+        run: |
+          if find build/like-dislike-button -name '.*' -not -name '.' | grep -q .; then
+            echo "::error::hidden files present in the build"
+            find build/like-dislike-button -name '.*' -not -name '.'
+            exit 1
+          fi
+          echo "build contains $(find build/like-dislike-button -type f | wc -l) files"
+
+      - name: Deploy to the plugin directory
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: like-dislike-button
+          # Ship the built directory, not the repository root.
+          BUILD_DIR: build/like-dislike-button
+          # Screenshots go to SVN assets/, separate from the plugin itself.
+          ASSETS_DIR: .wordpress-org
