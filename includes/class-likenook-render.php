@@ -2,7 +2,7 @@
 /**
  * Front-end output: automatic placement, shortcodes and assets.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Builds the buttons markup and puts it on the page.
  */
-class LDBTN_Render {
+class Likenook_Render {
 
 	/**
 	 * Settings that blocks, shortcodes and widgets may override per instance.
@@ -83,33 +83,33 @@ class LDBTN_Render {
 		 * @param int  $id         Post ID, or 0 for none.
 		 * @param bool $in_sidebar Whether a widget area is being rendered.
 		 */
-		return (int) apply_filters( 'ldbtn_current_post_id', $id, self::$in_sidebar );
+		return (int) apply_filters( 'likenook_current_post_id', $id, self::$in_sidebar );
 	}
 
 	/**
 	 * Registers the script and stylesheet used wherever buttons appear.
 	 */
 	public static function register_assets() {
-		wp_register_style( 'ldbtn', LDBTN_URL . 'assets/css/ldbtn.css', array(), LDBTN_VERSION );
-		wp_add_inline_style( 'ldbtn', self::inline_css() );
+		wp_register_style( 'likenook', LIKENOOK_URL . 'assets/css/likenook.css', array(), LIKENOOK_VERSION );
+		wp_add_inline_style( 'likenook', self::inline_css() );
 
-		wp_register_script( 'ldbtn', LDBTN_URL . 'assets/js/ldbtn.js', array(), LDBTN_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
+		wp_register_script( 'likenook', LIKENOOK_URL . 'assets/js/likenook.js', array(), LIKENOOK_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
 		wp_localize_script(
-			'ldbtn',
-			'ldbtnConfig',
+			'likenook',
+			'likenookConfig',
 			array(
-				'rest'        => esc_url_raw( rest_url( 'ldbtn/v1/' ) ),
+				'rest'        => esc_url_raw( rest_url( 'likenook/v1/' ) ),
 				'nonce'       => wp_create_nonce( 'wp_rest' ),
 				'ajax'        => admin_url( 'admin-ajax.php' ),
-				'allowChange' => (bool) LDBTN_Settings::get( 'allow_change' ),
-				'short'       => (bool) LDBTN_Settings::get( 'short_numbers' ),
+				'allowChange' => (bool) Likenook_Settings::get( 'allow_change' ),
+				'short'       => (bool) Likenook_Settings::get( 'short_numbers' ),
 				'i18n'        => array(
-					'error'   => __( 'Something went wrong. Please try again.', 'like-dislike-button' ),
-					'voted'   => __( 'You have already voted.', 'like-dislike-button' ),
+					'error'   => __( 'Something went wrong. Please try again.', 'likenook' ),
+					'voted'   => __( 'You have already voted.', 'likenook' ),
 					/* translators: %s: login link */
-					'login'   => __( 'Please %s to vote.', 'like-dislike-button' ),
-					'logIn'   => __( 'log in', 'like-dislike-button' ),
-					'removed' => __( 'Your vote was removed.', 'like-dislike-button' ),
+					'login'   => __( 'Please %s to vote.', 'likenook' ),
+					'logIn'   => __( 'log in', 'likenook' ),
+					'removed' => __( 'Your vote was removed.', 'likenook' ),
 				),
 			)
 		);
@@ -123,7 +123,7 @@ class LDBTN_Render {
 	 */
 	public static function inline_css( $settings = null ) {
 		$vars = self::css_vars( $settings );
-		return $vars ? '.ldbtn.ldbtn{' . $vars . '}' : '';
+		return $vars ? '.likenook.likenook{' . $vars . '}' : '';
 	}
 
 	/**
@@ -133,12 +133,12 @@ class LDBTN_Render {
 	 * @return string
 	 */
 	public static function css_vars( $settings = null ) {
-		$settings = $settings ? $settings : LDBTN_Settings::all();
+		$settings = $settings ? $settings : Likenook_Settings::all();
 		$map      = array(
-			'like_color'    => '--ldbtn-like',
-			'dislike_color' => '--ldbtn-dislike',
-			'text_color'    => '--ldbtn-fg',
-			'bg_color'      => '--ldbtn-bg',
+			'like_color'    => '--likenook-like',
+			'dislike_color' => '--likenook-dislike',
+			'text_color'    => '--likenook-fg',
+			'bg_color'      => '--likenook-bg',
 		);
 		$vars     = '';
 		foreach ( $map as $key => $var ) {
@@ -153,8 +153,8 @@ class LDBTN_Render {
 	 * Loads assets early on pages where buttons are likely, so styles land in the head.
 	 */
 	public static function maybe_enqueue() {
-		$likely = is_singular() && ( LDBTN_Settings::type_enabled( get_post_type() ) || ( LDBTN_Settings::get( 'comments' ) && comments_open() ) );
-		$likely = $likely || ( LDBTN_Settings::get( 'archives' ) && ( is_home() || is_archive() ) );
+		$likely = is_singular() && ( Likenook_Settings::type_enabled( get_post_type() ) || ( Likenook_Settings::get( 'comments' ) && comments_open() ) );
+		$likely = $likely || ( Likenook_Settings::get( 'archives' ) && ( is_home() || is_archive() ) );
 		if ( $likely ) {
 			self::enqueue();
 		}
@@ -164,8 +164,8 @@ class LDBTN_Render {
 	 * Enqueues the front-end assets.
 	 */
 	public static function enqueue() {
-		wp_enqueue_style( 'ldbtn' );
-		wp_enqueue_script( 'ldbtn' );
+		wp_enqueue_style( 'likenook' );
+		wp_enqueue_script( 'likenook' );
 	}
 
 	/**
@@ -175,14 +175,14 @@ class LDBTN_Render {
 	 * @return bool
 	 */
 	private static function auto_applies( $post ) {
-		if ( ! $post || 'manual' === LDBTN_Settings::get( 'position' ) || ! LDBTN_Settings::type_enabled( $post->post_type ) ) {
+		if ( ! $post || 'manual' === Likenook_Settings::get( 'position' ) || ! Likenook_Settings::type_enabled( $post->post_type ) ) {
 			return false;
 		}
-		if ( get_post_meta( $post->ID, LDBTN_Votes::META_HIDE, true ) || post_password_required( $post ) ) {
+		if ( get_post_meta( $post->ID, Likenook_Votes::META_HIDE, true ) || post_password_required( $post ) ) {
 			return false;
 		}
 		// Placed by hand already, so don't add a second set.
-		if ( has_block( 'like-dislike-button/buttons', $post ) || has_shortcode( $post->post_content, 'like_dislike_button' ) ) {
+		if ( has_block( 'likenook/buttons', $post ) || has_shortcode( $post->post_content, 'likenook' ) ) {
 			return false;
 		}
 		return true;
@@ -210,12 +210,12 @@ class LDBTN_Render {
 		}
 
 		$singular = is_singular() && is_main_query() && get_queried_object_id() === $post->ID;
-		if ( ! $singular && ! ( LDBTN_Settings::get( 'archives' ) && ! is_singular() ) ) {
+		if ( ! $singular && ! ( Likenook_Settings::get( 'archives' ) && ! is_singular() ) ) {
 			return $content;
 		}
 
 		$buttons  = self::render( 'post', $post->ID );
-		$position = LDBTN_Settings::get( 'position' );
+		$position = Likenook_Settings::get( 'position' );
 
 		if ( 'before' === $position || 'both' === $position ) {
 			$content = $buttons . $content;
@@ -244,7 +244,7 @@ class LDBTN_Render {
 	 * @return string
 	 */
 	public static function filter_comment( $text, $comment = null ) {
-		if ( is_admin() || is_feed() || ! $comment || ! LDBTN_Settings::get( 'comments' ) || '1' !== (string) $comment->comment_approved ) {
+		if ( is_admin() || is_feed() || ! $comment || ! Likenook_Settings::get( 'comments' ) || '1' !== (string) $comment->comment_approved ) {
 			return $text;
 		}
 		if ( wp_is_json_request() || doing_filter( 'get_comment_excerpt' ) ) {
@@ -273,7 +273,7 @@ class LDBTN_Render {
 	 * @return string
 	 */
 	public static function render( $type, $id, $args = array() ) {
-		$settings = isset( $args['settings'] ) ? $args['settings'] : LDBTN_Settings::all();
+		$settings = isset( $args['settings'] ) ? $args['settings'] : Likenook_Settings::all();
 		foreach ( self::OVERRIDABLE as $key ) {
 			// Empty choices inherit the saved setting; an empty question or thank-you text clears it.
 			if ( ! isset( $args[ $key ] ) || ( '' === $args[ $key ] && ! in_array( $key, array( 'question', 'thanks' ), true ) ) ) {
@@ -281,7 +281,7 @@ class LDBTN_Render {
 			}
 			$settings[ $key ] = $args[ $key ];
 		}
-		$settings = LDBTN_Settings::sanitize( $settings );
+		$settings = Likenook_Settings::sanitize( $settings );
 		$preview  = ! empty( $args['preview'] );
 
 		if ( $preview ) {
@@ -290,7 +290,7 @@ class LDBTN_Render {
 				'dislikes' => isset( $args['dislikes'] ) ? (int) $args['dislikes'] : 14,
 			);
 		} else {
-			$counts = LDBTN_Votes::counts( $type, $id );
+			$counts = Likenook_Votes::counts( $type, $id );
 			self::enqueue();
 		}
 
@@ -305,38 +305,38 @@ class LDBTN_Render {
 		$labels = $settings['show_labels'] || 'none' === $settings['icon_set'];
 
 		$classes = array(
-			'ldbtn',
-			'ldbtn--' . $type,
-			'ldbtn--style-' . $settings['style'],
-			'ldbtn--size-' . $settings['size'],
-			'ldbtn--align-' . $settings['align'],
-			'ldbtn--layout-' . $settings['layout'],
-			'ldbtn--icons-' . $settings['icon_set'],
-			'ldbtn--counts-' . $counts_mode,
-			'ldbtn--anim-' . $settings['animation'],
+			'likenook',
+			'likenook--' . $type,
+			'likenook--style-' . $settings['style'],
+			'likenook--size-' . $settings['size'],
+			'likenook--align-' . $settings['align'],
+			'likenook--layout-' . $settings['layout'],
+			'likenook--icons-' . $settings['icon_set'],
+			'likenook--counts-' . $counts_mode,
+			'likenook--anim-' . $settings['animation'],
 		);
 		if ( $labels ) {
-			$classes[] = 'ldbtn--labels';
+			$classes[] = 'likenook--labels';
 		}
 		if ( ! empty( $args['class'] ) ) {
 			$classes[] = $args['class'];
 		}
 
 		$data = array(
-			'data-ldbtn-type'     => $type,
-			'data-ldbtn-id'       => $id,
-			'data-ldbtn-likes'    => $counts['likes'],
-			'data-ldbtn-dislikes' => $counts['dislikes'],
-			'data-ldbtn-counts'   => $counts_mode,
+			'data-likenook-type'     => $type,
+			'data-likenook-id'       => $id,
+			'data-likenook-likes'    => $counts['likes'],
+			'data-likenook-dislikes' => $counts['dislikes'],
+			'data-likenook-counts'   => $counts_mode,
 		);
 		if ( '' !== $settings['thanks'] ) {
-			$data['data-ldbtn-thanks'] = $settings['thanks'];
+			$data['data-likenook-thanks'] = $settings['thanks'];
 		}
 		if ( $preview ) {
-			$data['data-ldbtn-preview'] = '1';
+			$data['data-likenook-preview'] = '1';
 		}
 		if ( 'logged_in' === $settings['who'] && ! is_user_logged_in() && ! $preview ) {
-			$data['data-ldbtn-login'] = wp_login_url( self::current_url() );
+			$data['data-likenook-login'] = wp_login_url( self::current_url() );
 		}
 
 		if ( ! empty( $args['block'] ) ) {
@@ -352,17 +352,17 @@ class LDBTN_Render {
 			$attributes .= ' ' . $name . '="' . esc_attr( $value ) . '"';
 		}
 
-		$group_label = 'comment' === $type ? __( 'Rate this comment', 'like-dislike-button' ) : __( 'Rate this content', 'like-dislike-button' );
+		$group_label = 'comment' === $type ? __( 'Rate this comment', 'likenook' ) : __( 'Rate this content', 'likenook' );
 
 		$html = '<div ' . $attributes . '>';
 		if ( '' !== $settings['question'] ) {
-			$html .= '<p class="ldbtn-question">' . esc_html( $settings['question'] ) . '</p>';
+			$html .= '<p class="likenook-question">' . esc_html( $settings['question'] ) . '</p>';
 		}
-		$html .= '<div class="ldbtn-buttons" role="group" aria-label="' . esc_attr( '' !== $settings['question'] ? $settings['question'] : $group_label ) . '">';
+		$html .= '<div class="likenook-buttons" role="group" aria-label="' . esc_attr( '' !== $settings['question'] ? $settings['question'] : $group_label ) . '">';
 
 		foreach ( $reactions as $index => $reaction ) {
 			if ( 'score' === $counts_mode && 1 === $index ) {
-				$html .= '<span class="ldbtn-score" aria-live="polite">' . esc_html( self::format_number( $counts['likes'] - $counts['dislikes'], $settings['short_numbers'] ) ) . '</span>';
+				$html .= '<span class="likenook-score" aria-live="polite">' . esc_html( self::format_number( $counts['likes'] - $counts['dislikes'], $settings['short_numbers'] ) ) . '</span>';
 			}
 			$html .= self::button( $reaction, $counts, $counts_mode, $labels, $settings );
 		}
@@ -372,10 +372,10 @@ class LDBTN_Render {
 		if ( $settings['ratio_bar'] && 'both' === $settings['buttons'] ) {
 			$total  = $counts['likes'] + $counts['dislikes'];
 			$share  = $total ? round( $counts['likes'] / $total * 100, 1 ) : 0;
-			$html  .= '<div class="ldbtn-bar" aria-hidden="true"><span style="width:' . esc_attr( $share ) . '%"></span></div>';
+			$html  .= '<div class="likenook-bar" aria-hidden="true"><span style="width:' . esc_attr( $share ) . '%"></span></div>';
 		}
 
-		$html .= '<p class="ldbtn-msg" role="status" aria-live="polite"></p>';
+		$html .= '<p class="likenook-msg" role="status" aria-live="polite"></p>';
 		$html .= '</div>';
 
 		/**
@@ -386,7 +386,7 @@ class LDBTN_Render {
 		 * @param int    $id       Item ID.
 		 * @param array  $settings Settings used, after overrides.
 		 */
-		return apply_filters( 'ldbtn_buttons_html', $html, $type, $id, $settings );
+		return apply_filters( 'likenook_buttons_html', $html, $type, $id, $settings );
 	}
 
 	/**
@@ -400,7 +400,7 @@ class LDBTN_Render {
 	 * @return string
 	 */
 	private static function button( $reaction, $counts, $counts_mode, $labels, $settings ) {
-		$label = LDBTN_Settings::label( $reaction, $settings );
+		$label = Likenook_Settings::label( $reaction, $settings );
 		$count = 'like' === $reaction ? $counts['likes'] : $counts['dislikes'];
 		$total = $counts['likes'] + $counts['dislikes'];
 
@@ -411,11 +411,11 @@ class LDBTN_Render {
 			$text = $total ? round( $count / $total * 100 ) . '%' : '';
 		}
 
-		$html  = '<button type="button" class="ldbtn-btn ldbtn-btn--' . esc_attr( $reaction ) . '" data-ldbtn-reaction="' . esc_attr( $reaction ) . '" aria-pressed="false">';
-		$html .= LDBTN_Icons::get( $settings['icon_set'], $reaction, $settings );
-		$html .= '<span class="' . ( $labels ? 'ldbtn-label' : 'ldbtn-sr' ) . '">' . esc_html( $label ) . '</span>';
+		$html  = '<button type="button" class="likenook-btn likenook-btn--' . esc_attr( $reaction ) . '" data-likenook-reaction="' . esc_attr( $reaction ) . '" aria-pressed="false">';
+		$html .= Likenook_Icons::get( $settings['icon_set'], $reaction, $settings );
+		$html .= '<span class="' . ( $labels ? 'likenook-label' : 'likenook-sr' ) . '">' . esc_html( $label ) . '</span>';
 		if ( in_array( $counts_mode, array( 'show', 'percent', 'after_vote' ), true ) ) {
-			$html .= '<span class="ldbtn-count"' . ( 'after_vote' === $counts_mode ? ' hidden' : '' ) . '>' . esc_html( $text ) . '</span>';
+			$html .= '<span class="likenook-count"' . ( 'after_vote' === $counts_mode ? ' hidden' : '' ) . '>' . esc_html( $text ) . '</span>';
 		}
 		$html .= '</button>';
 		return $html;
@@ -454,10 +454,10 @@ class LDBTN_Render {
 	 * Registers shortcodes, plus the old shortcodes of other plugins after an import.
 	 */
 	public static function register_shortcodes() {
-		add_shortcode( 'like_dislike_button', array( __CLASS__, 'shortcode_buttons' ) );
-		add_shortcode( 'ldbtn_most_liked', array( 'LDBTN_Most_Liked', 'shortcode' ) );
+		add_shortcode( 'likenook', array( __CLASS__, 'shortcode_buttons' ) );
+		add_shortcode( 'likenook_most_liked', array( 'Likenook_Most_Liked', 'shortcode' ) );
 
-		if ( LDBTN_Settings::get( 'compat_shortcodes' ) ) {
+		if ( Likenook_Settings::get( 'compat_shortcodes' ) ) {
 			foreach ( array( 'posts_like_dislike', 'like_dislike', 'wp_ulike' ) as $tag ) {
 				if ( ! shortcode_exists( $tag ) ) {
 					add_shortcode( $tag, array( __CLASS__, 'shortcode_buttons' ) );
@@ -467,7 +467,7 @@ class LDBTN_Render {
 	}
 
 	/**
-	 * [like_dislike_button id="" type="post|comment" icons="" style="" size="" align="" layout="" counts="" labels="yes|no" like_label="" dislike_label="" bar="yes|no" question="" thanks=""]
+	 * [likenook id="" type="post|comment" icons="" style="" size="" align="" layout="" counts="" labels="yes|no" like_label="" dislike_label="" bar="yes|no" question="" thanks=""]
 	 *
 	 * @param array|string $atts Attributes.
 	 * @return string
@@ -491,7 +491,7 @@ class LDBTN_Render {
 				'thanks'        => null,
 			),
 			$atts,
-			'like_dislike_button'
+			'likenook'
 		);
 
 		$type = 'comment' === $atts['type'] ? 'comment' : 'post';

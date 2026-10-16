@@ -2,7 +2,7 @@
 /**
  * Privacy: policy text, personal data export and erasure.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Connects votes to the WordPress privacy tools.
  */
-class LDBTN_Privacy {
+class Likenook_Privacy {
 
 	/**
 	 * Hooks into WordPress.
@@ -28,8 +28,8 @@ class LDBTN_Privacy {
 		if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
 			return;
 		}
-		$text = '<p>' . __( 'When you like or dislike a post or comment, we store your reaction and the date. If you are logged in, the vote is linked to your account. If you are not, we store either a random ID from a cookie named ldbtn_vid or a one-way hash of your IP address, so each person votes once. Your IP address itself is never stored. No vote data is sent to other services.', 'like-dislike-button' ) . '</p>';
-		wp_add_privacy_policy_content( 'Like Dislike Button', wp_kses_post( $text ) );
+		$text = '<p>' . __( 'When you like or dislike a post or comment, we store your reaction and the date. If you are logged in, the vote is linked to your account. If you are not, we store either a random ID from a cookie named likenook_vid or a one-way hash of your IP address, so each person votes once. Your IP address itself is never stored. No vote data is sent to other services.', 'likenook' ) . '</p>';
+		wp_add_privacy_policy_content( 'Likenook', wp_kses_post( $text ) );
 	}
 
 	/**
@@ -39,8 +39,8 @@ class LDBTN_Privacy {
 	 * @return array
 	 */
 	public static function register_exporter( $exporters ) {
-		$exporters['like-dislike-button'] = array(
-			'exporter_friendly_name' => __( 'Likes and dislikes', 'like-dislike-button' ),
+		$exporters['likenook'] = array(
+			'exporter_friendly_name' => __( 'Likes and dislikes', 'likenook' ),
 			'callback'               => array( __CLASS__, 'export' ),
 		);
 		return $exporters;
@@ -53,8 +53,8 @@ class LDBTN_Privacy {
 	 * @return array
 	 */
 	public static function register_eraser( $erasers ) {
-		$erasers['like-dislike-button'] = array(
-			'eraser_friendly_name' => __( 'Likes and dislikes', 'like-dislike-button' ),
+		$erasers['likenook'] = array(
+			'eraser_friendly_name' => __( 'Likes and dislikes', 'likenook' ),
 			'callback'             => array( __CLASS__, 'erase' ),
 		);
 		return $erasers;
@@ -75,27 +75,27 @@ class LDBTN_Privacy {
 		$rows  = array();
 
 		if ( $user ) {
-			$table = esc_sql( LDBTN_DB::table() );
+			$table = esc_sql( Likenook_DB::table() );
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table name.
 			$rows = $wpdb->get_results( $wpdb->prepare( "SELECT id, object_type, object_id, reaction, created_at FROM {$table} WHERE user_id = %d ORDER BY id ASC LIMIT %d OFFSET %d", $user->ID, $limit, ( max( 1, (int) $page ) - 1 ) * $limit ) );
 
 			foreach ( $rows as $row ) {
 				$link    = 'comment' === $row->object_type ? get_comment_link( (int) $row->object_id ) : get_permalink( (int) $row->object_id );
 				$items[] = array(
-					'group_id'    => 'ldbtn-votes',
-					'group_label' => __( 'Likes and dislikes', 'like-dislike-button' ),
-					'item_id'     => 'ldbtn-vote-' . $row->id,
+					'group_id'    => 'likenook-votes',
+					'group_label' => __( 'Likes and dislikes', 'likenook' ),
+					'item_id'     => 'likenook-vote-' . $row->id,
 					'data'        => array(
 						array(
-							'name'  => __( 'Item', 'like-dislike-button' ),
+							'name'  => __( 'Item', 'likenook' ),
 							'value' => $link ? $link : $row->object_type . ' #' . $row->object_id,
 						),
 						array(
-							'name'  => __( 'Reaction', 'like-dislike-button' ),
+							'name'  => __( 'Reaction', 'likenook' ),
 							'value' => $row->reaction,
 						),
 						array(
-							'name'  => __( 'Date (UTC)', 'like-dislike-button' ),
+							'name'  => __( 'Date (UTC)', 'likenook' ),
 							'value' => $row->created_at,
 						),
 					),
@@ -121,12 +121,12 @@ class LDBTN_Privacy {
 		$removed = 0;
 
 		if ( $user ) {
-			$table = esc_sql( LDBTN_DB::table() );
+			$table = esc_sql( Likenook_DB::table() );
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table name.
 			$items = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT object_type, object_id FROM {$table} WHERE user_id = %d", $user->ID ) );
 			$removed = (int) $wpdb->delete( $table, array( 'user_id' => $user->ID ), array( '%d' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			foreach ( $items as $item ) {
-				LDBTN_Votes::recount( $item->object_type, (int) $item->object_id );
+				Likenook_Votes::recount( $item->object_type, (int) $item->object_id );
 			}
 		}
 

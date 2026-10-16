@@ -1,12 +1,12 @@
 /**
- * Like Dislike Button — admin screens.
+ * Likenook — admin screens.
  */
 ( function ( $ ) {
 	'use strict';
 
-	var cfg = window.ldbtnAdmin || {};
+	var cfg = window.likenookAdmin || {};
 	var i18n = cfg.i18n || {};
-	var $form = $( '#ldbtn-settings-form' );
+	var $form = $( '#likenook-settings-form' );
 
 	function post( action, data ) {
 		return $.post( cfg.ajax, $.extend( { action: action, nonce: cfg.nonce }, data ) );
@@ -15,14 +15,14 @@
 	/* Tabs ------------------------------------------------------------ */
 
 	function showTab( id, focus ) {
-		var $tab = $( '.ldbtn-tab[aria-controls="ldbtn-tab-' + id + '"]' );
+		var $tab = $( '.likenook-tab[aria-controls="likenook-tab-' + id + '"]' );
 		if ( ! $tab.length ) {
 			return;
 		}
-		$( '.ldbtn-tab' ).attr( { 'aria-selected': 'false', tabindex: '-1' } );
+		$( '.likenook-tab' ).attr( { 'aria-selected': 'false', tabindex: '-1' } );
 		$tab.attr( { 'aria-selected': 'true', tabindex: '0' } );
-		$( '.ldbtn-panel' ).prop( 'hidden', true );
-		$( '#ldbtn-tab-' + id ).prop( 'hidden', false );
+		$( '.likenook-panel' ).prop( 'hidden', true );
+		$( '#likenook-tab-' + id ).prop( 'hidden', false );
 		if ( focus ) {
 			$tab.trigger( 'focus' );
 		}
@@ -36,12 +36,12 @@
 		}
 	}
 
-	$( '.ldbtn-tab' ).on( 'click', function () {
-		showTab( $( this ).attr( 'aria-controls' ).replace( 'ldbtn-tab-', '' ) );
+	$( '.likenook-tab' ).on( 'click', function () {
+		showTab( $( this ).attr( 'aria-controls' ).replace( 'likenook-tab-', '' ) );
 	} );
 
-	$( '.ldbtn-tabs' ).on( 'keydown', '.ldbtn-tab', function ( e ) {
-		var $tabs = $( '.ldbtn-tab' );
+	$( '.likenook-tabs' ).on( 'keydown', '.likenook-tab', function ( e ) {
+		var $tabs = $( '.likenook-tab' );
 		var index = $tabs.index( this );
 		var next = null;
 		if ( 'ArrowRight' === e.key ) {
@@ -51,18 +51,18 @@
 		}
 		if ( null !== next ) {
 			e.preventDefault();
-			showTab( $tabs.eq( next ).attr( 'aria-controls' ).replace( 'ldbtn-tab-', '' ), true );
+			showTab( $tabs.eq( next ).attr( 'aria-controls' ).replace( 'likenook-tab-', '' ), true );
 		}
 	} );
 
-	if ( $( '.ldbtn-tabs' ).length ) {
+	if ( $( '.likenook-tabs' ).length ) {
 		showTab( ( window.location.hash || '#appearance' ).slice( 1 ) );
 	}
 
 	/* Conditional fields --------------------------------------------- */
 
 	function value( key ) {
-		var $input = $form.find( '[name="ldbtn_settings[' + key + ']"]' );
+		var $input = $form.find( '[name="likenook_settings[' + key + ']"]' );
 		if ( $input.is( ':radio' ) ) {
 			return $input.filter( ':checked' ).val();
 		}
@@ -90,9 +90,9 @@
 			if ( request ) {
 				request.abort();
 			}
-			request = post( 'ldbtn_preview', { settings: $form.serialize() } ).done( function ( res ) {
+			request = post( 'likenook_preview', { settings: $form.serialize() } ).done( function ( res ) {
 				if ( res && res.success ) {
-					$( '#ldbtn-preview' ).html( res.data.html );
+					$( '#likenook-preview' ).html( res.data.html );
 				}
 			} );
 		}, 120 );
@@ -103,16 +103,16 @@
 		refreshPreview();
 	} );
 
-	$( '.ldbtn-preview-bg' ).on( 'click', 'button', function () {
-		$( '.ldbtn-preview-bg button' ).attr( 'aria-checked', 'false' );
+	$( '.likenook-preview-bg' ).on( 'click', 'button', function () {
+		$( '.likenook-preview-bg button' ).attr( 'aria-checked', 'false' );
 		$( this ).attr( 'aria-checked', 'true' );
-		$( '.ldbtn-preview-stage' ).attr( 'data-bg', $( this ).data( 'bg' ) );
+		$( '.likenook-preview-stage' ).attr( 'data-bg', $( this ).data( 'bg' ) );
 	} );
 
 	/* Presets -------------------------------------------------------- */
 
 	function setValue( key, val ) {
-		var $input = $form.find( '[name="ldbtn_settings[' + key + ']"]' );
+		var $input = $form.find( '[name="likenook_settings[' + key + ']"]' );
 		if ( $input.is( ':radio' ) ) {
 			$input.prop( 'checked', false ).filter( '[value="' + val + '"]' ).prop( 'checked', true );
 		} else if ( $input.is( ':checkbox' ) ) {
@@ -122,13 +122,13 @@
 		}
 	}
 
-	$( '.ldbtn-preset' ).on( 'click', function () {
+	$( '.likenook-preset' ).on( 'click', function () {
 		var preset = ( cfg.presets || {} )[ $( this ).data( 'preset' ) ];
 		if ( ! preset ) {
 			return;
 		}
 		$.each( preset.values, setValue );
-		$( '.ldbtn-preset' ).removeClass( 'is-applied' );
+		$( '.likenook-preset' ).removeClass( 'is-applied' );
 		$( this ).addClass( 'is-applied' );
 		conditions();
 		refreshPreview();
@@ -137,7 +137,7 @@
 	/* Colours -------------------------------------------------------- */
 
 	if ( $.fn.wpColorPicker ) {
-		$( '.ldbtn-color' ).wpColorPicker( {
+		$( '.likenook-color' ).wpColorPicker( {
 			change: refreshPreview,
 			clear: refreshPreview,
 		} );
@@ -145,11 +145,11 @@
 
 	/* Custom icon images --------------------------------------------- */
 
-	$( '.ldbtn-media' ).each( function () {
+	$( '.likenook-media' ).each( function () {
 		var $box = $( this );
 		var frame = null;
 
-		$box.find( '.ldbtn-media__pick' ).on( 'click', function () {
+		$box.find( '.likenook-media__pick' ).on( 'click', function () {
 			if ( ! frame ) {
 				frame = wp.media( {
 					title: i18n.choose,
@@ -161,15 +161,15 @@
 					var file = frame.state().get( 'selection' ).first().toJSON();
 					var url = file.sizes && file.sizes.thumbnail ? file.sizes.thumbnail.url : file.url;
 					$box.find( 'input' ).val( file.id ).trigger( 'change' );
-					$box.find( '.ldbtn-media__thumb' ).html( $( '<img alt="">' ).attr( 'src', url ) );
+					$box.find( '.likenook-media__thumb' ).html( $( '<img alt="">' ).attr( 'src', url ) );
 				} );
 			}
 			frame.open();
 		} );
 
-		$box.find( '.ldbtn-media__clear' ).on( 'click', function () {
+		$box.find( '.likenook-media__clear' ).on( 'click', function () {
 			$box.find( 'input' ).val( '0' ).trigger( 'change' );
-			$box.find( '.ldbtn-media__thumb' ).empty();
+			$box.find( '.likenook-media__thumb' ).empty();
 		} );
 	} );
 
@@ -177,9 +177,9 @@
 
 	/* Chart tooltip -------------------------------------------------- */
 
-	$( '.ldbtn-chart' ).each( function () {
+	$( '.likenook-chart' ).each( function () {
 		var $chart = $( this );
-		var $tip = $chart.find( '.ldbtn-chart__tip' );
+		var $tip = $chart.find( '.likenook-chart__tip' );
 
 		function show( col ) {
 			var $col = $( col );
@@ -188,42 +188,42 @@
 			$tip
 				.empty()
 				.append( $( '<strong>' ).text( $col.data( 'label' ) ) )
-				.append( $( '<span class="ldbtn-chart__tip-row">' ).append( '<i class="ldbtn-key ldbtn-key--like"></i>', document.createTextNode( i18n.likes + ' ' ), $( '<b>' ).text( $col.data( 'likes' ) ) ) )
-				.append( $( '<span class="ldbtn-chart__tip-row">' ).append( '<i class="ldbtn-key ldbtn-key--dislike"></i>', document.createTextNode( i18n.dislikes + ' ' ), $( '<b>' ).text( $col.data( 'dislikes' ) ) ) )
+				.append( $( '<span class="likenook-chart__tip-row">' ).append( '<i class="likenook-key likenook-key--like"></i>', document.createTextNode( i18n.likes + ' ' ), $( '<b>' ).text( $col.data( 'likes' ) ) ) )
+				.append( $( '<span class="likenook-chart__tip-row">' ).append( '<i class="likenook-key likenook-key--dislike"></i>', document.createTextNode( i18n.dislikes + ' ' ), $( '<b>' ).text( $col.data( 'dislikes' ) ) ) )
 				.prop( 'hidden', false );
 
 			var left = box.left - outer.left + box.width / 2;
 			var tipWidth = $tip.outerWidth();
 			left = Math.max( tipWidth / 2, Math.min( outer.width - tipWidth / 2, left ) );
 			$tip.css( { left: left + 'px' } );
-			$chart.find( '.ldbtn-chart__col' ).removeClass( 'is-hover' );
+			$chart.find( '.likenook-chart__col' ).removeClass( 'is-hover' );
 			$col.addClass( 'is-hover' );
 		}
 
 		function hide() {
 			$tip.prop( 'hidden', true );
-			$chart.find( '.ldbtn-chart__col' ).removeClass( 'is-hover' );
+			$chart.find( '.likenook-chart__col' ).removeClass( 'is-hover' );
 		}
 
-		$chart.on( 'mouseenter focus', '.ldbtn-chart__col', function () {
+		$chart.on( 'mouseenter focus', '.likenook-chart__col', function () {
 			show( this );
 		} );
 		$chart.on( 'mouseleave', hide );
-		$chart.on( 'blur', '.ldbtn-chart__col', hide );
+		$chart.on( 'blur', '.likenook-chart__col', hide );
 	} );
 
 	/* Tools ---------------------------------------------------------- */
 
-	$( '.ldbtn-import' ).on( 'click', function () {
+	$( '.likenook-import' ).on( 'click', function () {
 		var $btn = $( this );
-		var $status = $btn.siblings( '.ldbtn-progress' );
+		var $status = $btn.siblings( '.likenook-progress' );
 		var source = $btn.data( 'source' );
 		var total = 0;
 
 		$btn.prop( 'disabled', true );
 
 		function step( cursor ) {
-			post( 'ldbtn_import', $.extend( { source: source }, cursor ) )
+			post( 'likenook_import', $.extend( { source: source }, cursor ) )
 				.done( function ( res ) {
 					if ( ! res || ! res.success ) {
 						$status.text( ( res && res.data && res.data.message ) || i18n.error );
@@ -249,14 +249,14 @@
 		step( {} );
 	} );
 
-	$( '#ldbtn-recount' ).on( 'click', function () {
+	$( '#likenook-recount' ).on( 'click', function () {
 		var $btn = $( this );
-		var $status = $btn.siblings( '.ldbtn-progress' );
+		var $status = $btn.siblings( '.likenook-progress' );
 		$btn.prop( 'disabled', true );
 		$status.text( i18n.recounting );
 
 		function step( data ) {
-			post( 'ldbtn_recount', data )
+			post( 'likenook_recount', data )
 				.done( function ( res ) {
 					if ( ! res || ! res.success ) {
 						$status.text( i18n.error );
@@ -276,7 +276,7 @@
 		step( { step: 0, after: 0 } );
 	} );
 
-	$( '.ldbtn-copy__btn' ).on( 'click', function () {
+	$( '.likenook-copy__btn' ).on( 'click', function () {
 		var $btn = $( this );
 		var original = $btn.text();
 		var done = function () {
@@ -295,7 +295,7 @@
 		}
 	} );
 
-	$( '.ldbtn-reset-form' ).on( 'submit', function ( e ) {
+	$( '.likenook-reset-form' ).on( 'submit', function ( e ) {
 		if ( ! window.confirm( i18n.confirmReset ) ) {
 			e.preventDefault();
 		}

@@ -2,7 +2,7 @@
 /**
  * Template tags for themes.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,19 +15,19 @@ defined( 'ABSPATH' ) || exit;
  *                       show_labels, ratio_bar, animation, question, thanks.
  * @return string
  */
-function ldbtn_get_buttons( $post_id = 0, $args = array() ) {
-	$post_id = $post_id ? (int) $post_id : LDBTN_Render::current_post_id();
-	return $post_id ? LDBTN_Render::render( 'post', $post_id, $args ) : '';
+function likenook_get_buttons( $post_id = 0, $args = array() ) {
+	$post_id = $post_id ? (int) $post_id : Likenook_Render::current_post_id();
+	return $post_id ? Likenook_Render::render( 'post', $post_id, $args ) : '';
 }
 
 /**
  * Prints the buttons for a post.
  *
  * @param int   $post_id Post ID, defaults to the current post.
- * @param array $args    See ldbtn_get_buttons().
+ * @param array $args    See likenook_get_buttons().
  */
-function ldbtn_buttons( $post_id = 0, $args = array() ) {
-	echo ldbtn_get_buttons( $post_id, $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped while building.
+function likenook_buttons( $post_id = 0, $args = array() ) {
+	echo likenook_get_buttons( $post_id, $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped while building.
 }
 
 /**
@@ -37,7 +37,7 @@ function ldbtn_buttons( $post_id = 0, $args = array() ) {
  * @param string $type post|comment.
  * @return array{likes:int,dislikes:int}
  */
-function ldbtn_get_counts( $id = 0, $type = 'post' ) {
-	$id = $id ? (int) $id : LDBTN_Render::current_post_id();
-	return LDBTN_Votes::counts( 'comment' === $type ? 'comment' : 'post', $id );
+function likenook_get_counts( $id = 0, $type = 'post' ) {
+	$id = $id ? (int) $id : Likenook_Render::current_post_id();
+	return Likenook_Votes::counts( 'comment' === $type ? 'comment' : 'post', $id );
 }

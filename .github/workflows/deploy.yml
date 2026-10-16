@@ -25,7 +25,7 @@ jobs:
         run: |
           tag="${GITHUB_REF_NAME#v}"
           stable=$(grep -m1 -i '^Stable tag:' readme.txt | awk '{print $NF}')
-          header=$(grep -m1 -i '^ \* Version:' like-dislike-button.php | awk '{print $NF}')
+          header=$(grep -m1 -i '^ \* Version:' likenook.php | awk '{print $NF}')
           if [ "$tag" != "$stable" ] || [ "$tag" != "$header" ]; then
             echo "::error::Tag $tag, Stable tag $stable and plugin Version $header must all match"
             exit 1
@@ -38,20 +38,20 @@ jobs:
 
       - name: Verify nothing unwanted slipped in
         run: |
-          if find build/like-dislike-button -name '.*' -not -name '.' | grep -q .; then
+          if find build/likenook -name '.*' -not -name '.' | grep -q .; then
             echo "::error::hidden files present in the build"
-            find build/like-dislike-button -name '.*' -not -name '.'
+            find build/likenook -name '.*' -not -name '.'
             exit 1
           fi
-          echo "build contains $(find build/like-dislike-button -type f | wc -l) files"
+          echo "build contains $(find build/likenook -type f | wc -l) files"
 
       - name: Deploy to the plugin directory
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-          SLUG: like-dislike-button
+          SLUG: likenook
           # Ship the built directory, not the repository root.
-          BUILD_DIR: build/like-dislike-button
+          BUILD_DIR: build/likenook
           # Screenshots go to SVN assets/, separate from the plugin itself.
           ASSETS_DIR: .wordpress-org

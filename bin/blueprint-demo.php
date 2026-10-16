@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Builds the demo site.
  */
-function ldbtn_blueprint_demo() {
+function likenook_blueprint_demo() {
 	global $wp_rewrite, $wpdb;
 	$wp_rewrite->set_permalink_structure( '/%postname%/' );
 	flush_rewrite_rules( false );
@@ -35,7 +35,7 @@ function ldbtn_blueprint_demo() {
 	wp_delete_post( 1, true );
 	wp_delete_post( 2, true );
 
-	$table = LDBTN_DB::table();
+	$table = Likenook_DB::table();
 
 	foreach ( $posts as $i => $post ) {
 		$paragraphs = '';
@@ -67,7 +67,7 @@ function ldbtn_blueprint_demo() {
 				)
 			);
 		}
-		LDBTN_Votes::recount( 'post', $id );
+		Likenook_Votes::recount( 'post', $id );
 
 		if ( 0 === $i ) {
 			$comment = wp_insert_comment(
@@ -89,7 +89,7 @@ function ldbtn_blueprint_demo() {
 					'created_at'  => gmdate( 'Y-m-d H:i:s' ),
 				)
 			);
-			LDBTN_Votes::recount( 'comment', $comment );
+			Likenook_Votes::recount( 'comment', $comment );
 		}
 	}
 
@@ -108,7 +108,7 @@ function ldbtn_blueprint_demo() {
 	$showcase = '';
 	foreach ( $styles as $label => $atts ) {
 		$showcase .= '<!-- wp:heading {"level":4} --><h4 class="wp-block-heading">' . esc_html( $label ) . '</h4><!-- /wp:heading -->';
-		$showcase .= '<!-- wp:shortcode -->[like_dislike_button id="' . (int) $first->ID . '" ' . $atts . ']<!-- /wp:shortcode -->';
+		$showcase .= '<!-- wp:shortcode -->[likenook id="' . (int) $first->ID . '" ' . $atts . ']<!-- /wp:shortcode -->';
 	}
 	wp_insert_post(
 		array(
@@ -121,16 +121,16 @@ function ldbtn_blueprint_demo() {
 	);
 
 	// Buttons under comments too, and a Most Liked Posts list on the front page.
-	LDBTN_Settings::update( array( 'comments' => true ) );
+	Likenook_Settings::update( array( 'comments' => true ) );
 	wp_insert_post(
 		array(
 			'post_type'    => 'page',
 			'post_status'  => 'publish',
 			'post_title'   => 'Most liked',
 			'post_name'    => 'most-liked',
-			'post_content' => '<!-- wp:like-dislike-button/most-liked {"number":5,"period":"month"} /-->',
+			'post_content' => '<!-- wp:likenook/most-liked {"number":5,"period":"month"} /-->',
 		)
 	);
 }
 
-ldbtn_blueprint_demo();
+likenook_blueprint_demo();

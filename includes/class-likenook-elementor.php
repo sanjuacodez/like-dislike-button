@@ -2,7 +2,7 @@
 /**
  * Elementor widget registration.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Adds the widget only when Elementor is active.
  */
-class LDBTN_Elementor {
+class Likenook_Elementor {
 
 	/**
 	 * Hooks into Elementor.
@@ -25,9 +25,9 @@ class LDBTN_Elementor {
 	 * @param \Elementor\Widgets_Manager $manager Widgets manager.
 	 */
 	public static function register( $manager ) {
-		require_once LDBTN_PATH . 'includes/class-ldbtn-elementor-widget.php';
-		require_once LDBTN_PATH . 'includes/class-ldbtn-elementor-most-liked.php';
-		$manager->register( new LDBTN_Elementor_Widget() );
-		$manager->register( new LDBTN_Elementor_Most_Liked() );
+		require_once LIKENOOK_PATH . 'includes/class-likenook-elementor-widget.php';
+		require_once LIKENOOK_PATH . 'includes/class-likenook-elementor-most-liked.php';
+		$manager->register( new Likenook_Elementor_Widget() );
+		$manager->register( new Likenook_Elementor_Most_Liked() );
 	}
 }

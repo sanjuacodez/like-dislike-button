@@ -2,7 +2,7 @@
 /**
  * Editor script dependencies.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 return array(

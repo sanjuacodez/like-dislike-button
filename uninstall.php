@@ -2,7 +2,7 @@
 /**
  * Removes plugin data on uninstall, only if "Delete all data" was switched on.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
@@ -10,32 +10,32 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 /**
  * Cleans up one site.
  */
-function ldbtn_uninstall_site() {
+function likenook_uninstall_site() {
 	global $wpdb;
 
-	$settings = get_option( 'ldbtn_settings' );
+	$settings = get_option( 'likenook_settings' );
 	if ( empty( $settings['delete_data'] ) ) {
 		return;
 	}
 
-	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}ldbtn_votes" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange
+	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}likenook_votes" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange
 
-	foreach ( array( '_ldbtn_likes', '_ldbtn_dislikes', '_ldbtn_score', '_ldbtn_imported', '_ldbtn_hide' ) as $key ) {
+	foreach ( array( '_likenook_likes', '_likenook_dislikes', '_likenook_score', '_likenook_imported', '_likenook_hide' ) as $key ) {
 		delete_metadata( 'post', 0, $key, '', true );
 		delete_metadata( 'comment', 0, $key, '', true );
 	}
 
-	delete_option( 'ldbtn_settings' );
-	delete_option( 'ldbtn_db_version' );
-	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_ldbtn\_%' OR option_name LIKE '\_transient\_timeout\_ldbtn\_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	delete_option( 'likenook_settings' );
+	delete_option( 'likenook_db_version' );
+	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_likenook\_%' OR option_name LIKE '\_transient\_timeout\_likenook\_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 }
 
 if ( is_multisite() ) {
-	foreach ( get_sites( array( 'fields' => 'ids' ) ) as $ldbtn_site ) {
-		switch_to_blog( $ldbtn_site );
-		ldbtn_uninstall_site();
+	foreach ( get_sites( array( 'fields' => 'ids' ) ) as $likenook_site ) {
+		switch_to_blog( $likenook_site );
+		likenook_uninstall_site();
 		restore_current_blog();
 	}
 } else {
-	ldbtn_uninstall_site();
+	likenook_uninstall_site();
 }

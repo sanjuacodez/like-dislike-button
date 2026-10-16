@@ -1,8 +1,8 @@
 <?php
 /**
- * Blocks: Like Dislike Buttons and Most Liked Posts.
+ * Blocks: Likenook Buttons and Most Liked Posts.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Registers the blocks and renders them on the server.
  */
-class LDBTN_Blocks {
+class Likenook_Blocks {
 
 	/**
 	 * Hooks into WordPress.
@@ -23,14 +23,14 @@ class LDBTN_Blocks {
 	 * Registers both blocks.
 	 */
 	public static function register() {
-		register_block_type( LDBTN_PATH . 'blocks/buttons', array( 'render_callback' => array( __CLASS__, 'render_buttons' ) ) );
-		register_block_type( LDBTN_PATH . 'blocks/most-liked', array( 'render_callback' => array( __CLASS__, 'render_most_liked' ) ) );
+		register_block_type( LIKENOOK_PATH . 'blocks/buttons', array( 'render_callback' => array( __CLASS__, 'render_buttons' ) ) );
+		register_block_type( LIKENOOK_PATH . 'blocks/most-liked', array( 'render_callback' => array( __CLASS__, 'render_most_liked' ) ) );
 
-		$handle = generate_block_asset_handle( 'like-dislike-button/buttons', 'editorScript' );
-		wp_add_inline_script( $handle, 'window.ldbtnBlockOptions = ' . wp_json_encode( self::editor_options() ) . ';', 'before' );
+		$handle = generate_block_asset_handle( 'likenook/buttons', 'editorScript' );
+		wp_add_inline_script( $handle, 'window.likenookBlockOptions = ' . wp_json_encode( self::editor_options() ) . ';', 'before' );
 
 		foreach ( array( 'buttons', 'most-liked' ) as $block ) {
-			wp_set_script_translations( generate_block_asset_handle( 'like-dislike-button/' . $block, 'editorScript' ), 'like-dislike-button' );
+			wp_set_script_translations( generate_block_asset_handle( 'likenook/' . $block, 'editorScript' ), 'likenook' );
 		}
 	}
 
@@ -52,19 +52,19 @@ class LDBTN_Blocks {
 		};
 
 		return array(
-			'iconSets' => $options( wp_list_pluck( LDBTN_Icons::sets(), 'label' ) ),
+			'iconSets' => $options( wp_list_pluck( Likenook_Icons::sets(), 'label' ) ),
 			'styles'   => $options( self::style_labels() ),
 			'sizes'    => $options(
 				array(
-					'sm' => __( 'Small', 'like-dislike-button' ),
-					'md' => __( 'Medium', 'like-dislike-button' ),
-					'lg' => __( 'Large', 'like-dislike-button' ),
+					'sm' => __( 'Small', 'likenook' ),
+					'md' => __( 'Medium', 'likenook' ),
+					'lg' => __( 'Large', 'likenook' ),
 				)
 			),
 			'layouts'  => $options(
 				array(
-					'row'   => __( 'Side by side', 'like-dislike-button' ),
-					'stack' => __( 'Stacked', 'like-dislike-button' ),
+					'row'   => __( 'Side by side', 'likenook' ),
+					'stack' => __( 'Stacked', 'likenook' ),
 				)
 			),
 			'counts'   => $options( self::count_labels() ),
@@ -78,12 +78,12 @@ class LDBTN_Blocks {
 	 */
 	public static function style_labels() {
 		return array(
-			'soft'    => __( 'Soft', 'like-dislike-button' ),
-			'outline' => __( 'Outline', 'like-dislike-button' ),
-			'pill'    => __( 'Pill', 'like-dislike-button' ),
-			'minimal' => __( 'Minimal', 'like-dislike-button' ),
-			'solid'   => __( 'Solid', 'like-dislike-button' ),
-			'glass'   => __( 'Glass', 'like-dislike-button' ),
+			'soft'    => __( 'Soft', 'likenook' ),
+			'outline' => __( 'Outline', 'likenook' ),
+			'pill'    => __( 'Pill', 'likenook' ),
+			'minimal' => __( 'Minimal', 'likenook' ),
+			'solid'   => __( 'Solid', 'likenook' ),
+			'glass'   => __( 'Glass', 'likenook' ),
 		);
 	}
 
@@ -94,11 +94,11 @@ class LDBTN_Blocks {
 	 */
 	public static function count_labels() {
 		return array(
-			'show'       => __( 'Show counts', 'like-dislike-button' ),
-			'hide'       => __( 'Hide counts', 'like-dislike-button' ),
-			'after_vote' => __( 'Show after voting', 'like-dislike-button' ),
-			'percent'    => __( 'Percentages', 'like-dislike-button' ),
-			'score'      => __( 'Score (likes minus dislikes)', 'like-dislike-button' ),
+			'show'       => __( 'Show counts', 'likenook' ),
+			'hide'       => __( 'Hide counts', 'likenook' ),
+			'after_vote' => __( 'Show after voting', 'likenook' ),
+			'percent'    => __( 'Percentages', 'likenook' ),
+			'score'      => __( 'Score (likes minus dislikes)', 'likenook' ),
 		);
 	}
 
@@ -112,8 +112,8 @@ class LDBTN_Blocks {
 	 */
 	public static function render_buttons( $attributes, $content, $block ) {
 		// In a widget area the block context is just the last post listed; use the viewed post instead.
-		if ( LDBTN_Render::in_sidebar() || ! isset( $block->context['postId'] ) ) {
-			$post_id = LDBTN_Render::current_post_id();
+		if ( Likenook_Render::in_sidebar() || ! isset( $block->context['postId'] ) ) {
+			$post_id = Likenook_Render::current_post_id();
 		} else {
 			$post_id = (int) $block->context['postId'];
 		}
@@ -141,7 +141,7 @@ class LDBTN_Blocks {
 			}
 		}
 
-		return LDBTN_Render::render( 'post', $post_id, $args );
+		return Likenook_Render::render( 'post', $post_id, $args );
 	}
 
 	/**
@@ -151,7 +151,7 @@ class LDBTN_Blocks {
 	 * @return string
 	 */
 	public static function render_most_liked( $attributes ) {
-		return LDBTN_Most_Liked::render(
+		return Likenook_Most_Liked::render(
 			array(
 				'number'         => isset( $attributes['number'] ) ? (int) $attributes['number'] : 5,
 				'post_type'      => isset( $attributes['postType'] ) ? $attributes['postType'] : 'post',
@@ -159,7 +159,7 @@ class LDBTN_Blocks {
 				'show_count'     => ! empty( $attributes['showCount'] ),
 				'show_thumbnail' => ! empty( $attributes['showThumbnail'] ),
 			),
-			get_block_wrapper_attributes( array( 'class' => 'ldbtn-most-liked' ) )
+			get_block_wrapper_attributes( array( 'class' => 'likenook-most-liked' ) )
 		);
 	}
 }

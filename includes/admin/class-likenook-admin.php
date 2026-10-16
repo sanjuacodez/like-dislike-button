@@ -2,15 +2,15 @@
 /**
  * Admin screens: dashboard, settings, tools, post meta box and list columns.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Everything under the "Like Dislike" admin menu.
+ * Everything under the "Likenook" admin menu.
  */
-class LDBTN_Admin {
+class Likenook_Admin {
 
 	const STATS_CAP = 'edit_others_posts';
 
@@ -29,19 +29,19 @@ class LDBTN_Admin {
 		add_action( 'admin_init', array( __CLASS__, 'register_setting' ) );
 		add_action( 'admin_init', array( __CLASS__, 'list_columns' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'assets' ) );
-		add_filter( 'plugin_action_links_' . plugin_basename( LDBTN_FILE ), array( __CLASS__, 'action_links' ) );
+		add_filter( 'plugin_action_links_' . plugin_basename( LIKENOOK_FILE ), array( __CLASS__, 'action_links' ) );
 		add_action( 'add_meta_boxes', array( __CLASS__, 'meta_box' ) );
 		add_action( 'save_post', array( __CLASS__, 'save_meta_box' ) );
 		add_action( 'pre_get_posts', array( __CLASS__, 'sort_by_likes' ) );
 		add_action( 'wp_dashboard_setup', array( __CLASS__, 'dashboard_widget' ) );
-		add_action( 'update_option_' . LDBTN_Settings::OPTION, array( 'LDBTN_Settings', 'flush' ) );
+		add_action( 'update_option_' . Likenook_Settings::OPTION, array( 'Likenook_Settings', 'flush' ) );
 
-		add_action( 'wp_ajax_ldbtn_preview', array( __CLASS__, 'ajax_preview' ) );
-		add_action( 'wp_ajax_ldbtn_import', array( __CLASS__, 'ajax_import' ) );
-		add_action( 'wp_ajax_ldbtn_recount', array( __CLASS__, 'ajax_recount' ) );
-		add_action( 'admin_post_ldbtn_reset_post', array( __CLASS__, 'reset_post' ) );
-		add_action( 'admin_post_ldbtn_reset_all', array( __CLASS__, 'reset_all' ) );
-		add_action( 'admin_post_ldbtn_export', array( __CLASS__, 'export_csv' ) );
+		add_action( 'wp_ajax_likenook_preview', array( __CLASS__, 'ajax_preview' ) );
+		add_action( 'wp_ajax_likenook_import', array( __CLASS__, 'ajax_import' ) );
+		add_action( 'wp_ajax_likenook_recount', array( __CLASS__, 'ajax_recount' ) );
+		add_action( 'admin_post_likenook_reset_post', array( __CLASS__, 'reset_post' ) );
+		add_action( 'admin_post_likenook_reset_all', array( __CLASS__, 'reset_all' ) );
+		add_action( 'admin_post_likenook_export', array( __CLASS__, 'export_csv' ) );
 	}
 
 	/**
@@ -50,10 +50,10 @@ class LDBTN_Admin {
 	public static function menu() {
 		$icon = 'data:image/svg+xml;base64,' . base64_encode( '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#a7aaad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/><path d="M7 10v12"/></svg>' ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Menu icon data URI.
 
-		self::$pages[] = add_menu_page( __( 'Like Dislike', 'like-dislike-button' ), __( 'Like Dislike', 'like-dislike-button' ), self::STATS_CAP, 'ldbtn', array( __CLASS__, 'page_dashboard' ), $icon, 26 );
-		self::$pages[] = add_submenu_page( 'ldbtn', __( 'Like Dislike Dashboard', 'like-dislike-button' ), __( 'Dashboard', 'like-dislike-button' ), self::STATS_CAP, 'ldbtn', array( __CLASS__, 'page_dashboard' ) );
-		self::$pages[] = add_submenu_page( 'ldbtn', __( 'Like Dislike Settings', 'like-dislike-button' ), __( 'Settings', 'like-dislike-button' ), 'manage_options', 'ldbtn-settings', array( __CLASS__, 'page_settings' ) );
-		self::$pages[] = add_submenu_page( 'ldbtn', __( 'Like Dislike Tools', 'like-dislike-button' ), __( 'Tools', 'like-dislike-button' ), 'manage_options', 'ldbtn-tools', array( __CLASS__, 'page_tools' ) );
+		self::$pages[] = add_menu_page( __( 'Likenook', 'likenook' ), __( 'Likenook', 'likenook' ), self::STATS_CAP, 'likenook', array( __CLASS__, 'page_dashboard' ), $icon, 26 );
+		self::$pages[] = add_submenu_page( 'likenook', __( 'Likenook Dashboard', 'likenook' ), __( 'Dashboard', 'likenook' ), self::STATS_CAP, 'likenook', array( __CLASS__, 'page_dashboard' ) );
+		self::$pages[] = add_submenu_page( 'likenook', __( 'Likenook Settings', 'likenook' ), __( 'Settings', 'likenook' ), 'manage_options', 'likenook-settings', array( __CLASS__, 'page_settings' ) );
+		self::$pages[] = add_submenu_page( 'likenook', __( 'Likenook Tools', 'likenook' ), __( 'Tools', 'likenook' ), 'manage_options', 'likenook-tools', array( __CLASS__, 'page_tools' ) );
 	}
 
 	/**
@@ -61,12 +61,12 @@ class LDBTN_Admin {
 	 */
 	public static function register_setting() {
 		register_setting(
-			'ldbtn_settings',
-			LDBTN_Settings::OPTION,
+			'likenook_settings',
+			Likenook_Settings::OPTION,
 			array(
 				'type'              => 'array',
-				'sanitize_callback' => array( 'LDBTN_Settings', 'sanitize' ),
-				'default'           => LDBTN_Settings::defaults(),
+				'sanitize_callback' => array( 'Likenook_Settings', 'sanitize' ),
+				'default'           => Likenook_Settings::defaults(),
 			)
 		);
 	}
@@ -80,7 +80,7 @@ class LDBTN_Admin {
 	public static function action_links( $links ) {
 		array_unshift(
 			$links,
-			'<a href="' . esc_url( admin_url( 'admin.php?page=ldbtn-settings' ) ) . '">' . esc_html__( 'Settings', 'like-dislike-button' ) . '</a>'
+			'<a href="' . esc_url( admin_url( 'admin.php?page=likenook-settings' ) ) . '">' . esc_html__( 'Settings', 'likenook' ) . '</a>'
 		);
 		return $links;
 	}
@@ -91,47 +91,47 @@ class LDBTN_Admin {
 	 * @param string $hook Current screen hook.
 	 */
 	public static function assets( $hook ) {
-		if ( 'edit.php' === $hook && LDBTN_Settings::type_enabled( get_current_screen()->post_type ) ) {
-			wp_register_style( 'ldbtn-list', false, array(), LDBTN_VERSION );
-			wp_enqueue_style( 'ldbtn-list' );
-			wp_add_inline_style( 'ldbtn-list', '.column-ldbtn_votes{width:8.5em}.ldbtn-col{display:inline-flex;gap:.6em;font-variant-numeric:tabular-nums}.ldbtn-col .dashicons{font-size:16px;width:16px;height:16px;vertical-align:text-bottom;color:#8c8f94}' );
+		if ( 'edit.php' === $hook && Likenook_Settings::type_enabled( get_current_screen()->post_type ) ) {
+			wp_register_style( 'likenook-list', false, array(), LIKENOOK_VERSION );
+			wp_enqueue_style( 'likenook-list' );
+			wp_add_inline_style( 'likenook-list', '.column-likenook_votes{width:8.5em}.likenook-col{display:inline-flex;gap:.6em;font-variant-numeric:tabular-nums}.likenook-col .dashicons{font-size:16px;width:16px;height:16px;vertical-align:text-bottom;color:#8c8f94}' );
 		}
 		if ( ! in_array( $hook, self::$pages, true ) ) {
 			return;
 		}
 
-		wp_enqueue_style( 'ldbtn' );
-		wp_enqueue_style( 'ldbtn-admin', LDBTN_URL . 'assets/css/admin.css', array( 'wp-color-picker' ), LDBTN_VERSION );
+		wp_enqueue_style( 'likenook' );
+		wp_enqueue_style( 'likenook-admin', LIKENOOK_URL . 'assets/css/admin.css', array( 'wp-color-picker' ), LIKENOOK_VERSION );
 
 		$deps = array( 'jquery', 'wp-color-picker' );
-		wp_enqueue_script( 'ldbtn' );
-		if ( false !== strpos( $hook, 'ldbtn-settings' ) ) {
+		wp_enqueue_script( 'likenook' );
+		if ( false !== strpos( $hook, 'likenook-settings' ) ) {
 			wp_enqueue_media();
 			// The preview brings its own colours from the unsaved form, so drop the saved ones.
-			wp_styles()->registered['ldbtn']->extra['after'] = array();
+			wp_styles()->registered['likenook']->extra['after'] = array();
 		}
-		wp_enqueue_script( 'ldbtn-admin', LDBTN_URL . 'assets/js/admin.js', $deps, LDBTN_VERSION, true );
+		wp_enqueue_script( 'likenook-admin', LIKENOOK_URL . 'assets/js/admin.js', $deps, LIKENOOK_VERSION, true );
 		wp_localize_script(
-			'ldbtn-admin',
-			'ldbtnAdmin',
+			'likenook-admin',
+			'likenookAdmin',
 			array(
 				'ajax'    => admin_url( 'admin-ajax.php' ),
-				'nonce'   => wp_create_nonce( 'ldbtn_admin' ),
+				'nonce'   => wp_create_nonce( 'likenook_admin' ),
 				'presets' => self::presets(),
 				'i18n'    => array(
-					'choose'       => __( 'Choose an image', 'like-dislike-button' ),
-					'use'          => __( 'Use this image', 'like-dislike-button' ),
+					'choose'       => __( 'Choose an image', 'likenook' ),
+					'use'          => __( 'Use this image', 'likenook' ),
 					/* translators: %d: number of records processed so far */
-					'importing'    => __( 'Importing… %d processed', 'like-dislike-button' ),
+					'importing'    => __( 'Importing… %d processed', 'likenook' ),
 					/* translators: %d: number of records imported */
-					'imported'     => __( 'Done. Imported: %d', 'like-dislike-button' ),
-					'recounting'   => __( 'Recounting…', 'like-dislike-button' ),
-					'recounted'    => __( 'All totals are up to date.', 'like-dislike-button' ),
-					'error'        => __( 'Something went wrong. Please try again.', 'like-dislike-button' ),
-					'confirmReset' => __( 'Delete every like and dislike on this site? This can’t be undone.', 'like-dislike-button' ),
-					'copied'       => __( 'Copied', 'like-dislike-button' ),
-					'likes'        => __( 'Likes', 'like-dislike-button' ),
-					'dislikes'     => __( 'Dislikes', 'like-dislike-button' ),
+					'imported'     => __( 'Done. Imported: %d', 'likenook' ),
+					'recounting'   => __( 'Recounting…', 'likenook' ),
+					'recounted'    => __( 'All totals are up to date.', 'likenook' ),
+					'error'        => __( 'Something went wrong. Please try again.', 'likenook' ),
+					'confirmReset' => __( 'Delete every like and dislike on this site? This can’t be undone.', 'likenook' ),
+					'copied'       => __( 'Copied', 'likenook' ),
+					'likes'        => __( 'Likes', 'likenook' ),
+					'dislikes'     => __( 'Dislikes', 'likenook' ),
 				),
 			)
 		);
@@ -159,26 +159,26 @@ class LDBTN_Admin {
 		);
 		return array(
 			'classic' => array(
-				'label'  => __( 'Like / dislike', 'like-dislike-button' ),
+				'label'  => __( 'Like / dislike', 'likenook' ),
 				'values' => $base,
 			),
 			'helpful' => array(
-				'label'  => __( 'Was this helpful?', 'like-dislike-button' ),
+				'label'  => __( 'Was this helpful?', 'likenook' ),
 				'values' => array_merge(
 					$base,
 					array(
 						'style'         => 'outline',
 						'show_labels'   => true,
-						'like_label'    => __( 'Yes', 'like-dislike-button' ),
-						'dislike_label' => __( 'No', 'like-dislike-button' ),
+						'like_label'    => __( 'Yes', 'likenook' ),
+						'dislike_label' => __( 'No', 'likenook' ),
 						'counts'        => 'hide',
-						'question'      => __( 'Was this article helpful?', 'like-dislike-button' ),
-						'thanks'        => __( 'Thanks for your feedback!', 'like-dislike-button' ),
+						'question'      => __( 'Was this article helpful?', 'likenook' ),
+						'thanks'        => __( 'Thanks for your feedback!', 'likenook' ),
 					)
 				),
 			),
 			'hearts'  => array(
-				'label'  => __( 'Hearts', 'like-dislike-button' ),
+				'label'  => __( 'Hearts', 'likenook' ),
 				'values' => array_merge(
 					$base,
 					array(
@@ -190,7 +190,7 @@ class LDBTN_Admin {
 				),
 			),
 			'updown'  => array(
-				'label'  => __( 'Upvote / downvote', 'like-dislike-button' ),
+				'label'  => __( 'Upvote / downvote', 'likenook' ),
 				'values' => array_merge(
 					$base,
 					array(
@@ -203,7 +203,7 @@ class LDBTN_Admin {
 				),
 			),
 			'emoji'   => array(
-				'label'  => __( 'Emoji', 'like-dislike-button' ),
+				'label'  => __( 'Emoji', 'likenook' ),
 				'values' => array_merge(
 					$base,
 					array(
@@ -213,7 +213,7 @@ class LDBTN_Admin {
 				),
 			),
 			'ratio'   => array(
-				'label'  => __( 'Rating bar', 'like-dislike-button' ),
+				'label'  => __( 'Rating bar', 'likenook' ),
 				'values' => array_merge(
 					$base,
 					array(
@@ -233,21 +233,21 @@ class LDBTN_Admin {
 	 */
 	public static function header( $current ) {
 		$tabs = array(
-			'ldbtn'          => __( 'Dashboard', 'like-dislike-button' ),
-			'ldbtn-settings' => __( 'Settings', 'like-dislike-button' ),
-			'ldbtn-tools'    => __( 'Tools', 'like-dislike-button' ),
+			'likenook'          => __( 'Dashboard', 'likenook' ),
+			'likenook-settings' => __( 'Settings', 'likenook' ),
+			'likenook-tools'    => __( 'Tools', 'likenook' ),
 		);
 		if ( ! current_user_can( 'manage_options' ) ) {
 			$tabs = array_slice( $tabs, 0, 1, true );
 		}
 		?>
-		<div class="ldbtn-topbar">
-			<div class="ldbtn-topbar__brand">
-				<span class="ldbtn-topbar__logo" aria-hidden="true"><?php echo LDBTN_Icons::get( 'thumbs', 'like' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static SVG. ?></span>
-				<span class="ldbtn-topbar__name"><?php esc_html_e( 'Like Dislike Button', 'like-dislike-button' ); ?></span>
-				<span class="ldbtn-topbar__version"><?php echo esc_html( LDBTN_VERSION ); ?></span>
+		<div class="likenook-topbar">
+			<div class="likenook-topbar__brand">
+				<span class="likenook-topbar__logo" aria-hidden="true"><?php echo Likenook_Icons::get( 'thumbs', 'like' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static SVG. ?></span>
+				<span class="likenook-topbar__name"><?php esc_html_e( 'Likenook', 'likenook' ); ?></span>
+				<span class="likenook-topbar__version"><?php echo esc_html( LIKENOOK_VERSION ); ?></span>
 			</div>
-			<nav class="ldbtn-topbar__nav" aria-label="<?php esc_attr_e( 'Like Dislike sections', 'like-dislike-button' ); ?>">
+			<nav class="likenook-topbar__nav" aria-label="<?php esc_attr_e( 'Likenook sections', 'likenook' ); ?>">
 				<?php foreach ( $tabs as $slug => $label ) : ?>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $slug ) ); ?>" class="<?php echo $slug === $current ? 'is-current' : ''; ?>" <?php echo $slug === $current ? 'aria-current="page"' : ''; ?>><?php echo esc_html( $label ); ?></a>
 				<?php endforeach; ?>
@@ -260,21 +260,21 @@ class LDBTN_Admin {
 	 * Analytics page.
 	 */
 	public static function page_dashboard() {
-		require LDBTN_PATH . 'includes/admin/views/dashboard.php';
+		require LIKENOOK_PATH . 'includes/admin/views/dashboard.php';
 	}
 
 	/**
 	 * Settings page.
 	 */
 	public static function page_settings() {
-		require LDBTN_PATH . 'includes/admin/views/settings.php';
+		require LIKENOOK_PATH . 'includes/admin/views/settings.php';
 	}
 
 	/**
 	 * Tools page.
 	 */
 	public static function page_tools() {
-		require LDBTN_PATH . 'includes/admin/views/tools.php';
+		require LIKENOOK_PATH . 'includes/admin/views/tools.php';
 	}
 
 	/**
@@ -284,15 +284,15 @@ class LDBTN_Admin {
 	 * @return string
 	 */
 	public static function preview_html( $settings ) {
-		$settings = LDBTN_Settings::sanitize( $settings );
+		$settings = Likenook_Settings::sanitize( $settings );
 		// Unsaved colours go on the preview itself as custom properties.
-		return LDBTN_Render::render(
+		return Likenook_Render::render(
 			'post',
 			0,
 			array(
 				'preview'  => true,
 				'settings' => $settings,
-				'style'    => LDBTN_Render::css_vars( $settings ),
+				'style'    => Likenook_Render::css_vars( $settings ),
 			)
 		);
 	}
@@ -301,13 +301,13 @@ class LDBTN_Admin {
 	 * AJAX: preview for unsaved settings.
 	 */
 	public static function ajax_preview() {
-		check_ajax_referer( 'ldbtn_admin', 'nonce' );
+		check_ajax_referer( 'likenook_admin', 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( null, 403 );
 		}
 		$raw = isset( $_POST['settings'] ) ? wp_unslash( $_POST['settings'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Parsed and sanitized below.
 		parse_str( (string) $raw, $parsed );
-		$settings = isset( $parsed[ LDBTN_Settings::OPTION ] ) ? $parsed[ LDBTN_Settings::OPTION ] : array();
+		$settings = isset( $parsed[ Likenook_Settings::OPTION ] ) ? $parsed[ Likenook_Settings::OPTION ] : array();
 		wp_send_json_success( array( 'html' => self::preview_html( $settings ) ) );
 	}
 
@@ -315,7 +315,7 @@ class LDBTN_Admin {
 	 * AJAX: one import batch.
 	 */
 	public static function ajax_import() {
-		check_ajax_referer( 'ldbtn_admin', 'nonce' );
+		check_ajax_referer( 'likenook_admin', 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( null, 403 );
 		}
@@ -325,12 +325,12 @@ class LDBTN_Admin {
 			'after' => isset( $_POST['after'] ) ? absint( $_POST['after'] ) : 0,
 		);
 
-		$result = LDBTN_Importer::run_batch( $source, $cursor );
+		$result = Likenook_Importer::run_batch( $source, $cursor );
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
 		}
 		if ( $result['done'] ) {
-			LDBTN_Importer::finish();
+			Likenook_Importer::finish();
 		}
 		wp_send_json_success( $result );
 	}
@@ -339,11 +339,11 @@ class LDBTN_Admin {
 	 * AJAX: one recount batch.
 	 */
 	public static function ajax_recount() {
-		check_ajax_referer( 'ldbtn_admin', 'nonce' );
+		check_ajax_referer( 'likenook_admin', 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( null, 403 );
 		}
-		$types = LDBTN_Votes::object_types();
+		$types = Likenook_Votes::object_types();
 		$step  = isset( $_POST['step'] ) ? absint( $_POST['step'] ) : 0;
 		$after = isset( $_POST['after'] ) ? absint( $_POST['after'] ) : 0;
 
@@ -351,7 +351,7 @@ class LDBTN_Admin {
 			wp_send_json_success( array( 'done' => true ) );
 		}
 
-		$next = LDBTN_Votes::recount_batch( $types[ $step ], $after );
+		$next = Likenook_Votes::recount_batch( $types[ $step ], $after );
 		wp_send_json_success(
 			array(
 				'done'  => ! $next && ! isset( $types[ $step + 1 ] ),
@@ -365,12 +365,12 @@ class LDBTN_Admin {
 	 * Deletes all votes after confirmation.
 	 */
 	public static function reset_all() {
-		check_admin_referer( 'ldbtn_reset_all' );
+		check_admin_referer( 'likenook_reset_all' );
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'like-dislike-button' ) );
+			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'likenook' ) );
 		}
-		LDBTN_Votes::reset();
-		wp_safe_redirect( add_query_arg( 'ldbtn_notice', 'reset', admin_url( 'admin.php?page=ldbtn-tools' ) ) );
+		Likenook_Votes::reset();
+		wp_safe_redirect( add_query_arg( 'likenook_notice', 'reset', admin_url( 'admin.php?page=likenook-tools' ) ) );
 		exit;
 	}
 
@@ -379,12 +379,12 @@ class LDBTN_Admin {
 	 */
 	public static function reset_post() {
 		$post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
-		check_admin_referer( 'ldbtn_reset_post_' . $post_id );
+		check_admin_referer( 'likenook_reset_post_' . $post_id );
 		if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
-			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'like-dislike-button' ) );
+			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'likenook' ) );
 		}
-		LDBTN_Votes::reset( 'post', $post_id );
-		wp_safe_redirect( add_query_arg( 'ldbtn_notice', 'reset', wp_get_referer() ? wp_get_referer() : get_edit_post_link( $post_id, 'url' ) ) );
+		Likenook_Votes::reset( 'post', $post_id );
+		wp_safe_redirect( add_query_arg( 'likenook_notice', 'reset', wp_get_referer() ? wp_get_referer() : get_edit_post_link( $post_id, 'url' ) ) );
 		exit;
 	}
 
@@ -393,9 +393,9 @@ class LDBTN_Admin {
 	 */
 	public static function export_csv() {
 		global $wpdb;
-		check_admin_referer( 'ldbtn_export' );
+		check_admin_referer( 'likenook_export' );
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'like-dislike-button' ) );
+			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'likenook' ) );
 		}
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
@@ -409,8 +409,8 @@ class LDBTN_Admin {
 				LEFT JOIN {$wpdb->postmeta} d ON d.post_id = p.ID AND d.meta_key = %s
 				WHERE l.meta_value IS NOT NULL OR d.meta_value IS NOT NULL
 				ORDER BY likes DESC",
-				LDBTN_Votes::META_LIKES,
-				LDBTN_Votes::META_DISLIKES
+				Likenook_Votes::META_LIKES,
+				Likenook_Votes::META_DISLIKES
 			)
 		);
 
@@ -433,8 +433,8 @@ class LDBTN_Admin {
 	 * Meta box on enabled post types.
 	 */
 	public static function meta_box() {
-		foreach ( (array) LDBTN_Settings::get( 'post_types' ) as $type ) {
-			add_meta_box( 'ldbtn-votes', __( 'Likes & dislikes', 'like-dislike-button' ), array( __CLASS__, 'render_meta_box' ), $type, 'side', 'low' );
+		foreach ( (array) Likenook_Settings::get( 'post_types' ) as $type ) {
+			add_meta_box( 'likenook-votes', __( 'Likes & dislikes', 'likenook' ), array( __CLASS__, 'render_meta_box' ), $type, 'side', 'low' );
 		}
 	}
 
@@ -444,26 +444,26 @@ class LDBTN_Admin {
 	 * @param WP_Post $post Post.
 	 */
 	public static function render_meta_box( $post ) {
-		$counts = LDBTN_Votes::counts( 'post', $post->ID );
-		$hidden = (bool) get_post_meta( $post->ID, LDBTN_Votes::META_HIDE, true );
-		wp_nonce_field( 'ldbtn_meta_box', 'ldbtn_meta_box_nonce' );
+		$counts = Likenook_Votes::counts( 'post', $post->ID );
+		$hidden = (bool) get_post_meta( $post->ID, Likenook_Votes::META_HIDE, true );
+		wp_nonce_field( 'likenook_meta_box', 'likenook_meta_box_nonce' );
 		?>
-		<p class="ldbtn-metabox-counts">
+		<p class="likenook-metabox-counts">
 			<?php
 			printf(
 				/* translators: 1: likes, 2: dislikes */
-				esc_html__( '%1$s likes · %2$s dislikes', 'like-dislike-button' ),
+				esc_html__( '%1$s likes · %2$s dislikes', 'likenook' ),
 				'<strong>' . esc_html( number_format_i18n( $counts['likes'] ) ) . '</strong>',
 				'<strong>' . esc_html( number_format_i18n( $counts['dislikes'] ) ) . '</strong>'
 			);
 			?>
 		</p>
 		<p>
-			<label><input type="checkbox" name="ldbtn_hide" value="1" <?php checked( $hidden ); ?>> <?php esc_html_e( 'Hide the buttons on this post', 'like-dislike-button' ); ?></label>
+			<label><input type="checkbox" name="likenook_hide" value="1" <?php checked( $hidden ); ?>> <?php esc_html_e( 'Hide the buttons on this post', 'likenook' ); ?></label>
 		</p>
 		<?php if ( $counts['likes'] || $counts['dislikes'] ) : ?>
 			<p>
-				<a class="ldbtn-confirm" data-confirm="<?php esc_attr_e( 'Delete all votes on this post?', 'like-dislike-button' ); ?>" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=ldbtn_reset_post&post=' . $post->ID ), 'ldbtn_reset_post_' . $post->ID ) ); ?>" onclick="return confirm(this.getAttribute('data-confirm'));"><?php esc_html_e( 'Reset votes', 'like-dislike-button' ); ?></a>
+				<a class="likenook-confirm" data-confirm="<?php esc_attr_e( 'Delete all votes on this post?', 'likenook' ); ?>" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=likenook_reset_post&post=' . $post->ID ), 'likenook_reset_post_' . $post->ID ) ); ?>" onclick="return confirm(this.getAttribute('data-confirm'));"><?php esc_html_e( 'Reset votes', 'likenook' ); ?></a>
 			</p>
 		<?php endif; ?>
 		<?php
@@ -475,16 +475,16 @@ class LDBTN_Admin {
 	 * @param int $post_id Post ID.
 	 */
 	public static function save_meta_box( $post_id ) {
-		if ( ! isset( $_POST['ldbtn_meta_box_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['ldbtn_meta_box_nonce'] ) ), 'ldbtn_meta_box' ) ) {
+		if ( ! isset( $_POST['likenook_meta_box_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['likenook_meta_box_nonce'] ) ), 'likenook_meta_box' ) ) {
 			return;
 		}
 		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
-		if ( ! empty( $_POST['ldbtn_hide'] ) ) {
-			update_post_meta( $post_id, LDBTN_Votes::META_HIDE, 1 );
+		if ( ! empty( $_POST['likenook_hide'] ) ) {
+			update_post_meta( $post_id, Likenook_Votes::META_HIDE, 1 );
 		} else {
-			delete_post_meta( $post_id, LDBTN_Votes::META_HIDE );
+			delete_post_meta( $post_id, Likenook_Votes::META_HIDE );
 		}
 	}
 
@@ -492,11 +492,11 @@ class LDBTN_Admin {
 	 * Adds a sortable "Votes" column to enabled post types.
 	 */
 	public static function list_columns() {
-		foreach ( (array) LDBTN_Settings::get( 'post_types' ) as $type ) {
+		foreach ( (array) Likenook_Settings::get( 'post_types' ) as $type ) {
 			add_filter(
 				"manage_{$type}_posts_columns",
 				function ( $columns ) {
-					$columns['ldbtn_votes'] = '<span class="ldbtn-col-head">' . esc_html__( 'Votes', 'like-dislike-button' ) . '</span>';
+					$columns['likenook_votes'] = '<span class="likenook-col-head">' . esc_html__( 'Votes', 'likenook' ) . '</span>';
 					return $columns;
 				}
 			);
@@ -504,7 +504,7 @@ class LDBTN_Admin {
 			add_filter(
 				"manage_edit-{$type}_sortable_columns",
 				function ( $columns ) {
-					$columns['ldbtn_votes'] = array( 'ldbtn_likes', true );
+					$columns['likenook_votes'] = array( 'likenook_likes', true );
 					return $columns;
 				}
 			);
@@ -518,16 +518,16 @@ class LDBTN_Admin {
 	 * @param int    $post_id Post ID.
 	 */
 	public static function column_content( $column, $post_id ) {
-		if ( 'ldbtn_votes' !== $column ) {
+		if ( 'likenook_votes' !== $column ) {
 			return;
 		}
-		$counts = LDBTN_Votes::counts( 'post', $post_id );
+		$counts = Likenook_Votes::counts( 'post', $post_id );
 		printf(
-			'<span class="ldbtn-col"><span title="%1$s"><span class="dashicons dashicons-thumbs-up" aria-hidden="true"></span> <span class="screen-reader-text">%1$s</span>%2$s</span><span title="%3$s"><span class="dashicons dashicons-thumbs-down" aria-hidden="true"></span> <span class="screen-reader-text">%3$s</span>%4$s</span></span>',
-			esc_attr__( 'Likes', 'like-dislike-button' ),
-			esc_html( LDBTN_Render::format_number( $counts['likes'] ) ),
-			esc_attr__( 'Dislikes', 'like-dislike-button' ),
-			esc_html( LDBTN_Render::format_number( $counts['dislikes'] ) )
+			'<span class="likenook-col"><span title="%1$s"><span class="dashicons dashicons-thumbs-up" aria-hidden="true"></span> <span class="screen-reader-text">%1$s</span>%2$s</span><span title="%3$s"><span class="dashicons dashicons-thumbs-down" aria-hidden="true"></span> <span class="screen-reader-text">%3$s</span>%4$s</span></span>',
+			esc_attr__( 'Likes', 'likenook' ),
+			esc_html( Likenook_Render::format_number( $counts['likes'] ) ),
+			esc_attr__( 'Dislikes', 'likenook' ),
+			esc_html( Likenook_Render::format_number( $counts['dislikes'] ) )
 		);
 	}
 
@@ -537,7 +537,7 @@ class LDBTN_Admin {
 	 * @param WP_Query $query Query.
 	 */
 	public static function sort_by_likes( $query ) {
-		if ( ! is_admin() || ! $query->is_main_query() || 'ldbtn_likes' !== $query->get( 'orderby' ) ) {
+		if ( ! is_admin() || ! $query->is_main_query() || 'likenook_likes' !== $query->get( 'orderby' ) ) {
 			return;
 		}
 		add_filter(
@@ -548,8 +548,8 @@ class LDBTN_Admin {
 					return $clauses;
 				}
 				$order              = 'ASC' === strtoupper( (string) $query->get( 'order' ) ) ? 'ASC' : 'DESC';
-				$clauses['join']   .= $wpdb->prepare( " LEFT JOIN {$wpdb->postmeta} ldbtn_m ON (ldbtn_m.post_id = {$wpdb->posts}.ID AND ldbtn_m.meta_key = %s)", LDBTN_Votes::META_LIKES );
-				$clauses['orderby'] = "CAST(COALESCE(ldbtn_m.meta_value, 0) AS SIGNED) {$order}, {$wpdb->posts}.post_date DESC";
+				$clauses['join']   .= $wpdb->prepare( " LEFT JOIN {$wpdb->postmeta} likenook_m ON (likenook_m.post_id = {$wpdb->posts}.ID AND likenook_m.meta_key = %s)", Likenook_Votes::META_LIKES );
+				$clauses['orderby'] = "CAST(COALESCE(likenook_m.meta_value, 0) AS SIGNED) {$order}, {$wpdb->posts}.post_date DESC";
 				return $clauses;
 			},
 			10,
@@ -562,7 +562,7 @@ class LDBTN_Admin {
 	 */
 	public static function dashboard_widget() {
 		if ( current_user_can( self::STATS_CAP ) ) {
-			wp_add_dashboard_widget( 'ldbtn_dashboard', __( 'Likes this week', 'like-dislike-button' ), array( __CLASS__, 'render_dashboard_widget' ) );
+			wp_add_dashboard_widget( 'likenook_dashboard', __( 'Likes this week', 'likenook' ), array( __CLASS__, 'render_dashboard_widget' ) );
 		}
 	}
 
@@ -570,25 +570,25 @@ class LDBTN_Admin {
 	 * Dashboard widget content.
 	 */
 	public static function render_dashboard_widget() {
-		$totals = LDBTN_Stats::totals( 7 );
-		$top    = LDBTN_Stats::top( 7, 'like', 5 );
+		$totals = Likenook_Stats::totals( 7 );
+		$top    = Likenook_Stats::top( 7, 'like', 5 );
 		?>
-		<div class="ldbtn-dw">
+		<div class="likenook-dw">
 			<p style="display:flex;gap:2em;margin:0 0 1em">
-				<span><strong style="font-size:1.6em;display:block"><?php echo esc_html( number_format_i18n( $totals['likes'] ) ); ?></strong><?php esc_html_e( 'Likes', 'like-dislike-button' ); ?></span>
-				<span><strong style="font-size:1.6em;display:block"><?php echo esc_html( number_format_i18n( $totals['dislikes'] ) ); ?></strong><?php esc_html_e( 'Dislikes', 'like-dislike-button' ); ?></span>
+				<span><strong style="font-size:1.6em;display:block"><?php echo esc_html( number_format_i18n( $totals['likes'] ) ); ?></strong><?php esc_html_e( 'Likes', 'likenook' ); ?></span>
+				<span><strong style="font-size:1.6em;display:block"><?php echo esc_html( number_format_i18n( $totals['dislikes'] ) ); ?></strong><?php esc_html_e( 'Dislikes', 'likenook' ); ?></span>
 			</p>
 			<?php if ( $top ) : ?>
-				<h3><?php esc_html_e( 'Most liked this week', 'like-dislike-button' ); ?></h3>
+				<h3><?php esc_html_e( 'Most liked this week', 'likenook' ); ?></h3>
 				<ul>
 					<?php foreach ( $top as $row ) : ?>
 						<li><a href="<?php echo esc_url( get_permalink( (int) $row->id ) ); ?>"><?php echo esc_html( get_the_title( (int) $row->id ) ); ?></a> — <?php echo esc_html( number_format_i18n( (int) $row->likes ) ); ?></li>
 					<?php endforeach; ?>
 				</ul>
 			<?php else : ?>
-				<p><?php esc_html_e( 'No votes in the last 7 days.', 'like-dislike-button' ); ?></p>
+				<p><?php esc_html_e( 'No votes in the last 7 days.', 'likenook' ); ?></p>
 			<?php endif; ?>
-			<p><a href="<?php echo esc_url( admin_url( 'admin.php?page=ldbtn' ) ); ?>"><?php esc_html_e( 'View all stats', 'like-dislike-button' ); ?> →</a></p>
+			<p><a href="<?php echo esc_url( admin_url( 'admin.php?page=likenook' ) ); ?>"><?php esc_html_e( 'View all stats', 'likenook' ); ?> →</a></p>
 		</div>
 		<?php
 	}

@@ -1,4 +1,4 @@
-# Like Dislike Button
+# Likenook
 
 Like and dislike buttons for WordPress posts, pages, WooCommerce products,
 custom post types and comments. Nine icon sets, six styles, a block that works
@@ -26,12 +26,12 @@ page caching.
 
 | | |
 |---|---|
-| **Block editor** | Like Dislike Buttons and Most Liked Posts blocks: posts, Query Loop, block theme templates and template parts, widget areas |
-| **Elementor** | Like Dislike Buttons and Most Liked Posts widgets with style, text and colour controls; editor clicks are preview-only |
+| **Block editor** | Likenook Buttons and Most Liked Posts blocks: posts, Query Loop, block theme templates and template parts, widget areas |
+| **Elementor** | Likenook Buttons and Most Liked Posts widgets with style, text and colour controls; editor clicks are preview-only |
 | **Widget areas** | both blocks, plus classic widgets for classic themes (also used by SiteOrigin, Elementor's WordPress panel and Beaver Builder's widget module) |
-| **Other builders** | Divi, Bricks, Beaver Builder, WPBakery, Oxygen, Breakdance: `[like_dislike_button]` in a shortcode or text module |
-| **Theme templates** | `ldbtn_buttons()` anywhere, or `do_shortcode()` |
-| **Themes** | classic and block themes; button rules carry `:not(#ldbtn-x)` so theme-wide `button` styles don't override them |
+| **Other builders** | Divi, Bricks, Beaver Builder, WPBakery, Oxygen, Breakdance: `[likenook]` in a shortcode or text module |
+| **Theme templates** | `likenook_buttons()` anywhere, or `do_shortcode()` |
+| **Themes** | classic and block themes; button rules carry `:not(#likenook-x)` so theme-wide `button` styles don't override them |
 
 Buttons placed without an ID belong to the current post. In a widget area that
 means the post being viewed, and nothing on blog and archive pages, where the
@@ -62,9 +62,9 @@ Most like plugins break in one of three places.
 
 ```
 Page (cacheable)                       REST API (never cached)
-  .ldbtn[data-ldbtn-type][data-ldbtn-id]  ─→  GET  /ldbtn/v1/state?items=post:12,comment:5
+  .likenook[data-likenook-type][data-likenook-id]  ─→  GET  /likenook/v1/state?items=post:12,comment:5
                                      ←─  totals + this visitor's vote for each item
-  click                             ─→  POST /ldbtn/v1/vote {type, id, reaction}
+  click                             ─→  POST /likenook/v1/vote {type, id, reaction}
                                          └─ checks: item public, reaction on,
                                             login/role rules, 30 votes/min per network
                                          └─ insert / switch / remove one row
@@ -77,9 +77,9 @@ settings. Cookie IDs and IPs are only ever stored as a keyed HMAC, never as-is.
 One row per voter per item is enforced by a unique key, and a short MySQL lock
 stops double clicks from counting twice.
 
-**Storage.** `{prefix}ldbtn_votes` holds one row per current vote. Totals live in
-`_ldbtn_likes`, `_ldbtn_dislikes` and `_ldbtn_score` (post or comment meta). Imports
-from plugins that only kept totals sit in `_ldbtn_imported`, so a recount never
+**Storage.** `{prefix}likenook_votes` holds one row per current vote. Totals live in
+`_likenook_likes`, `_likenook_dislikes` and `_likenook_score` (post or comment meta). Imports
+from plugins that only kept totals sit in `_likenook_imported`, so a recount never
 loses them.
 
 **Structured data.** Totals are added to the page's existing Article or WebPage
@@ -109,43 +109,43 @@ light and dark themes.
 | **Analytics** | 7/30/90 days, 12 months or all time, change vs previous period, votes per day, most liked and disliked, sortable posts column, dashboard widget, CSV export |
 | **Import** | WP ULike (vote by vote), Like Dislike for WP (vote by vote), Posts Like Dislike (totals), Like / Dislike Button 2.x |
 | **Privacy** | hashed IPs only, cookie set only on voting, WordPress export and erase tools, privacy policy text, no external requests |
-| **Developers** | REST API, `ldbtn_votes` REST field, hooks, WP-CLI, template tags, CSS custom properties |
+| **Developers** | REST API, `likenook_votes` REST field, hooks, WP-CLI, template tags, CSS custom properties |
 
 ### Shortcodes and template tags
 
 ```text
-[like_dislike_button]
-[like_dislike_button id="42" icons="hearts" style="pill" counts="percent"]
-[like_dislike_button style="outline" labels="yes" like_label="Yes" dislike_label="No" question="Was this helpful?"]
-[ldbtn_most_liked number="5" period="month" show_thumbnail="yes"]
+[likenook]
+[likenook id="42" icons="hearts" style="pill" counts="percent"]
+[likenook style="outline" labels="yes" like_label="Yes" dislike_label="No" question="Was this helpful?"]
+[likenook_most_liked number="5" period="month" show_thumbnail="yes"]
 ```
 
 ```php
-<?php if ( function_exists( 'ldbtn_buttons' ) ) { ldbtn_buttons(); } ?>
-<?php $counts = ldbtn_get_counts( get_the_ID() ); // ['likes' => 12, 'dislikes' => 3] ?>
+<?php if ( function_exists( 'likenook_buttons' ) ) { likenook_buttons(); } ?>
+<?php $counts = likenook_get_counts( get_the_ID() ); // ['likes' => 12, 'dislikes' => 3] ?>
 ```
 
 ### Hooks
 
 | Hook | Type | Use |
 |---|---|---|
-| `ldbtn_vote_recorded` | action | `( $type, $id, $vote, $previous, $user_id, $counts )` after any vote change |
-| `ldbtn_can_vote` | filter | return a `WP_Error` to block a vote |
-| `ldbtn_buttons_html` | filter | change the buttons markup |
-| `ldbtn_icon_sets` | filter | add an icon set (24×24 stroked SVG paths) |
-| `ldbtn_visitor_ip` | filter | supply the real visitor IP behind a proxy |
-| `ldbtn_rate_limit` | filter | votes per minute per network, `0` to turn off |
-| `ldbtn_schema_statistics` | filter | change or remove the `interactionStatistic` entries |
-| `ldbtn_current_post_id` | filter | which post buttons without an ID belong to |
+| `likenook_vote_recorded` | action | `( $type, $id, $vote, $previous, $user_id, $counts )` after any vote change |
+| `likenook_can_vote` | filter | return a `WP_Error` to block a vote |
+| `likenook_buttons_html` | filter | change the buttons markup |
+| `likenook_icon_sets` | filter | add an icon set (24×24 stroked SVG paths) |
+| `likenook_visitor_ip` | filter | supply the real visitor IP behind a proxy |
+| `likenook_rate_limit` | filter | votes per minute per network, `0` to turn off |
+| `likenook_schema_statistics` | filter | change or remove the `interactionStatistic` entries |
+| `likenook_current_post_id` | filter | which post buttons without an ID belong to |
 
 ### WP-CLI
 
 ```bash
-wp ldbtn stats --days=30         # totals and top posts
-wp ldbtn sources                 # other like plugins found on this site
-wp ldbtn import wp-ulike         # import votes
-wp ldbtn recount                 # rebuild every total
-wp ldbtn reset --post=42         # delete one post's votes
+wp likenook stats --days=30         # totals and top posts
+wp likenook sources                 # other like plugins found on this site
+wp likenook import wp-ulike         # import votes
+wp likenook recount                 # rebuild every total
+wp likenook reset --post=42         # delete one post's votes
 ```
 
 ---
@@ -156,17 +156,17 @@ No build step. The blocks are plain JavaScript (`blocks/*/index.js`) using the
 `wp.*` globals, with dependencies listed in `index.asset.php`.
 
 ```
-like-dislike-button.php      bootstrap
+likenook.php      bootstrap
 includes/
-  class-ldbtn-votes.php        casting, counting, recounting, voter identity
-  class-ldbtn-render.php       button markup, automatic placement, shortcodes
-  class-ldbtn-rest.php         ldbtn/v1/state, ldbtn/v1/vote, ldbtn_votes field
-  class-ldbtn-schema.php       interactionStatistic in schema.org markup
-  class-ldbtn-blocks.php       Buttons and Most Liked blocks
-  class-ldbtn-widgets.php      classic widgets
-  class-ldbtn-elementor*.php   Elementor widgets
-  class-ldbtn-stats.php        dashboard queries
-  class-ldbtn-importer.php     imports from other plugins
+  class-likenook-votes.php        casting, counting, recounting, voter identity
+  class-likenook-render.php       button markup, automatic placement, shortcodes
+  class-likenook-rest.php         likenook/v1/state, likenook/v1/vote, likenook_votes field
+  class-likenook-schema.php       interactionStatistic in schema.org markup
+  class-likenook-blocks.php       Buttons and Most Liked blocks
+  class-likenook-widgets.php      classic widgets
+  class-likenook-elementor*.php   Elementor widgets
+  class-likenook-stats.php        dashboard queries
+  class-likenook-importer.php     imports from other plugins
   admin/                     dashboard, settings, tools, meta box, list column
 assets/                      front-end and admin CSS/JS
 blocks/                      block.json + editor scripts
@@ -184,14 +184,14 @@ next to the plugin folder rather than inside it.
 To try the Live Preview locally with your working copy mounted:
 
 ```bash
-./bin/build-blueprint --local /tmp/ldbtn-blueprint.json
-npx @wp-playground/cli@latest server --blueprint=/tmp/ldbtn-blueprint.json \
-  --mount="$PWD:/wordpress/wp-content/plugins/like-dislike-button"
+./bin/build-blueprint --local /tmp/likenook-blueprint.json
+npx @wp-playground/cli@latest server --blueprint=/tmp/likenook-blueprint.json \
+  --mount="$PWD:/wordpress/wp-content/plugins/likenook"
 ```
 
 ## Release
 
-1. Bump `Version` in `like-dislike-button.php`, `LDBTN_VERSION`, and `Stable tag` in `readme.txt`.
+1. Bump `Version` in `likenook.php`, `LIKENOOK_VERSION`, and `Stable tag` in `readme.txt`.
 2. Commit and push to `main`.
 3. Tag it: `git tag v3.0.0 && git push origin v3.0.0`.
 

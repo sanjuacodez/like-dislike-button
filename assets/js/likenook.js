@@ -1,5 +1,5 @@
 /**
- * Like Dislike Button — front end.
+ * Likenook — front end.
  *
  * Counts and the visitor's own votes load through one REST request after the
  * page loads, so buttons stay correct on cached pages.
@@ -7,7 +7,7 @@
 ( function () {
 	'use strict';
 
-	var config = window.ldbtnConfig || {};
+	var config = window.likenookConfig || {};
 	var i18n = config.i18n || {};
 	var state = {};
 	var busy = {};
@@ -25,11 +25,11 @@
 	}
 
 	function keyOf( el ) {
-		return el.getAttribute( 'data-ldbtn-type' ) + ':' + el.getAttribute( 'data-ldbtn-id' );
+		return el.getAttribute( 'data-likenook-type' ) + ':' + el.getAttribute( 'data-likenook-id' );
 	}
 
 	function widgets( key ) {
-		var all = document.querySelectorAll( '.ldbtn[data-ldbtn-id]' );
+		var all = document.querySelectorAll( '.likenook[data-likenook-id]' );
 		return Array.prototype.filter.call( all, function ( el ) {
 			return ! key || keyOf( el ) === key;
 		} );
@@ -37,9 +37,9 @@
 
 	function readState( el ) {
 		return {
-			likes: parseInt( el.getAttribute( 'data-ldbtn-likes' ), 10 ) || 0,
-			dislikes: parseInt( el.getAttribute( 'data-ldbtn-dislikes' ), 10 ) || 0,
-			vote: el.getAttribute( 'data-ldbtn-vote' ) || '',
+			likes: parseInt( el.getAttribute( 'data-likenook-likes' ), 10 ) || 0,
+			dislikes: parseInt( el.getAttribute( 'data-likenook-dislikes' ), 10 ) || 0,
+			vote: el.getAttribute( 'data-likenook-vote' ) || '',
 		};
 	}
 
@@ -59,19 +59,19 @@
 	 * Draws counts and the pressed state into one widget.
 	 */
 	function paint( el, s, animate ) {
-		var mode = el.getAttribute( 'data-ldbtn-counts' );
+		var mode = el.getAttribute( 'data-likenook-counts' );
 		var total = s.likes + s.dislikes;
 
-		el.setAttribute( 'data-ldbtn-likes', s.likes );
-		el.setAttribute( 'data-ldbtn-dislikes', s.dislikes );
-		el.setAttribute( 'data-ldbtn-vote', s.vote );
+		el.setAttribute( 'data-likenook-likes', s.likes );
+		el.setAttribute( 'data-likenook-dislikes', s.dislikes );
+		el.setAttribute( 'data-likenook-vote', s.vote );
 		el.classList.toggle( 'has-voted', !! s.vote );
 
-		el.querySelectorAll( '.ldbtn-btn' ).forEach( function ( btn ) {
-			var reaction = btn.getAttribute( 'data-ldbtn-reaction' );
+		el.querySelectorAll( '.likenook-btn' ).forEach( function ( btn ) {
+			var reaction = btn.getAttribute( 'data-likenook-reaction' );
 			var n = 'like' === reaction ? s.likes : s.dislikes;
 			var active = s.vote === reaction;
-			var count = btn.querySelector( '.ldbtn-count' );
+			var count = btn.querySelector( '.likenook-count' );
 
 			btn.classList.toggle( 'is-active', active );
 			btn.setAttribute( 'aria-pressed', active ? 'true' : 'false' );
@@ -89,16 +89,16 @@
 			}
 		} );
 
-		setText( el.querySelector( '.ldbtn-score' ), format( s.likes - s.dislikes ), animate );
+		setText( el.querySelector( '.likenook-score' ), format( s.likes - s.dislikes ), animate );
 
-		var bar = el.querySelector( '.ldbtn-bar span' );
+		var bar = el.querySelector( '.likenook-bar span' );
 		if ( bar ) {
 			bar.style.width = ( total ? ( s.likes / total ) * 100 : 0 ) + '%';
 		}
 	}
 
 	function message( el, html ) {
-		var node = el.querySelector( '.ldbtn-msg' );
+		var node = el.querySelector( '.likenook-msg' );
 		if ( node ) {
 			node.innerHTML = html;
 		}
@@ -111,7 +111,7 @@
 	}
 
 	function animate( el, btn ) {
-		if ( el.classList.contains( 'ldbtn--anim-none' ) || window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) {
+		if ( el.classList.contains( 'likenook--anim-none' ) || window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) {
 			return;
 		}
 		btn.classList.remove( 'is-animating' );
@@ -122,17 +122,17 @@
 			btn.removeEventListener( 'animationend', done );
 		} );
 
-		if ( el.classList.contains( 'ldbtn--anim-burst' ) ) {
-			var icon = btn.querySelector( '.ldbtn-icon' );
+		if ( el.classList.contains( 'likenook--anim-burst' ) ) {
+			var icon = btn.querySelector( '.likenook-icon' );
 			var x = icon ? icon.offsetLeft + icon.offsetWidth / 2 + 'px' : '50%';
 			for ( var i = 0; i < 8; i++ ) {
 				var p = document.createElement( 'span' );
 				var angle = ( Math.PI * 2 * i ) / 8;
-				p.className = 'ldbtn-particle';
+				p.className = 'likenook-particle';
 				p.setAttribute( 'aria-hidden', 'true' );
-				p.style.setProperty( '--ldbtn-x', x );
-				p.style.setProperty( '--ldbtn-dx', Math.cos( angle ) * 1.6 + 'em' );
-				p.style.setProperty( '--ldbtn-dy', Math.sin( angle ) * 1.6 + 'em' );
+				p.style.setProperty( '--likenook-x', x );
+				p.style.setProperty( '--likenook-dx', Math.cos( angle ) * 1.6 + 'em' );
+				p.style.setProperty( '--likenook-dy', Math.sin( angle ) * 1.6 + 'em' );
 				btn.appendChild( p );
 				setTimeout( p.remove.bind( p ), 600 );
 			}
@@ -197,10 +197,10 @@
 		var keys = [];
 		var list = widgets();
 		if ( root && root.querySelectorAll ) {
-			list = root.matches( '.ldbtn[data-ldbtn-id]' ) ? [ root ] : Array.prototype.slice.call( root.querySelectorAll( '.ldbtn[data-ldbtn-id]' ) );
+			list = root.matches( '.likenook[data-likenook-id]' ) ? [ root ] : Array.prototype.slice.call( root.querySelectorAll( '.likenook[data-likenook-id]' ) );
 		}
 		list.forEach( function ( el ) {
-			if ( el.hasAttribute( 'data-ldbtn-preview' ) ) {
+			if ( el.hasAttribute( 'data-likenook-preview' ) ) {
 				return;
 			}
 			var key = keyOf( el );
@@ -224,15 +224,15 @@
 	}
 
 	function onClick( event ) {
-		var btn = event.target.closest( '.ldbtn .ldbtn-btn' );
+		var btn = event.target.closest( '.likenook .likenook-btn' );
 		if ( ! btn ) {
 			return;
 		}
-		var el = btn.closest( '.ldbtn' );
+		var el = btn.closest( '.likenook' );
 		var key = keyOf( el );
-		var reaction = btn.getAttribute( 'data-ldbtn-reaction' );
-		var login = el.getAttribute( 'data-ldbtn-login' );
-		var preview = el.hasAttribute( 'data-ldbtn-preview' );
+		var reaction = btn.getAttribute( 'data-likenook-reaction' );
+		var login = el.getAttribute( 'data-likenook-login' );
+		var preview = el.hasAttribute( 'data-likenook-preview' );
 
 		event.preventDefault();
 
@@ -267,7 +267,7 @@
 			animate( el, btn );
 		}
 
-		var thanks = el.getAttribute( 'data-ldbtn-thanks' );
+		var thanks = el.getAttribute( 'data-likenook-thanks' );
 		var note = after.vote ? ( thanks ? escapeHtml( thanks ) : '' ) : escapeHtml( i18n.removed || '' );
 
 		if ( preview ) {
@@ -280,7 +280,7 @@
 
 		api( 'vote', {
 			method: 'POST',
-			body: { type: el.getAttribute( 'data-ldbtn-type' ), id: parseInt( el.getAttribute( 'data-ldbtn-id' ), 10 ), reaction: reaction },
+			body: { type: el.getAttribute( 'data-likenook-type' ), id: parseInt( el.getAttribute( 'data-likenook-id' ), 10 ), reaction: reaction },
 		} )
 			.then( function ( data ) {
 				state[ key ] = data;
@@ -312,9 +312,9 @@
 	}
 
 	/**
-	 * For themes that add posts with infinite scroll: `ldbtn.refresh( container )`.
+	 * For themes that add posts with infinite scroll: `likenook.refresh( container )`.
 	 */
-	window.ldbtn = {
+	window.likenook = {
 		refresh: load,
 		paint: paint,
 	};

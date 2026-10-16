@@ -1,14 +1,14 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "like-dislike-button/buttons",
+	"name": "likenook/buttons",
 	"version": "3.0.0",
-	"title": "Like Dislike Buttons",
+	"title": "Likenook Buttons",
 	"category": "widgets",
 	"icon": "thumbs-up",
 	"description": "Like and dislike buttons for this post. Works in Query Loop, templates and sidebars.",
 	"keywords": [ "like", "dislike", "vote", "reaction", "helpful" ],
-	"textdomain": "like-dislike-button",
+	"textdomain": "likenook",
 	"usesContext": [ "postId", "postType" ],
 	"attributes": {
 		"iconSet": { "type": "string", "default": "" },
@@ -31,5 +31,5 @@
 		"typography": { "fontSize": true }
 	},
 	"editorScript": "file:./index.js",
-	"style": "ldbtn"
+	"style": "likenook"
 }

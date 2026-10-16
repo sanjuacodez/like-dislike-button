@@ -3,7 +3,7 @@
  * Elementor widget: Most Liked Posts. Loaded only from the
  * `elementor/widgets/register` hook.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Most Liked Posts widget for Elementor.
  */
-class LDBTN_Elementor_Most_Liked extends \Elementor\Widget_Base {
+class Likenook_Elementor_Most_Liked extends \Elementor\Widget_Base {
 
 	/**
 	 * Widget slug.
@@ -19,7 +19,7 @@ class LDBTN_Elementor_Most_Liked extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	public function get_name() {
-		return 'ldbtn_most_liked';
+		return 'likenook_most_liked';
 	}
 
 	/**
@@ -28,7 +28,7 @@ class LDBTN_Elementor_Most_Liked extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	public function get_title() {
-		return esc_html__( 'Most Liked Posts', 'like-dislike-button' );
+		return esc_html__( 'Most Liked Posts', 'likenook' );
 	}
 
 	/**
@@ -64,7 +64,7 @@ class LDBTN_Elementor_Most_Liked extends \Elementor\Widget_Base {
 	 * @return string[]
 	 */
 	public function get_style_depends() {
-		return array( 'ldbtn' );
+		return array( 'likenook' );
 	}
 
 	/**
@@ -81,14 +81,14 @@ class LDBTN_Elementor_Most_Liked extends \Elementor\Widget_Base {
 		$this->start_controls_section(
 			'content',
 			array(
-				'label' => esc_html__( 'Most liked posts', 'like-dislike-button' ),
+				'label' => esc_html__( 'Most liked posts', 'likenook' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
 			)
 		);
 		$this->add_control(
 			'number',
 			array(
-				'label'   => esc_html__( 'Number of posts', 'like-dislike-button' ),
+				'label'   => esc_html__( 'Number of posts', 'likenook' ),
 				'type'    => \Elementor\Controls_Manager::NUMBER,
 				'min'     => 1,
 				'max'     => 20,
@@ -98,7 +98,7 @@ class LDBTN_Elementor_Most_Liked extends \Elementor\Widget_Base {
 		$this->add_control(
 			'post_type',
 			array(
-				'label'   => esc_html__( 'Post type', 'like-dislike-button' ),
+				'label'   => esc_html__( 'Post type', 'likenook' ),
 				'type'    => \Elementor\Controls_Manager::SELECT,
 				'default' => 'post',
 				'options' => $types,
@@ -107,21 +107,21 @@ class LDBTN_Elementor_Most_Liked extends \Elementor\Widget_Base {
 		$this->add_control(
 			'period',
 			array(
-				'label'   => esc_html__( 'Period', 'like-dislike-button' ),
+				'label'   => esc_html__( 'Period', 'likenook' ),
 				'type'    => \Elementor\Controls_Manager::SELECT,
 				'default' => 'all',
 				'options' => array(
-					'all'   => esc_html__( 'All time', 'like-dislike-button' ),
-					'week'  => esc_html__( 'Last 7 days', 'like-dislike-button' ),
-					'month' => esc_html__( 'Last 30 days', 'like-dislike-button' ),
-					'year'  => esc_html__( 'Last 12 months', 'like-dislike-button' ),
+					'all'   => esc_html__( 'All time', 'likenook' ),
+					'week'  => esc_html__( 'Last 7 days', 'likenook' ),
+					'month' => esc_html__( 'Last 30 days', 'likenook' ),
+					'year'  => esc_html__( 'Last 12 months', 'likenook' ),
 				),
 			)
 		);
 		$this->add_control(
 			'show_count',
 			array(
-				'label'   => esc_html__( 'Show like count', 'like-dislike-button' ),
+				'label'   => esc_html__( 'Show like count', 'likenook' ),
 				'type'    => \Elementor\Controls_Manager::SWITCHER,
 				'default' => 'yes',
 			)
@@ -129,7 +129,7 @@ class LDBTN_Elementor_Most_Liked extends \Elementor\Widget_Base {
 		$this->add_control(
 			'show_thumbnail',
 			array(
-				'label' => esc_html__( 'Show featured image', 'like-dislike-button' ),
+				'label' => esc_html__( 'Show featured image', 'likenook' ),
 				'type'  => \Elementor\Controls_Manager::SWITCHER,
 			)
 		);
@@ -141,7 +141,7 @@ class LDBTN_Elementor_Most_Liked extends \Elementor\Widget_Base {
 	 */
 	protected function render() {
 		$settings = $this->get_settings_for_display();
-		$html     = LDBTN_Most_Liked::render(
+		$html     = Likenook_Most_Liked::render(
 			array(
 				'number'         => isset( $settings['number'] ) ? (int) $settings['number'] : 5,
 				'post_type'      => isset( $settings['post_type'] ) ? $settings['post_type'] : 'post',
@@ -152,7 +152,7 @@ class LDBTN_Elementor_Most_Liked extends \Elementor\Widget_Base {
 		);
 
 		if ( '' === $html && \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
-			$html = '<p>' . esc_html__( 'No liked posts yet for this post type and period. The list fills in as visitors vote.', 'like-dislike-button' ) . '</p>';
+			$html = '<p>' . esc_html__( 'No liked posts yet for this post type and period. The list fills in as visitors vote.', 'likenook' ) . '</p>';
 		}
 		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped while building.
 	}

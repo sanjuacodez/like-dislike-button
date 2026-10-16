@@ -2,17 +2,17 @@
 /**
  * Settings: defaults, reading and sanitizing.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Holds the single `ldbtn_settings` option.
+ * Holds the single `likenook_settings` option.
  */
-class LDBTN_Settings {
+class Likenook_Settings {
 
-	const OPTION = 'ldbtn_settings';
+	const OPTION = 'likenook_settings';
 
 	/**
 	 * Settings for this request, merged over the defaults.
@@ -81,7 +81,7 @@ class LDBTN_Settings {
 			'position'       => array( 'after', 'before', 'both', 'manual' ),
 			'buttons'        => array( 'both', 'like', 'dislike' ),
 			'order'          => array( 'like_first', 'dislike_first' ),
-			'icon_set'       => array_keys( LDBTN_Icons::sets() ),
+			'icon_set'       => array_keys( Likenook_Icons::sets() ),
 			'style'          => array( 'soft', 'outline', 'pill', 'minimal', 'solid', 'glass' ),
 			'size'           => array( 'sm', 'md', 'lg' ),
 			'align'          => array( 'left', 'center', 'right' ),
@@ -160,7 +160,7 @@ class LDBTN_Settings {
 		if ( '' !== $custom ) {
 			return $custom;
 		}
-		return 'like' === $reaction ? __( 'Like', 'like-dislike-button' ) : __( 'Dislike', 'like-dislike-button' );
+		return 'like' === $reaction ? __( 'Like', 'likenook' ) : __( 'Dislike', 'likenook' );
 	}
 
 	/**

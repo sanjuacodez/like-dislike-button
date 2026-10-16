@@ -2,21 +2,21 @@
 /**
  * The votes table.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Creates and upgrades the `{prefix}ldbtn_votes` table.
+ * Creates and upgrades the `{prefix}likenook_votes` table.
  *
  * One row per voter per item holds that voter's current reaction. Totals are
- * cached in post or comment meta (`_ldbtn_likes`, `_ldbtn_dislikes`, `_ldbtn_score`)
+ * cached in post or comment meta (`_likenook_likes`, `_likenook_dislikes`, `_likenook_score`)
  * so lists and sorting never touch this table.
  */
-class LDBTN_DB {
+class Likenook_DB {
 
-	const VERSION_OPTION = 'ldbtn_db_version';
+	const VERSION_OPTION = 'likenook_db_version';
 
 	/**
 	 * Full table name.
@@ -25,7 +25,7 @@ class LDBTN_DB {
 	 */
 	public static function table() {
 		global $wpdb;
-		return $wpdb->prefix . 'ldbtn_votes';
+		return $wpdb->prefix . 'likenook_votes';
 	}
 
 	/**
@@ -55,7 +55,7 @@ KEY user_id (user_id)
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 
-		update_option( self::VERSION_OPTION, LDBTN_DB_VERSION, false );
+		update_option( self::VERSION_OPTION, LIKENOOK_DB_VERSION, false );
 	}
 
 	/**
@@ -63,7 +63,7 @@ KEY user_id (user_id)
 	 * updates that skip the activation hook.
 	 */
 	public static function maybe_upgrade() {
-		if ( get_option( self::VERSION_OPTION ) !== LDBTN_DB_VERSION ) {
+		if ( get_option( self::VERSION_OPTION ) !== LIKENOOK_DB_VERSION ) {
 			self::install();
 		}
 	}

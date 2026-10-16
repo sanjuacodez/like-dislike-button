@@ -8,7 +8,7 @@
 	var c = wp.components;
 	var ServerSideRender = wp.serverSideRender;
 
-	wp.blocks.registerBlockType( 'like-dislike-button/most-liked', {
+	wp.blocks.registerBlockType( 'likenook/most-liked', {
 		edit: function ( props ) {
 			var a = props.attributes;
 			var blockProps = be.useBlockProps();
@@ -23,7 +23,7 @@
 					return { label: type.labels.singular_name || type.name, value: type.slug };
 				} );
 			if ( ! typeOptions.length ) {
-				typeOptions = [ { label: __( 'Posts', 'like-dislike-button' ), value: 'post' } ];
+				typeOptions = [ { label: __( 'Posts', 'likenook' ), value: 'post' } ];
 			}
 
 			return el(
@@ -34,14 +34,14 @@
 					null,
 					el(
 						c.PanelBody,
-						{ title: __( 'Settings', 'like-dislike-button' ) },
+						{ title: __( 'Settings', 'likenook' ) },
 						el(
 							c.__experimentalVStack || 'div',
 							{ spacing: 4 },
 							el( c.RangeControl, {
 								__nextHasNoMarginBottom: true,
 								__next40pxDefaultSize: true,
-								label: __( 'Number of posts', 'like-dislike-button' ),
+								label: __( 'Number of posts', 'likenook' ),
 								value: a.number,
 								min: 1,
 								max: 20,
@@ -52,7 +52,7 @@
 							el( c.SelectControl, {
 								__nextHasNoMarginBottom: true,
 								__next40pxDefaultSize: true,
-								label: __( 'Post type', 'like-dislike-button' ),
+								label: __( 'Post type', 'likenook' ),
 								value: a.postType,
 								options: typeOptions,
 								onChange: function ( value ) {
@@ -62,13 +62,13 @@
 							el( c.SelectControl, {
 								__nextHasNoMarginBottom: true,
 								__next40pxDefaultSize: true,
-								label: __( 'Period', 'like-dislike-button' ),
+								label: __( 'Period', 'likenook' ),
 								value: a.period,
 								options: [
-									{ label: __( 'All time', 'like-dislike-button' ), value: 'all' },
-									{ label: __( 'Last 7 days', 'like-dislike-button' ), value: 'week' },
-									{ label: __( 'Last 30 days', 'like-dislike-button' ), value: 'month' },
-									{ label: __( 'Last 12 months', 'like-dislike-button' ), value: 'year' },
+									{ label: __( 'All time', 'likenook' ), value: 'all' },
+									{ label: __( 'Last 7 days', 'likenook' ), value: 'week' },
+									{ label: __( 'Last 30 days', 'likenook' ), value: 'month' },
+									{ label: __( 'Last 12 months', 'likenook' ), value: 'year' },
 								],
 								onChange: function ( value ) {
 									props.setAttributes( { period: value } );
@@ -76,7 +76,7 @@
 							} ),
 							el( c.ToggleControl, {
 								__nextHasNoMarginBottom: true,
-								label: __( 'Show like count', 'like-dislike-button' ),
+								label: __( 'Show like count', 'likenook' ),
 								checked: a.showCount,
 								onChange: function ( value ) {
 									props.setAttributes( { showCount: value } );
@@ -84,7 +84,7 @@
 							} ),
 							el( c.ToggleControl, {
 								__nextHasNoMarginBottom: true,
-								label: __( 'Show featured image', 'like-dislike-button' ),
+								label: __( 'Show featured image', 'likenook' ),
 								checked: a.showThumbnail,
 								onChange: function ( value ) {
 									props.setAttributes( { showThumbnail: value } );
@@ -97,14 +97,14 @@
 					c.Disabled,
 					null,
 					el( ServerSideRender, {
-						block: 'like-dislike-button/most-liked',
+						block: 'likenook/most-liked',
 						attributes: a,
 						skipBlockSupportAttributes: true,
 						EmptyResponsePlaceholder: function () {
 							return el( c.Placeholder, {
 								icon: 'heart',
-								label: __( 'Most Liked Posts', 'like-dislike-button' ),
-								instructions: __( 'No liked posts yet for this post type and period. The list fills in as visitors vote.', 'like-dislike-button' ),
+								label: __( 'Most Liked Posts', 'likenook' ),
+								instructions: __( 'No liked posts yet for this post type and period. The list fills in as visitors vote.', 'likenook' ),
 							} );
 						},
 					} )

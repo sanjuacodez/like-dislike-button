@@ -1,14 +1,14 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "like-dislike-button/most-liked",
+	"name": "likenook/most-liked",
 	"version": "3.0.0",
 	"title": "Most Liked Posts",
 	"category": "widgets",
 	"icon": "heart",
 	"description": "A list of the posts with the most likes, all time or for a recent period.",
 	"keywords": [ "popular", "top", "likes", "ranking" ],
-	"textdomain": "like-dislike-button",
+	"textdomain": "likenook",
 	"attributes": {
 		"number": { "type": "number", "default": 5 },
 		"postType": { "type": "string", "default": "post" },
@@ -23,5 +23,5 @@
 		"typography": { "fontSize": true }
 	},
 	"editorScript": "file:./index.js",
-	"style": "ldbtn"
+	"style": "likenook"
 }

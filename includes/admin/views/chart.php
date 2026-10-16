@@ -2,55 +2,55 @@
 /**
  * Stacked column chart of likes and dislikes, as inline SVG.
  *
- * Expects $ldbtn_series: list of [label, likes, dislikes, key].
+ * Expects $likenook_series: list of [label, likes, dislikes, key].
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! $ldbtn_series ) {
-	echo '<p class="ldbtn-empty-line">' . esc_html__( 'No votes in this period.', 'like-dislike-button' ) . '</p>';
+if ( ! $likenook_series ) {
+	echo '<p class="likenook-empty-line">' . esc_html__( 'No votes in this period.', 'likenook' ) . '</p>';
 	return;
 }
 
-$ldbtn_w      = 1100;
-$ldbtn_h      = 300;
-$ldbtn_left   = 40;
-$ldbtn_right  = 6;
-$ldbtn_top    = 10;
-$ldbtn_bottom = 26;
-$ldbtn_plot_w = $ldbtn_w - $ldbtn_left - $ldbtn_right;
-$ldbtn_plot_h = $ldbtn_h - $ldbtn_top - $ldbtn_bottom;
-$ldbtn_n      = count( $ldbtn_series );
-$ldbtn_max    = 0;
-foreach ( $ldbtn_series as $ldbtn_point ) {
-	$ldbtn_max = max( $ldbtn_max, $ldbtn_point[1] + $ldbtn_point[2] );
+$likenook_w      = 1100;
+$likenook_h      = 300;
+$likenook_left   = 40;
+$likenook_right  = 6;
+$likenook_top    = 10;
+$likenook_bottom = 26;
+$likenook_plot_w = $likenook_w - $likenook_left - $likenook_right;
+$likenook_plot_h = $likenook_h - $likenook_top - $likenook_bottom;
+$likenook_n      = count( $likenook_series );
+$likenook_max    = 0;
+foreach ( $likenook_series as $likenook_point ) {
+	$likenook_max = max( $likenook_max, $likenook_point[1] + $likenook_point[2] );
 }
 
 // Round the axis up to a clean step: 1, 2, 2.5 or 5 times a power of ten.
-$ldbtn_step = 1;
-if ( $ldbtn_max > 4 ) {
-	$ldbtn_raw  = $ldbtn_max / 4;
-	$ldbtn_mag  = pow( 10, floor( log10( $ldbtn_raw ) ) );
-	$ldbtn_step = $ldbtn_mag * 10;
-	foreach ( array( 1, 2, 2.5, 5, 10 ) as $ldbtn_mult ) {
-		if ( $ldbtn_mult * $ldbtn_mag >= $ldbtn_raw ) {
-			$ldbtn_step = $ldbtn_mult * $ldbtn_mag;
+$likenook_step = 1;
+if ( $likenook_max > 4 ) {
+	$likenook_raw  = $likenook_max / 4;
+	$likenook_mag  = pow( 10, floor( log10( $likenook_raw ) ) );
+	$likenook_step = $likenook_mag * 10;
+	foreach ( array( 1, 2, 2.5, 5, 10 ) as $likenook_mult ) {
+		if ( $likenook_mult * $likenook_mag >= $likenook_raw ) {
+			$likenook_step = $likenook_mult * $likenook_mag;
 			break;
 		}
 	}
-	$ldbtn_step = max( 1, $ldbtn_step );
+	$likenook_step = max( 1, $likenook_step );
 }
-$ldbtn_y_max = max( 4, ceil( $ldbtn_max / $ldbtn_step ) * $ldbtn_step );
-if ( $ldbtn_y_max / $ldbtn_step > 5 ) {
-	$ldbtn_step = $ldbtn_y_max / 4;
+$likenook_y_max = max( 4, ceil( $likenook_max / $likenook_step ) * $likenook_step );
+if ( $likenook_y_max / $likenook_step > 5 ) {
+	$likenook_step = $likenook_y_max / 4;
 }
 
-$ldbtn_band  = $ldbtn_plot_w / $ldbtn_n;
-$ldbtn_bar_w = min( 24, max( 2, $ldbtn_band * 0.7 ) );
-$ldbtn_base  = $ldbtn_top + $ldbtn_plot_h;
-$ldbtn_every = (int) ceil( $ldbtn_n / 8 );
+$likenook_band  = $likenook_plot_w / $likenook_n;
+$likenook_bar_w = min( 24, max( 2, $likenook_band * 0.7 ) );
+$likenook_base  = $likenook_top + $likenook_plot_h;
+$likenook_every = (int) ceil( $likenook_n / 8 );
 
 /**
  * A column segment; only the top segment gets rounded corners.
@@ -62,7 +62,7 @@ $ldbtn_every = (int) ceil( $ldbtn_n / 8 );
  * @param bool  $rounded Round the top corners.
  * @return string Path data.
  */
-$ldbtn_segment = function ( $x, $y, $w, $h, $rounded ) {
+$likenook_segment = function ( $x, $y, $w, $h, $rounded ) {
 	$r = $rounded ? min( 4, $h, $w / 2 ) : 0;
 	$b = $y + $h;
 	if ( ! $r ) {
@@ -81,65 +81,65 @@ $ldbtn_segment = function ( $x, $y, $w, $h, $rounded ) {
 	);
 };
 ?>
-<div class="ldbtn-chart">
-	<svg viewBox="0 0 <?php echo (int) $ldbtn_w; ?> <?php echo (int) $ldbtn_h; ?>" role="img" aria-labelledby="ldbtn-chart-desc" class="ldbtn-chart__svg">
-		<desc id="ldbtn-chart-desc">
+<div class="likenook-chart">
+	<svg viewBox="0 0 <?php echo (int) $likenook_w; ?> <?php echo (int) $likenook_h; ?>" role="img" aria-labelledby="likenook-chart-desc" class="likenook-chart__svg">
+		<desc id="likenook-chart-desc">
 			<?php
 			/* translators: 1: likes, 2: dislikes */
-			echo esc_html( sprintf( __( 'Likes and dislikes over time: %1$s likes and %2$s dislikes in total. The same data is available as a table below.', 'like-dislike-button' ), number_format_i18n( array_sum( wp_list_pluck( $ldbtn_series, 1 ) ) ), number_format_i18n( array_sum( wp_list_pluck( $ldbtn_series, 2 ) ) ) ) );
+			echo esc_html( sprintf( __( 'Likes and dislikes over time: %1$s likes and %2$s dislikes in total. The same data is available as a table below.', 'likenook' ), number_format_i18n( array_sum( wp_list_pluck( $likenook_series, 1 ) ) ), number_format_i18n( array_sum( wp_list_pluck( $likenook_series, 2 ) ) ) ) );
 			?>
 		</desc>
-		<g class="ldbtn-chart__grid">
-			<?php for ( $ldbtn_v = 0; $ldbtn_v <= $ldbtn_y_max + 0.001; $ldbtn_v += $ldbtn_step ) : ?>
-				<?php $ldbtn_y = $ldbtn_base - $ldbtn_v / $ldbtn_y_max * $ldbtn_plot_h; ?>
-				<line x1="<?php echo esc_attr( $ldbtn_left ); ?>" x2="<?php echo esc_attr( $ldbtn_w - $ldbtn_right ); ?>" y1="<?php echo esc_attr( round( $ldbtn_y, 2 ) ); ?>" y2="<?php echo esc_attr( round( $ldbtn_y, 2 ) ); ?>" class="<?php echo 0 === (int) $ldbtn_v ? 'is-base' : ''; ?>"/>
-				<text x="<?php echo esc_attr( $ldbtn_left - 8 ); ?>" y="<?php echo esc_attr( round( $ldbtn_y + 4, 2 ) ); ?>" text-anchor="end"><?php echo esc_html( LDBTN_Render::format_number( (int) round( $ldbtn_v ) ) ); ?></text>
+		<g class="likenook-chart__grid">
+			<?php for ( $likenook_v = 0; $likenook_v <= $likenook_y_max + 0.001; $likenook_v += $likenook_step ) : ?>
+				<?php $likenook_y = $likenook_base - $likenook_v / $likenook_y_max * $likenook_plot_h; ?>
+				<line x1="<?php echo esc_attr( $likenook_left ); ?>" x2="<?php echo esc_attr( $likenook_w - $likenook_right ); ?>" y1="<?php echo esc_attr( round( $likenook_y, 2 ) ); ?>" y2="<?php echo esc_attr( round( $likenook_y, 2 ) ); ?>" class="<?php echo 0 === (int) $likenook_v ? 'is-base' : ''; ?>"/>
+				<text x="<?php echo esc_attr( $likenook_left - 8 ); ?>" y="<?php echo esc_attr( round( $likenook_y + 4, 2 ) ); ?>" text-anchor="end"><?php echo esc_html( Likenook_Render::format_number( (int) round( $likenook_v ) ) ); ?></text>
 			<?php endfor; ?>
 		</g>
-		<g class="ldbtn-chart__bars">
+		<g class="likenook-chart__bars">
 			<?php
-			foreach ( $ldbtn_series as $ldbtn_i => $ldbtn_point ) :
-				list( $ldbtn_label, $ldbtn_likes, $ldbtn_dislikes ) = $ldbtn_point;
-				$ldbtn_x   = $ldbtn_left + $ldbtn_i * $ldbtn_band + ( $ldbtn_band - $ldbtn_bar_w ) / 2;
-				$ldbtn_h_l = $ldbtn_likes / $ldbtn_y_max * $ldbtn_plot_h;
-				$ldbtn_h_d = $ldbtn_dislikes / $ldbtn_y_max * $ldbtn_plot_h;
-				$ldbtn_gap = $ldbtn_h_l && $ldbtn_h_d ? 2 : 0;
+			foreach ( $likenook_series as $likenook_i => $likenook_point ) :
+				list( $likenook_label, $likenook_likes, $likenook_dislikes ) = $likenook_point;
+				$likenook_x   = $likenook_left + $likenook_i * $likenook_band + ( $likenook_band - $likenook_bar_w ) / 2;
+				$likenook_h_l = $likenook_likes / $likenook_y_max * $likenook_plot_h;
+				$likenook_h_d = $likenook_dislikes / $likenook_y_max * $likenook_plot_h;
+				$likenook_gap = $likenook_h_l && $likenook_h_d ? 2 : 0;
 				?>
-				<g class="ldbtn-chart__col" data-label="<?php echo esc_attr( $ldbtn_label ); ?>" data-likes="<?php echo esc_attr( number_format_i18n( $ldbtn_likes ) ); ?>" data-dislikes="<?php echo esc_attr( number_format_i18n( $ldbtn_dislikes ) ); ?>" tabindex="0" aria-label="<?php echo esc_attr( sprintf( '%s: %s %s, %s %s', $ldbtn_label, number_format_i18n( $ldbtn_likes ), __( 'likes', 'like-dislike-button' ), number_format_i18n( $ldbtn_dislikes ), __( 'dislikes', 'like-dislike-button' ) ) ); ?>">
-					<rect class="ldbtn-chart__hit" x="<?php echo esc_attr( round( $ldbtn_left + $ldbtn_i * $ldbtn_band, 2 ) ); ?>" y="<?php echo esc_attr( $ldbtn_top ); ?>" width="<?php echo esc_attr( round( $ldbtn_band, 2 ) ); ?>" height="<?php echo esc_attr( $ldbtn_plot_h ); ?>"/>
-					<?php if ( $ldbtn_h_l > 0 ) : ?>
-						<path class="ldbtn-chart__like" d="<?php echo esc_attr( $ldbtn_segment( $ldbtn_x, $ldbtn_base - $ldbtn_h_l, $ldbtn_bar_w, $ldbtn_h_l, ! $ldbtn_h_d ) ); ?>"/>
+				<g class="likenook-chart__col" data-label="<?php echo esc_attr( $likenook_label ); ?>" data-likes="<?php echo esc_attr( number_format_i18n( $likenook_likes ) ); ?>" data-dislikes="<?php echo esc_attr( number_format_i18n( $likenook_dislikes ) ); ?>" tabindex="0" aria-label="<?php echo esc_attr( sprintf( '%s: %s %s, %s %s', $likenook_label, number_format_i18n( $likenook_likes ), __( 'likes', 'likenook' ), number_format_i18n( $likenook_dislikes ), __( 'dislikes', 'likenook' ) ) ); ?>">
+					<rect class="likenook-chart__hit" x="<?php echo esc_attr( round( $likenook_left + $likenook_i * $likenook_band, 2 ) ); ?>" y="<?php echo esc_attr( $likenook_top ); ?>" width="<?php echo esc_attr( round( $likenook_band, 2 ) ); ?>" height="<?php echo esc_attr( $likenook_plot_h ); ?>"/>
+					<?php if ( $likenook_h_l > 0 ) : ?>
+						<path class="likenook-chart__like" d="<?php echo esc_attr( $likenook_segment( $likenook_x, $likenook_base - $likenook_h_l, $likenook_bar_w, $likenook_h_l, ! $likenook_h_d ) ); ?>"/>
 					<?php endif; ?>
-					<?php if ( $ldbtn_h_d > 0 ) : ?>
-						<?php $ldbtn_h_d_draw = max( 1, $ldbtn_h_d - $ldbtn_gap ); ?>
-						<path class="ldbtn-chart__dislike" d="<?php echo esc_attr( $ldbtn_segment( $ldbtn_x, $ldbtn_base - $ldbtn_h_l - $ldbtn_gap - $ldbtn_h_d_draw, $ldbtn_bar_w, $ldbtn_h_d_draw, true ) ); ?>"/>
+					<?php if ( $likenook_h_d > 0 ) : ?>
+						<?php $likenook_h_d_draw = max( 1, $likenook_h_d - $likenook_gap ); ?>
+						<path class="likenook-chart__dislike" d="<?php echo esc_attr( $likenook_segment( $likenook_x, $likenook_base - $likenook_h_l - $likenook_gap - $likenook_h_d_draw, $likenook_bar_w, $likenook_h_d_draw, true ) ); ?>"/>
 					<?php endif; ?>
 				</g>
-				<?php if ( 0 === $ldbtn_i % $ldbtn_every || $ldbtn_i === $ldbtn_n - 1 && ( $ldbtn_n - 1 ) % $ldbtn_every > $ldbtn_every / 2 ) : ?>
-					<text class="ldbtn-chart__x" x="<?php echo esc_attr( round( $ldbtn_left + ( $ldbtn_i + 0.5 ) * $ldbtn_band, 2 ) ); ?>" y="<?php echo esc_attr( $ldbtn_h - 6 ); ?>" text-anchor="middle"><?php echo esc_html( $ldbtn_label ); ?></text>
+				<?php if ( 0 === $likenook_i % $likenook_every || $likenook_i === $likenook_n - 1 && ( $likenook_n - 1 ) % $likenook_every > $likenook_every / 2 ) : ?>
+					<text class="likenook-chart__x" x="<?php echo esc_attr( round( $likenook_left + ( $likenook_i + 0.5 ) * $likenook_band, 2 ) ); ?>" y="<?php echo esc_attr( $likenook_h - 6 ); ?>" text-anchor="middle"><?php echo esc_html( $likenook_label ); ?></text>
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</g>
 	</svg>
-	<div class="ldbtn-chart__tip" role="presentation" hidden></div>
+	<div class="likenook-chart__tip" role="presentation" hidden></div>
 </div>
 
-<details class="ldbtn-chart-table">
-	<summary><?php esc_html_e( 'Show as a table', 'like-dislike-button' ); ?></summary>
-	<table class="ldbtn-table">
+<details class="likenook-chart-table">
+	<summary><?php esc_html_e( 'Show as a table', 'likenook' ); ?></summary>
+	<table class="likenook-table">
 		<thead>
 			<tr>
-				<th scope="col"><?php esc_html_e( 'Date', 'like-dislike-button' ); ?></th>
-				<th scope="col" class="num"><?php esc_html_e( 'Likes', 'like-dislike-button' ); ?></th>
-				<th scope="col" class="num"><?php esc_html_e( 'Dislikes', 'like-dislike-button' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Date', 'likenook' ); ?></th>
+				<th scope="col" class="num"><?php esc_html_e( 'Likes', 'likenook' ); ?></th>
+				<th scope="col" class="num"><?php esc_html_e( 'Dislikes', 'likenook' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ( array_reverse( $ldbtn_series ) as $ldbtn_point ) : ?>
+			<?php foreach ( array_reverse( $likenook_series ) as $likenook_point ) : ?>
 				<tr>
-					<td><?php echo esc_html( $ldbtn_point[0] ); ?></td>
-					<td class="num"><?php echo esc_html( number_format_i18n( $ldbtn_point[1] ) ); ?></td>
-					<td class="num"><?php echo esc_html( number_format_i18n( $ldbtn_point[2] ) ); ?></td>
+					<td><?php echo esc_html( $likenook_point[0] ); ?></td>
+					<td class="num"><?php echo esc_html( number_format_i18n( $likenook_point[1] ) ); ?></td>
+					<td class="num"><?php echo esc_html( number_format_i18n( $likenook_point[2] ) ); ?></td>
 				</tr>
 			<?php endforeach; ?>
 		</tbody>

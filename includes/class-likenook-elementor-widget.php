@@ -2,15 +2,15 @@
 /**
  * Elementor widget. Loaded only from the `elementor/widgets/register` hook.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Like Dislike Buttons widget for Elementor.
+ * Likenook Buttons widget for Elementor.
  */
-class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
+class Likenook_Elementor_Widget extends \Elementor\Widget_Base {
 
 	/**
 	 * Widget slug.
@@ -18,7 +18,7 @@ class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	public function get_name() {
-		return 'ldbtn_buttons';
+		return 'likenook_buttons';
 	}
 
 	/**
@@ -27,7 +27,7 @@ class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	public function get_title() {
-		return esc_html__( 'Like Dislike Buttons', 'like-dislike-button' );
+		return esc_html__( 'Likenook Buttons', 'likenook' );
 	}
 
 	/**
@@ -63,7 +63,7 @@ class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 	 * @return string[]
 	 */
 	public function get_style_depends() {
-		return array( 'ldbtn' );
+		return array( 'likenook' );
 	}
 
 	/**
@@ -72,7 +72,7 @@ class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 	 * @return string[]
 	 */
 	public function get_script_depends() {
-		return array( 'ldbtn' );
+		return array( 'likenook' );
 	}
 
 	/**
@@ -89,7 +89,7 @@ class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 				'label'   => $label,
 				'type'    => \Elementor\Controls_Manager::SELECT,
 				'default' => '',
-				'options' => array( '' => esc_html__( 'Use plugin setting', 'like-dislike-button' ) ) + $options,
+				'options' => array( '' => esc_html__( 'Use plugin setting', 'likenook' ) ) + $options,
 			)
 		);
 	}
@@ -101,7 +101,7 @@ class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 		$this->start_controls_section(
 			'content',
 			array(
-				'label' => esc_html__( 'Buttons', 'like-dislike-button' ),
+				'label' => esc_html__( 'Buttons', 'likenook' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
 			)
 		);
@@ -109,55 +109,55 @@ class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'post_id',
 			array(
-				'label'       => esc_html__( 'Post ID', 'like-dislike-button' ),
+				'label'       => esc_html__( 'Post ID', 'likenook' ),
 				'type'        => \Elementor\Controls_Manager::NUMBER,
-				'description' => esc_html__( 'Leave empty for the current post.', 'like-dislike-button' ),
+				'description' => esc_html__( 'Leave empty for the current post.', 'likenook' ),
 			)
 		);
 
-		$this->choice( 'icon_set', esc_html__( 'Icons', 'like-dislike-button' ), wp_list_pluck( LDBTN_Icons::sets(), 'label' ) );
-		$this->choice( 'style', esc_html__( 'Button style', 'like-dislike-button' ), LDBTN_Blocks::style_labels() );
+		$this->choice( 'icon_set', esc_html__( 'Icons', 'likenook' ), wp_list_pluck( Likenook_Icons::sets(), 'label' ) );
+		$this->choice( 'style', esc_html__( 'Button style', 'likenook' ), Likenook_Blocks::style_labels() );
 		$this->choice(
 			'size',
-			esc_html__( 'Size', 'like-dislike-button' ),
+			esc_html__( 'Size', 'likenook' ),
 			array(
-				'sm' => esc_html__( 'Small', 'like-dislike-button' ),
-				'md' => esc_html__( 'Medium', 'like-dislike-button' ),
-				'lg' => esc_html__( 'Large', 'like-dislike-button' ),
+				'sm' => esc_html__( 'Small', 'likenook' ),
+				'md' => esc_html__( 'Medium', 'likenook' ),
+				'lg' => esc_html__( 'Large', 'likenook' ),
 			)
 		);
 		$this->choice(
 			'align',
-			esc_html__( 'Alignment', 'like-dislike-button' ),
+			esc_html__( 'Alignment', 'likenook' ),
 			array(
-				'left'   => esc_html__( 'Left', 'like-dislike-button' ),
-				'center' => esc_html__( 'Center', 'like-dislike-button' ),
-				'right'  => esc_html__( 'Right', 'like-dislike-button' ),
+				'left'   => esc_html__( 'Left', 'likenook' ),
+				'center' => esc_html__( 'Center', 'likenook' ),
+				'right'  => esc_html__( 'Right', 'likenook' ),
 			)
 		);
 		$this->choice(
 			'layout',
-			esc_html__( 'Layout', 'like-dislike-button' ),
+			esc_html__( 'Layout', 'likenook' ),
 			array(
-				'row'   => esc_html__( 'Side by side', 'like-dislike-button' ),
-				'stack' => esc_html__( 'Stacked', 'like-dislike-button' ),
+				'row'   => esc_html__( 'Side by side', 'likenook' ),
+				'stack' => esc_html__( 'Stacked', 'likenook' ),
 			)
 		);
-		$this->choice( 'counts', esc_html__( 'Counts', 'like-dislike-button' ), LDBTN_Blocks::count_labels() );
+		$this->choice( 'counts', esc_html__( 'Counts', 'likenook' ), Likenook_Blocks::count_labels() );
 		$this->choice(
 			'show_labels',
-			esc_html__( 'Labels', 'like-dislike-button' ),
+			esc_html__( 'Labels', 'likenook' ),
 			array(
-				'yes' => esc_html__( 'Show', 'like-dislike-button' ),
-				'no'  => esc_html__( 'Hide', 'like-dislike-button' ),
+				'yes' => esc_html__( 'Show', 'likenook' ),
+				'no'  => esc_html__( 'Hide', 'likenook' ),
 			)
 		);
 		$this->choice(
 			'ratio_bar',
-			esc_html__( 'Like ratio bar', 'like-dislike-button' ),
+			esc_html__( 'Like ratio bar', 'likenook' ),
 			array(
-				'yes' => esc_html__( 'Show', 'like-dislike-button' ),
-				'no'  => esc_html__( 'Hide', 'like-dislike-button' ),
+				'yes' => esc_html__( 'Show', 'likenook' ),
+				'no'  => esc_html__( 'Hide', 'likenook' ),
 			)
 		);
 
@@ -166,16 +166,16 @@ class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 		$this->start_controls_section(
 			'text',
 			array(
-				'label' => esc_html__( 'Text', 'like-dislike-button' ),
+				'label' => esc_html__( 'Text', 'likenook' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
 			)
 		);
 		foreach (
 			array(
-				'like_label'    => esc_html__( 'Like label', 'like-dislike-button' ),
-				'dislike_label' => esc_html__( 'Dislike label', 'like-dislike-button' ),
-				'question'      => esc_html__( 'Question above the buttons', 'like-dislike-button' ),
-				'thanks'        => esc_html__( 'Thank-you message', 'like-dislike-button' ),
+				'like_label'    => esc_html__( 'Like label', 'likenook' ),
+				'dislike_label' => esc_html__( 'Dislike label', 'likenook' ),
+				'question'      => esc_html__( 'Question above the buttons', 'likenook' ),
+				'thanks'        => esc_html__( 'Thank-you message', 'likenook' ),
 			) as $key => $label
 		) {
 			$this->add_control(
@@ -183,7 +183,7 @@ class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 				array(
 					'label'       => $label,
 					'type'        => \Elementor\Controls_Manager::TEXT,
-					'placeholder' => esc_html__( 'Use plugin setting', 'like-dislike-button' ),
+					'placeholder' => esc_html__( 'Use plugin setting', 'likenook' ),
 				)
 			);
 		}
@@ -192,16 +192,16 @@ class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 		$this->start_controls_section(
 			'colors',
 			array(
-				'label' => esc_html__( 'Colours', 'like-dislike-button' ),
+				'label' => esc_html__( 'Colours', 'likenook' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
 			)
 		);
 		foreach (
 			array(
-				'like_color'    => array( esc_html__( 'Like', 'like-dislike-button' ), '--ldbtn-like' ),
-				'dislike_color' => array( esc_html__( 'Dislike', 'like-dislike-button' ), '--ldbtn-dislike' ),
-				'text_color'    => array( esc_html__( 'Text', 'like-dislike-button' ), '--ldbtn-fg' ),
-				'bg_color'      => array( esc_html__( 'Button background', 'like-dislike-button' ), '--ldbtn-bg' ),
+				'like_color'    => array( esc_html__( 'Like', 'likenook' ), '--likenook-like' ),
+				'dislike_color' => array( esc_html__( 'Dislike', 'likenook' ), '--likenook-dislike' ),
+				'text_color'    => array( esc_html__( 'Text', 'likenook' ), '--likenook-fg' ),
+				'bg_color'      => array( esc_html__( 'Button background', 'likenook' ), '--likenook-bg' ),
 			) as $key => $control
 		) {
 			$this->add_control(
@@ -209,7 +209,7 @@ class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 				array(
 					'label'     => $control[0],
 					'type'      => \Elementor\Controls_Manager::COLOR,
-					'selectors' => array( '{{WRAPPER}} .ldbtn.ldbtn' => $control[1] . ': {{VALUE}};' ),
+					'selectors' => array( '{{WRAPPER}} .likenook.likenook' => $control[1] . ': {{VALUE}};' ),
 				)
 			);
 		}
@@ -221,7 +221,7 @@ class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 	 */
 	protected function render() {
 		$settings = $this->get_settings_for_display();
-		$post_id  = ! empty( $settings['post_id'] ) ? absint( $settings['post_id'] ) : LDBTN_Render::current_post_id();
+		$post_id  = ! empty( $settings['post_id'] ) ? absint( $settings['post_id'] ) : Likenook_Render::current_post_id();
 		if ( ! $post_id ) {
 			return;
 		}
@@ -242,12 +242,12 @@ class LDBTN_Elementor_Widget extends \Elementor\Widget_Base {
 		}
 		// In the Elementor editor, clicks only preview the animation.
 		if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
-			$counts           = LDBTN_Votes::counts( 'post', $post_id );
+			$counts           = Likenook_Votes::counts( 'post', $post_id );
 			$args['preview']  = true;
 			$args['likes']    = $counts['likes'];
 			$args['dislikes'] = $counts['dislikes'];
 		}
 
-		echo LDBTN_Render::render( 'post', $post_id, $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped while building.
+		echo Likenook_Render::render( 'post', $post_id, $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped while building.
 	}
 }

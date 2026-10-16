@@ -1,5 +1,5 @@
 /**
- * Like Dislike Buttons block (no build step).
+ * Likenook Buttons block (no build step).
  */
 ( function ( wp ) {
 	var el = wp.element.createElement;
@@ -7,10 +7,10 @@
 	var be = wp.blockEditor;
 	var c = wp.components;
 	var ServerSideRender = wp.serverSideRender;
-	var opts = window.ldbtnBlockOptions || {};
+	var opts = window.likenookBlockOptions || {};
 
 	function choices( list ) {
-		return [ { label: __( 'Use plugin setting', 'like-dislike-button' ), value: '' } ].concat( list || [] );
+		return [ { label: __( 'Use plugin setting', 'likenook' ), value: '' } ].concat( list || [] );
 	}
 
 	function select( props, key, label, list ) {
@@ -28,14 +28,14 @@
 		} );
 	}
 
-	wp.blocks.registerBlockType( 'like-dislike-button/buttons', {
+	wp.blocks.registerBlockType( 'likenook/buttons', {
 		edit: function ( props ) {
 			var a = props.attributes;
 			var postId = props.context.postId;
 			var blockProps = be.useBlockProps();
 			var yesNo = [
-				{ label: __( 'Show', 'like-dislike-button' ), value: 'yes' },
-				{ label: __( 'Hide', 'like-dislike-button' ), value: 'no' },
+				{ label: __( 'Show', 'likenook' ), value: 'yes' },
+				{ label: __( 'Hide', 'likenook' ), value: 'no' },
 			];
 
 			return el(
@@ -56,27 +56,27 @@
 					null,
 					el(
 						c.PanelBody,
-						{ title: __( 'Look', 'like-dislike-button' ) },
+						{ title: __( 'Look', 'likenook' ) },
 						el(
 							c.__experimentalVStack || 'div',
 							{ spacing: 4 },
-							select( props, 'iconSet', __( 'Icons', 'like-dislike-button' ), opts.iconSets ),
-							select( props, 'buttonStyle', __( 'Button style', 'like-dislike-button' ), opts.styles ),
-							select( props, 'size', __( 'Size', 'like-dislike-button' ), opts.sizes ),
-							select( props, 'layout', __( 'Layout', 'like-dislike-button' ), opts.layouts ),
-							select( props, 'counts', __( 'Counts', 'like-dislike-button' ), opts.counts ),
-							select( props, 'showLabels', __( 'Labels', 'like-dislike-button' ), yesNo ),
-							select( props, 'ratioBar', __( 'Like ratio bar', 'like-dislike-button' ), yesNo )
+							select( props, 'iconSet', __( 'Icons', 'likenook' ), opts.iconSets ),
+							select( props, 'buttonStyle', __( 'Button style', 'likenook' ), opts.styles ),
+							select( props, 'size', __( 'Size', 'likenook' ), opts.sizes ),
+							select( props, 'layout', __( 'Layout', 'likenook' ), opts.layouts ),
+							select( props, 'counts', __( 'Counts', 'likenook' ), opts.counts ),
+							select( props, 'showLabels', __( 'Labels', 'likenook' ), yesNo ),
+							select( props, 'ratioBar', __( 'Like ratio bar', 'likenook' ), yesNo )
 						)
 					),
 					el(
 						c.PanelBody,
-						{ title: __( 'Text', 'like-dislike-button' ), initialOpen: false },
+						{ title: __( 'Text', 'likenook' ), initialOpen: false },
 						el( c.TextControl, {
 							__nextHasNoMarginBottom: true,
 							__next40pxDefaultSize: true,
-							label: __( 'Question above the buttons', 'like-dislike-button' ),
-							help: __( 'Leave empty to use the plugin setting.', 'like-dislike-button' ),
+							label: __( 'Question above the buttons', 'likenook' ),
+							help: __( 'Leave empty to use the plugin setting.', 'likenook' ),
 							value: a.question || '',
 							onChange: function ( value ) {
 								props.setAttributes( { question: value || undefined } );
@@ -86,7 +86,7 @@
 						el( c.TextControl, {
 							__nextHasNoMarginBottom: true,
 							__next40pxDefaultSize: true,
-							label: __( 'Like label', 'like-dislike-button' ),
+							label: __( 'Like label', 'likenook' ),
 							value: a.likeLabel || '',
 							onChange: function ( value ) {
 								props.setAttributes( { likeLabel: value || undefined } );
@@ -96,7 +96,7 @@
 						el( c.TextControl, {
 							__nextHasNoMarginBottom: true,
 							__next40pxDefaultSize: true,
-							label: __( 'Dislike label', 'like-dislike-button' ),
+							label: __( 'Dislike label', 'likenook' ),
 							value: a.dislikeLabel || '',
 							onChange: function ( value ) {
 								props.setAttributes( { dislikeLabel: value || undefined } );
@@ -106,7 +106,7 @@
 						el( c.TextControl, {
 							__nextHasNoMarginBottom: true,
 							__next40pxDefaultSize: true,
-							label: __( 'Thank-you message', 'like-dislike-button' ),
+							label: __( 'Thank-you message', 'likenook' ),
 							value: a.thanks || '',
 							onChange: function ( value ) {
 								props.setAttributes( { thanks: value || undefined } );
@@ -118,15 +118,15 @@
 					c.Disabled,
 					null,
 					el( ServerSideRender, {
-						block: 'like-dislike-button/buttons',
+						block: 'likenook/buttons',
 						attributes: a,
 						urlQueryArgs: postId ? { post_id: postId } : {},
 						skipBlockSupportAttributes: true,
 						EmptyResponsePlaceholder: function () {
 							return el( c.Placeholder, {
 								icon: 'thumbs-up',
-								label: __( 'Like Dislike Buttons', 'like-dislike-button' ),
-								instructions: __( 'Shows the buttons for the post being viewed. In a sidebar they appear on single posts and pages, not on blog or archive pages.', 'like-dislike-button' ),
+								label: __( 'Likenook Buttons', 'likenook' ),
+								instructions: __( 'Shows the buttons for the post being viewed. In a sidebar they appear on single posts and pages, not on blog or archive pages.', 'likenook' ),
 							} );
 						},
 					} )

@@ -1,12 +1,12 @@
 <?php
 /**
- * Classic widgets: Like Dislike Buttons and Most Liked Posts.
+ * Classic widgets: Likenook Buttons and Most Liked Posts.
  *
  * For classic widget areas and builders that place WordPress widgets
  * (SiteOrigin Page Builder, Elementor's WordPress panel, Beaver Builder's
  * widget module). The block widget editor uses the blocks instead.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Registers the widgets.
  */
-class LDBTN_Widgets {
+class Likenook_Widgets {
 
 	/**
 	 * Hooks into WordPress.
@@ -28,8 +28,8 @@ class LDBTN_Widgets {
 	 * Registers both widgets.
 	 */
 	public static function register() {
-		register_widget( 'LDBTN_Widget_Buttons' );
-		register_widget( 'LDBTN_Widget_Most_Liked' );
+		register_widget( 'Likenook_Widget_Buttons' );
+		register_widget( 'Likenook_Widget_Most_Liked' );
 	}
 
 	/**
@@ -40,8 +40,8 @@ class LDBTN_Widgets {
 	 * @return string[]
 	 */
 	public static function hide_from_block_editor( $types ) {
-		$types[] = 'ldbtn_buttons';
-		$types[] = 'ldbtn_most_liked';
+		$types[] = 'likenook_buttons';
+		$types[] = 'likenook_most_liked';
 		return $types;
 	}
 
@@ -111,24 +111,24 @@ class LDBTN_Widgets {
 	 * @return array
 	 */
 	public static function inherit( $options ) {
-		return array( '' => __( 'Use plugin setting', 'like-dislike-button' ) ) + $options;
+		return array( '' => __( 'Use plugin setting', 'likenook' ) ) + $options;
 	}
 }
 
 /**
- * Like Dislike Buttons widget: buttons for the post being viewed.
+ * Likenook Buttons widget: buttons for the post being viewed.
  */
-class LDBTN_Widget_Buttons extends WP_Widget {
+class Likenook_Widget_Buttons extends WP_Widget {
 
 	/**
 	 * Sets up the widget.
 	 */
 	public function __construct() {
 		parent::__construct(
-			'ldbtn_buttons',
-			__( 'Like Dislike Buttons', 'like-dislike-button' ),
+			'likenook_buttons',
+			__( 'Likenook Buttons', 'likenook' ),
 			array(
-				'description'                 => __( 'Like and dislike buttons for the post being viewed. Hidden on blog and archive pages.', 'like-dislike-button' ),
+				'description'                 => __( 'Like and dislike buttons for the post being viewed. Hidden on blog and archive pages.', 'likenook' ),
 				'customize_selective_refresh' => true,
 			)
 		);
@@ -141,7 +141,7 @@ class LDBTN_Widget_Buttons extends WP_Widget {
 	 * @param array $instance Saved values.
 	 */
 	public function widget( $args, $instance ) {
-		$post_id = LDBTN_Render::current_post_id();
+		$post_id = Likenook_Render::current_post_id();
 		if ( ! $post_id ) {
 			return;
 		}
@@ -158,7 +158,7 @@ class LDBTN_Widget_Buttons extends WP_Widget {
 		if ( $title ) {
 			echo $args['before_title'] . esc_html( $title ) . $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Markup from the theme's sidebar registration.
 		}
-		echo LDBTN_Render::render( 'post', $post_id, $overrides ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped while building.
+		echo Likenook_Render::render( 'post', $post_id, $overrides ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped while building.
 		echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Markup from the theme's sidebar registration.
 	}
 
@@ -169,49 +169,49 @@ class LDBTN_Widget_Buttons extends WP_Widget {
 	 * @return string
 	 */
 	public function form( $instance ) {
-		LDBTN_Widgets::text( $this, $instance, 'title', __( 'Title:', 'like-dislike-button' ) );
-		LDBTN_Widgets::text( $this, $instance, 'question', __( 'Question above the buttons (optional):', 'like-dislike-button' ) );
-		LDBTN_Widgets::select( $this, $instance, 'icon_set', __( 'Icons:', 'like-dislike-button' ), LDBTN_Widgets::inherit( wp_list_pluck( LDBTN_Icons::sets(), 'label' ) ) );
-		LDBTN_Widgets::select( $this, $instance, 'style', __( 'Button style:', 'like-dislike-button' ), LDBTN_Widgets::inherit( LDBTN_Blocks::style_labels() ) );
-		LDBTN_Widgets::select(
+		Likenook_Widgets::text( $this, $instance, 'title', __( 'Title:', 'likenook' ) );
+		Likenook_Widgets::text( $this, $instance, 'question', __( 'Question above the buttons (optional):', 'likenook' ) );
+		Likenook_Widgets::select( $this, $instance, 'icon_set', __( 'Icons:', 'likenook' ), Likenook_Widgets::inherit( wp_list_pluck( Likenook_Icons::sets(), 'label' ) ) );
+		Likenook_Widgets::select( $this, $instance, 'style', __( 'Button style:', 'likenook' ), Likenook_Widgets::inherit( Likenook_Blocks::style_labels() ) );
+		Likenook_Widgets::select(
 			$this,
 			$instance,
 			'size',
-			__( 'Size:', 'like-dislike-button' ),
-			LDBTN_Widgets::inherit(
+			__( 'Size:', 'likenook' ),
+			Likenook_Widgets::inherit(
 				array(
-					'sm' => __( 'Small', 'like-dislike-button' ),
-					'md' => __( 'Medium', 'like-dislike-button' ),
-					'lg' => __( 'Large', 'like-dislike-button' ),
+					'sm' => __( 'Small', 'likenook' ),
+					'md' => __( 'Medium', 'likenook' ),
+					'lg' => __( 'Large', 'likenook' ),
 				)
 			)
 		);
-		LDBTN_Widgets::select(
+		Likenook_Widgets::select(
 			$this,
 			$instance,
 			'align',
-			__( 'Alignment:', 'like-dislike-button' ),
-			LDBTN_Widgets::inherit(
+			__( 'Alignment:', 'likenook' ),
+			Likenook_Widgets::inherit(
 				array(
-					'left'   => __( 'Left', 'like-dislike-button' ),
-					'center' => __( 'Center', 'like-dislike-button' ),
-					'right'  => __( 'Right', 'like-dislike-button' ),
+					'left'   => __( 'Left', 'likenook' ),
+					'center' => __( 'Center', 'likenook' ),
+					'right'  => __( 'Right', 'likenook' ),
 				)
 			)
 		);
-		LDBTN_Widgets::select(
+		Likenook_Widgets::select(
 			$this,
 			$instance,
 			'layout',
-			__( 'Layout:', 'like-dislike-button' ),
-			LDBTN_Widgets::inherit(
+			__( 'Layout:', 'likenook' ),
+			Likenook_Widgets::inherit(
 				array(
-					'row'   => __( 'Side by side', 'like-dislike-button' ),
-					'stack' => __( 'Stacked', 'like-dislike-button' ),
+					'row'   => __( 'Side by side', 'likenook' ),
+					'stack' => __( 'Stacked', 'likenook' ),
 				)
 			)
 		);
-		LDBTN_Widgets::select( $this, $instance, 'counts', __( 'Counts:', 'like-dislike-button' ), LDBTN_Widgets::inherit( LDBTN_Blocks::count_labels() ) );
+		Likenook_Widgets::select( $this, $instance, 'counts', __( 'Counts:', 'likenook' ), Likenook_Widgets::inherit( Likenook_Blocks::count_labels() ) );
 		return '';
 	}
 
@@ -223,7 +223,7 @@ class LDBTN_Widget_Buttons extends WP_Widget {
 	 * @return array
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$choices = LDBTN_Settings::choices();
+		$choices = Likenook_Settings::choices();
 		$clean   = array(
 			'title'    => sanitize_text_field( isset( $new_instance['title'] ) ? $new_instance['title'] : '' ),
 			'question' => sanitize_text_field( isset( $new_instance['question'] ) ? $new_instance['question'] : '' ),
@@ -239,17 +239,17 @@ class LDBTN_Widget_Buttons extends WP_Widget {
 /**
  * Most Liked Posts widget.
  */
-class LDBTN_Widget_Most_Liked extends WP_Widget {
+class Likenook_Widget_Most_Liked extends WP_Widget {
 
 	/**
 	 * Sets up the widget.
 	 */
 	public function __construct() {
 		parent::__construct(
-			'ldbtn_most_liked',
-			__( 'Most Liked Posts', 'like-dislike-button' ),
+			'likenook_most_liked',
+			__( 'Most Liked Posts', 'likenook' ),
 			array(
-				'description'                 => __( 'Your most liked posts, all time or for a recent period.', 'like-dislike-button' ),
+				'description'                 => __( 'Your most liked posts, all time or for a recent period.', 'likenook' ),
 				'customize_selective_refresh' => true,
 			)
 		);
@@ -265,7 +265,7 @@ class LDBTN_Widget_Most_Liked extends WP_Widget {
 		$instance = wp_parse_args(
 			$instance,
 			array(
-				'title'          => __( 'Most liked', 'like-dislike-button' ),
+				'title'          => __( 'Most liked', 'likenook' ),
 				'number'         => 5,
 				'post_type'      => 'post',
 				'period'         => 'all',
@@ -274,7 +274,7 @@ class LDBTN_Widget_Most_Liked extends WP_Widget {
 			)
 		);
 
-		$list = LDBTN_Most_Liked::render(
+		$list = Likenook_Most_Liked::render(
 			array(
 				'number'         => (int) $instance['number'],
 				'post_type'      => $instance['post_type'],
@@ -307,7 +307,7 @@ class LDBTN_Widget_Most_Liked extends WP_Widget {
 		$instance = wp_parse_args(
 			$instance,
 			array(
-				'title'      => __( 'Most liked', 'like-dislike-button' ),
+				'title'      => __( 'Most liked', 'likenook' ),
 				'number'     => 5,
 				'post_type'  => 'post',
 				'period'     => 'all',
@@ -321,23 +321,23 @@ class LDBTN_Widget_Most_Liked extends WP_Widget {
 			}
 		}
 
-		LDBTN_Widgets::text( $this, $instance, 'title', __( 'Title:', 'like-dislike-button' ) );
-		LDBTN_Widgets::text( $this, $instance, 'number', __( 'Number of posts:', 'like-dislike-button' ), 'number' );
-		LDBTN_Widgets::select( $this, $instance, 'post_type', __( 'Post type:', 'like-dislike-button' ), $types );
-		LDBTN_Widgets::select(
+		Likenook_Widgets::text( $this, $instance, 'title', __( 'Title:', 'likenook' ) );
+		Likenook_Widgets::text( $this, $instance, 'number', __( 'Number of posts:', 'likenook' ), 'number' );
+		Likenook_Widgets::select( $this, $instance, 'post_type', __( 'Post type:', 'likenook' ), $types );
+		Likenook_Widgets::select(
 			$this,
 			$instance,
 			'period',
-			__( 'Period:', 'like-dislike-button' ),
+			__( 'Period:', 'likenook' ),
 			array(
-				'all'   => __( 'All time', 'like-dislike-button' ),
-				'week'  => __( 'Last 7 days', 'like-dislike-button' ),
-				'month' => __( 'Last 30 days', 'like-dislike-button' ),
-				'year'  => __( 'Last 12 months', 'like-dislike-button' ),
+				'all'   => __( 'All time', 'likenook' ),
+				'week'  => __( 'Last 7 days', 'likenook' ),
+				'month' => __( 'Last 30 days', 'likenook' ),
+				'year'  => __( 'Last 12 months', 'likenook' ),
 			)
 		);
-		LDBTN_Widgets::checkbox( $this, $instance, 'show_count', __( 'Show like count', 'like-dislike-button' ) );
-		LDBTN_Widgets::checkbox( $this, $instance, 'show_thumbnail', __( 'Show featured image', 'like-dislike-button' ) );
+		Likenook_Widgets::checkbox( $this, $instance, 'show_count', __( 'Show like count', 'likenook' ) );
+		Likenook_Widgets::checkbox( $this, $instance, 'show_thumbnail', __( 'Show featured image', 'likenook' ) );
 		return '';
 	}
 
@@ -355,7 +355,7 @@ class LDBTN_Widget_Most_Liked extends WP_Widget {
 			'title'          => sanitize_text_field( isset( $new_instance['title'] ) ? $new_instance['title'] : '' ),
 			'number'         => max( 1, min( 20, absint( isset( $new_instance['number'] ) ? $new_instance['number'] : 5 ) ) ),
 			'post_type'      => post_type_exists( $type ) ? $type : 'post',
-			'period'         => array_key_exists( $period, LDBTN_Most_Liked::periods() ) ? $period : 'all',
+			'period'         => array_key_exists( $period, Likenook_Most_Liked::periods() ) ? $period : 'all',
 			'show_count'     => empty( $new_instance['show_count'] ) ? 0 : 1,
 			'show_thumbnail' => empty( $new_instance['show_thumbnail'] ) ? 0 : 1,
 		);

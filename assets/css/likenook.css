@@ -1,0 +1,439 @@
+/**
+ * Likenook — front end.
+ *
+ * Colours are custom properties, so themes can restyle everything with
+ * `.likenook { --likenook-like: …; }`. Neutral colours mix from currentColor, which
+ * keeps the buttons readable on light and dark themes alike.
+ */
+
+.likenook {
+	--likenook-like: #2563eb;
+	--likenook-dislike: #dc2626;
+	--likenook-fg: currentColor;
+	--likenook-bg: color-mix(in srgb, currentColor 7%, transparent);
+	--likenook-bg-hover: color-mix(in srgb, currentColor 12%, transparent);
+	--likenook-border: color-mix(in srgb, currentColor 20%, transparent);
+	--likenook-radius: 0.6em;
+	--likenook-gap: 0.5em;
+	--likenook-pad-y: 0.5em;
+	--likenook-pad-x: 0.85em;
+	--likenook-icon: 1.25em;
+
+	margin: 1.5em 0;
+	font-size: 1rem;
+	line-height: 1.2;
+	text-align: left;
+}
+
+.likenook--icons-hearts { --likenook-like: #e11d48; --likenook-dislike: #64748b; }
+.likenook--icons-arrows { --likenook-like: #ea580c; --likenook-dislike: #4f46e5; }
+.likenook--icons-smileys { --likenook-like: #ca8a04; --likenook-dislike: #64748b; }
+.likenook--icons-checks { --likenook-like: #16a34a; --likenook-dislike: #dc2626; }
+.likenook--icons-flames { --likenook-like: #ea580c; --likenook-dislike: #0284c7; }
+
+.likenook--size-sm { font-size: 0.875rem; }
+.likenook--size-lg { font-size: 1.125rem; }
+.likenook--comment { margin: 0.75em 0 0; }
+
+.likenook--align-center { text-align: center; }
+.likenook--align-right { text-align: right; }
+
+.likenook-question {
+	margin: 0 0 0.6em;
+	font-weight: 600;
+	font-size: 1em;
+}
+
+.likenook-buttons {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--likenook-gap);
+	vertical-align: middle;
+}
+
+.likenook--layout-stack .likenook-buttons {
+	flex-direction: column;
+	flex-wrap: nowrap;
+	gap: 0.25em;
+}
+
+/*
+ * Reset theme button styles, then apply ours. Themes often style every
+ * <button> through long selectors (Twenty Twenty-One:
+ * `.site button:not(:hover):not(:active):not(.has-background)`), so button
+ * rules carry :not(#likenook-x), which counts as an ID and wins over class-based
+ * theme rules without !important.
+ */
+.likenook .likenook-btn:not(#likenook-x) {
+	-webkit-appearance: none;
+	appearance: none;
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.4em;
+	width: auto;
+	min-width: 0;
+	min-height: 2.5em;
+	margin: 0;
+	padding: var(--likenook-pad-y) var(--likenook-pad-x);
+	border: 1px solid transparent;
+	border-radius: var(--likenook-radius);
+	background: var(--likenook-bg);
+	box-shadow: none;
+	color: var(--likenook-fg);
+	font: inherit;
+	font-size: 1em;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: normal;
+	text-transform: none;
+	text-decoration: none;
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.likenook .likenook-btn:not(#likenook-x):hover {
+	background: var(--likenook-bg-hover);
+	color: var(--likenook-fg);
+}
+
+.likenook .likenook-btn:not(#likenook-x):active {
+	transform: scale(0.96);
+}
+
+.likenook .likenook-btn:not(#likenook-x):focus:not(:focus-visible) {
+	outline: none;
+}
+
+.likenook .likenook-btn:not(#likenook-x):focus-visible {
+	outline: 2px solid var(--likenook-like);
+	outline-offset: 2px;
+}
+
+.likenook .likenook-btn:not(#likenook-x)[aria-busy="true"] {
+	cursor: progress;
+}
+
+.likenook-icon {
+	display: inline-flex;
+	flex: none;
+	width: var(--likenook-icon);
+	height: var(--likenook-icon);
+}
+
+.likenook-icon svg,
+.likenook-icon img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	object-fit: contain;
+}
+
+.likenook-icon svg .likenook-f,
+.likenook-icon svg .likenook-t {
+	fill: transparent;
+	transition: fill 0.2s ease;
+}
+
+.likenook-icon--emoji {
+	align-items: center;
+	justify-content: center;
+	font-size: 1.15em;
+	line-height: 1;
+	font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.likenook-count,
+.likenook-score {
+	font-variant-numeric: tabular-nums;
+	font-weight: 600;
+	min-width: 1ch;
+}
+
+.likenook-count:empty {
+	display: none;
+}
+
+.likenook-count[hidden] {
+	display: none;
+}
+
+.likenook-score {
+	padding: 0.15em 0;
+	text-align: center;
+}
+
+.likenook-sr {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Active (voted) state, shared by all styles. */
+.likenook .likenook-btn--like.is-active { --likenook-c: var(--likenook-like); }
+.likenook .likenook-btn--dislike.is-active { --likenook-c: var(--likenook-dislike); }
+
+.likenook .likenook-btn:not(#likenook-x).is-active {
+	color: var(--likenook-c);
+	background: color-mix(in srgb, var(--likenook-c) 13%, transparent);
+}
+
+.likenook .likenook-btn:not(#likenook-x).is-active .likenook-f { fill: currentColor; }
+.likenook .likenook-btn:not(#likenook-x).is-active .likenook-t { fill: color-mix(in srgb, currentColor 22%, transparent); }
+
+/* Outline */
+.likenook--style-outline .likenook-btn:not(#likenook-x),
+.likenook--style-outline .likenook-btn:not(#likenook-x):hover {
+	border-color: var(--likenook-border);
+	background: transparent;
+}
+
+.likenook--style-outline .likenook-btn:not(#likenook-x):hover {
+	border-color: color-mix(in srgb, currentColor 40%, transparent);
+}
+
+.likenook--style-outline .likenook-btn:not(#likenook-x).is-active {
+	border-color: var(--likenook-c);
+	background: color-mix(in srgb, var(--likenook-c) 8%, transparent);
+}
+
+/* Pill: one segmented control. */
+.likenook--style-pill .likenook-buttons {
+	gap: 0;
+	padding: 0.2em;
+	border-radius: 999px;
+	background: var(--likenook-bg);
+}
+
+.likenook--style-pill .likenook-btn:not(#likenook-x) {
+	border-radius: 999px;
+	background: transparent;
+}
+
+.likenook--style-pill.likenook--layout-row .likenook-btn:not(#likenook-x) + .likenook-btn:not(#likenook-x)::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 25%;
+	height: 50%;
+	border-left: 1px solid var(--likenook-border);
+}
+
+.likenook--style-pill .likenook-btn:not(#likenook-x).is-active::before,
+.likenook--style-pill .likenook-btn:not(#likenook-x).is-active + .likenook-btn:not(#likenook-x)::before {
+	display: none;
+}
+
+/* Minimal */
+.likenook--style-minimal .likenook-buttons { gap: 0.15em; }
+
+.likenook--style-minimal .likenook-btn:not(#likenook-x) {
+	--likenook-pad-x: 0.5em;
+	background: transparent;
+}
+
+.likenook--style-minimal .likenook-btn:not(#likenook-x).is-active {
+	background: transparent;
+}
+
+.likenook--style-minimal .likenook-btn:not(#likenook-x).is-active:hover,
+.likenook--style-minimal .likenook-btn:not(#likenook-x):hover {
+	background: var(--likenook-bg);
+}
+
+/* Solid: the active button fills with its colour. */
+.likenook--style-solid .likenook-btn:not(#likenook-x) {
+	background: var(--likenook-bg-hover);
+}
+
+.likenook--style-solid .likenook-btn:not(#likenook-x):hover {
+	background: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.likenook--style-solid .likenook-btn:not(#likenook-x).is-active,
+.likenook--style-solid .likenook-btn:not(#likenook-x).is-active:hover {
+	background: var(--likenook-c);
+	color: #fff;
+}
+
+/* Glass: for buttons over images or colour. */
+.likenook--style-glass .likenook-btn:not(#likenook-x) {
+	border-color: rgba(255, 255, 255, 0.35);
+	background: rgba(255, 255, 255, 0.18);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 24px -12px rgba(0, 0, 0, 0.25);
+	-webkit-backdrop-filter: blur(12px) saturate(1.4);
+	backdrop-filter: blur(12px) saturate(1.4);
+}
+
+.likenook--style-glass .likenook-btn:not(#likenook-x):hover {
+	background: rgba(255, 255, 255, 0.3);
+}
+
+.likenook--style-glass .likenook-btn:not(#likenook-x).is-active,
+.likenook--style-glass .likenook-btn:not(#likenook-x).is-active:hover {
+	border-color: rgba(255, 255, 255, 0.9);
+	background: rgba(255, 255, 255, 0.85);
+	color: var(--likenook-c);
+}
+
+/* Icon-only buttons become square. */
+.likenook:not(.likenook--labels).likenook--counts-hide .likenook-btn:not(#likenook-x),
+.likenook:not(.likenook--labels).likenook--counts-score .likenook-btn:not(#likenook-x) {
+	--likenook-pad-x: var(--likenook-pad-y);
+	min-width: 2.5em;
+}
+
+/* Like ratio bar */
+.likenook-bar {
+	position: relative;
+	width: 100%;
+	max-width: 14em;
+	height: 0.3em;
+	margin-top: 0.6em;
+	overflow: hidden;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--likenook-dislike) 35%, transparent);
+}
+
+.likenook--align-center .likenook-bar { margin-left: auto; margin-right: auto; }
+.likenook--align-right .likenook-bar { margin-left: auto; }
+
+.likenook-bar span {
+	display: block;
+	height: 100%;
+	border-radius: inherit;
+	background: var(--likenook-like);
+	transition: width 0.4s ease;
+}
+
+.likenook-msg {
+	margin: 0.5em 0 0;
+	font-size: 0.875em;
+	opacity: 0.8;
+}
+
+.likenook-msg:empty {
+	display: none;
+}
+
+.likenook-msg a {
+	color: inherit;
+	text-decoration: underline;
+}
+
+/* Animations */
+.likenook-btn:not(#likenook-x).is-animating .likenook-icon { animation: likenook-pop 0.35s ease; }
+.likenook--anim-bounce .likenook-btn:not(#likenook-x).is-animating .likenook-icon { animation-name: likenook-bounce; animation-duration: 0.45s; }
+.likenook--anim-burst .likenook-btn:not(#likenook-x).is-animating .likenook-icon { animation-name: likenook-pop; }
+.likenook-count.is-changed, .likenook-score.is-changed { animation: likenook-roll 0.3s ease; }
+
+.likenook-particle {
+	position: absolute;
+	top: 50%;
+	left: var(--likenook-x, 50%);
+	width: 0.35em;
+	height: 0.35em;
+	margin: -0.175em;
+	border-radius: 50%;
+	background: var(--likenook-c, var(--likenook-like));
+	pointer-events: none;
+	animation: likenook-burst 0.55s ease-out forwards;
+}
+
+@keyframes likenook-pop {
+	0% { transform: scale(1); }
+	45% { transform: scale(1.35); }
+	100% { transform: scale(1); }
+}
+
+@keyframes likenook-bounce {
+	0%, 100% { transform: translateY(0); }
+	35% { transform: translateY(-0.35em); }
+	65% { transform: translateY(0.08em); }
+}
+
+@keyframes likenook-roll {
+	0% { transform: translateY(0.5em); opacity: 0; }
+	100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes likenook-burst {
+	0% { transform: translate(0, 0) scale(1); opacity: 1; }
+	100% { transform: translate(var(--likenook-dx), var(--likenook-dy)) scale(0.3); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.likenook .likenook-btn:not(#likenook-x),
+	.likenook-bar span,
+	.likenook-icon svg .likenook-f,
+	.likenook-icon svg .likenook-t { transition: none; }
+	.likenook-btn:not(#likenook-x).is-animating .likenook-icon,
+	.likenook-count.is-changed,
+	.likenook-score.is-changed,
+	.likenook-particle { animation: none; }
+	.likenook-particle { display: none; }
+	.likenook .likenook-btn:not(#likenook-x):active { transform: none; }
+}
+
+/* Most liked list */
+.likenook-most-liked {
+	margin: 0 0 1.5em;
+	padding: 0;
+	list-style: none;
+}
+
+.likenook-most-liked li {
+	display: flex;
+	align-items: center;
+	gap: 0.75em;
+	padding: 0.55em 0;
+	border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.likenook-most-liked li:last-child {
+	border-bottom: 0;
+}
+
+.likenook-most-liked__thumb {
+	flex: none;
+	width: 3.5em;
+	height: 3.5em;
+	overflow: hidden;
+	border-radius: 0.4em;
+}
+
+.likenook-most-liked__thumb img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.likenook-most-liked__title {
+	flex: 1;
+	min-width: 0;
+}
+
+.likenook-most-liked__count {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	gap: 0.3em;
+	font-size: 0.875em;
+	font-variant-numeric: tabular-nums;
+	opacity: 0.75;
+}
+
+.likenook-most-liked__count .likenook-icon {
+	--likenook-icon: 1.1em;
+}

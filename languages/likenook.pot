@@ -2,124 +2,124 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Like Dislike Button 3.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/like-dislike-button\n"
+"Project-Id-Version: Likenook – Like Dislike Buttons 3.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/likenook\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-14T09:45:26+00:00\n"
+"POT-Creation-Date: 2026-10-16T16:30:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
-"X-Domain: like-dislike-button\n"
+"X-Domain: likenook\n"
 
 #. Plugin Name of the plugin
-#: like-dislike-button.php
-#: includes/admin/class-ldbtn-admin.php:247
-msgid "Like Dislike Button"
+#: likenook.php
+msgid "Likenook – Like Dislike Buttons"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: like-dislike-button.php
-msgid "https://github.com/sanjuacodez/like-dislike-button"
+#: likenook.php
+msgid "https://github.com/sanjuacodez/likenook"
 msgstr ""
 
 #. Description of the plugin
-#: like-dislike-button.php
+#: likenook.php
 msgid "Like and dislike buttons for posts, pages, products and comments, with icon sets, styles, a block, most-liked lists and vote analytics. Works with page caching."
 msgstr ""
 
 #. Author of the plugin
-#: like-dislike-button.php
+#: likenook.php
 msgid "Sanjay Shankar"
 msgstr ""
 
 #. Author URI of the plugin
-#: like-dislike-button.php
+#: likenook.php
 msgid "https://sanjayshankar.me"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:53
-msgid "Like Dislike"
+#: includes/admin/class-likenook-admin.php:53
+#: includes/admin/class-likenook-admin.php:247
+msgid "Likenook"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:54
+#: includes/admin/class-likenook-admin.php:54
 #: includes/admin/views/dashboard.php:127
-msgid "Like Dislike Dashboard"
+msgid "Likenook Dashboard"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:54
-#: includes/admin/class-ldbtn-admin.php:236
+#: includes/admin/class-likenook-admin.php:54
+#: includes/admin/class-likenook-admin.php:236
 msgid "Dashboard"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:55
+#: includes/admin/class-likenook-admin.php:55
 #: includes/admin/views/settings.php:96
-msgid "Like Dislike Settings"
+msgid "Likenook Settings"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:55
-#: includes/admin/class-ldbtn-admin.php:83
-#: includes/admin/class-ldbtn-admin.php:237
+#: includes/admin/class-likenook-admin.php:55
+#: includes/admin/class-likenook-admin.php:83
+#: includes/admin/class-likenook-admin.php:237
 #: blocks/most-liked/index.js:37
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:56
+#: includes/admin/class-likenook-admin.php:56
 #: includes/admin/views/tools.php:15
-msgid "Like Dislike Tools"
+msgid "Likenook Tools"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:56
-#: includes/admin/class-ldbtn-admin.php:238
+#: includes/admin/class-likenook-admin.php:56
+#: includes/admin/class-likenook-admin.php:238
 msgid "Tools"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:122
+#: includes/admin/class-likenook-admin.php:122
 msgid "Choose an image"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:123
+#: includes/admin/class-likenook-admin.php:123
 msgid "Use this image"
 msgstr ""
 
 #. translators: %d: number of records processed so far
-#: includes/admin/class-ldbtn-admin.php:125
+#: includes/admin/class-likenook-admin.php:125
 #, php-format
 msgid "Importing… %d processed"
 msgstr ""
 
 #. translators: %d: number of records imported
-#: includes/admin/class-ldbtn-admin.php:127
+#: includes/admin/class-likenook-admin.php:127
 #, php-format
 msgid "Done. Imported: %d"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:128
+#: includes/admin/class-likenook-admin.php:128
 msgid "Recounting…"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:129
+#: includes/admin/class-likenook-admin.php:129
 msgid "All totals are up to date."
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:130
-#: includes/class-ldbtn-render.php:107
+#: includes/admin/class-likenook-admin.php:130
+#: includes/class-likenook-render.php:107
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:131
+#: includes/admin/class-likenook-admin.php:131
 msgid "Delete every like and dislike on this site? This can’t be undone."
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:132
+#: includes/admin/class-likenook-admin.php:132
 msgid "Copied"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:133
-#: includes/admin/class-ldbtn-admin.php:527
-#: includes/admin/class-ldbtn-admin.php:578
+#: includes/admin/class-likenook-admin.php:133
+#: includes/admin/class-likenook-admin.php:527
+#: includes/admin/class-likenook-admin.php:578
 #: includes/admin/views/chart.php:133
 #: includes/admin/views/dashboard.php:88
 #: includes/admin/views/dashboard.php:143
@@ -128,9 +128,9 @@ msgstr ""
 msgid "Likes"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:134
-#: includes/admin/class-ldbtn-admin.php:529
-#: includes/admin/class-ldbtn-admin.php:579
+#: includes/admin/class-likenook-admin.php:134
+#: includes/admin/class-likenook-admin.php:529
+#: includes/admin/class-likenook-admin.php:579
 #: includes/admin/views/chart.php:134
 #: includes/admin/views/dashboard.php:89
 #: includes/admin/views/dashboard.php:148
@@ -139,99 +139,99 @@ msgstr ""
 msgid "Dislikes"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:162
+#: includes/admin/class-likenook-admin.php:162
 msgid "Like / dislike"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:166
+#: includes/admin/class-likenook-admin.php:166
 msgid "Was this helpful?"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:172
+#: includes/admin/class-likenook-admin.php:172
 msgid "Yes"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:173
+#: includes/admin/class-likenook-admin.php:173
 msgid "No"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:175
+#: includes/admin/class-likenook-admin.php:175
 #: includes/admin/views/settings.php:263
 msgid "Was this article helpful?"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:176
+#: includes/admin/class-likenook-admin.php:176
 #: includes/admin/views/settings.php:264
 msgid "Thanks for your feedback!"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:181
-#: includes/class-ldbtn-icons.php:31
+#: includes/admin/class-likenook-admin.php:181
+#: includes/class-likenook-icons.php:31
 msgid "Hearts"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:193
+#: includes/admin/class-likenook-admin.php:193
 msgid "Upvote / downvote"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:206
-#: includes/class-ldbtn-icons.php:56
+#: includes/admin/class-likenook-admin.php:206
+#: includes/class-likenook-icons.php:56
 msgid "Emoji"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:216
+#: includes/admin/class-likenook-admin.php:216
 msgid "Rating bar"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:250
-msgid "Like Dislike sections"
+#: includes/admin/class-likenook-admin.php:250
+msgid "Likenook sections"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:370
-#: includes/admin/class-ldbtn-admin.php:384
-#: includes/admin/class-ldbtn-admin.php:398
+#: includes/admin/class-likenook-admin.php:370
+#: includes/admin/class-likenook-admin.php:384
+#: includes/admin/class-likenook-admin.php:398
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:437
+#: includes/admin/class-likenook-admin.php:437
 msgid "Likes & dislikes"
 msgstr ""
 
 #. translators: 1: likes, 2: dislikes
-#: includes/admin/class-ldbtn-admin.php:455
+#: includes/admin/class-likenook-admin.php:455
 #, php-format
 msgid "%1$s likes · %2$s dislikes"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:462
+#: includes/admin/class-likenook-admin.php:462
 msgid "Hide the buttons on this post"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:466
+#: includes/admin/class-likenook-admin.php:466
 msgid "Delete all votes on this post?"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:466
+#: includes/admin/class-likenook-admin.php:466
 msgid "Reset votes"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:499
+#: includes/admin/class-likenook-admin.php:499
 msgid "Votes"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:565
+#: includes/admin/class-likenook-admin.php:565
 msgid "Likes this week"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:582
+#: includes/admin/class-likenook-admin.php:582
 msgid "Most liked this week"
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:589
+#: includes/admin/class-likenook-admin.php:589
 msgid "No votes in the last 7 days."
 msgstr ""
 
-#: includes/admin/class-ldbtn-admin.php:591
+#: includes/admin/class-likenook-admin.php:591
 msgid "View all stats"
 msgstr ""
 
@@ -279,8 +279,8 @@ msgid "12 months"
 msgstr ""
 
 #: includes/admin/views/dashboard.php:15
-#: includes/class-ldbtn-elementor-most-liked.php:114
-#: includes/class-ldbtn-widgets.php:333
+#: includes/class-likenook-elementor-most-liked.php:114
+#: includes/class-likenook-widgets.php:333
 #: blocks/most-liked/index.js:68
 msgid "All time"
 msgstr ""
@@ -320,7 +320,7 @@ msgid "Deleted item #%d"
 msgstr ""
 
 #: includes/admin/views/dashboard.php:134
-#: includes/class-ldbtn-elementor-most-liked.php:110
+#: includes/class-likenook-elementor-most-liked.php:110
 #: blocks/most-liked/index.js:65
 msgid "Period"
 msgstr ""
@@ -347,14 +347,14 @@ msgid "Imported totals without dates count in the figures above but not in the c
 msgstr ""
 
 #: includes/admin/views/dashboard.php:180
-#: includes/class-ldbtn-widgets.php:268
-#: includes/class-ldbtn-widgets.php:310
+#: includes/class-likenook-widgets.php:268
+#: includes/class-likenook-widgets.php:310
 msgid "Most liked"
 msgstr ""
 
 #: includes/admin/views/dashboard.php:181
 #: includes/admin/views/welcome.php:197
-#: includes/class-ldbtn-elementor-most-liked.php:84
+#: includes/class-likenook-elementor-most-liked.php:84
 msgid "Most liked posts"
 msgstr ""
 
@@ -396,7 +396,7 @@ msgid "Presets fill in the options below. Adjust anything afterwards, then save.
 msgstr ""
 
 #: includes/admin/views/settings.php:134
-#: includes/class-ldbtn-elementor-widget.php:118
+#: includes/class-likenook-elementor-widget.php:118
 #: blocks/buttons/index.js:63
 msgid "Icons"
 msgstr ""
@@ -427,7 +427,7 @@ msgstr ""
 
 #: includes/admin/views/settings.php:179
 #: includes/admin/views/settings.php:325
-#: includes/class-ldbtn-elementor-widget.php:104
+#: includes/class-likenook-elementor-widget.php:104
 msgid "Buttons"
 msgstr ""
 
@@ -436,72 +436,72 @@ msgid "Style"
 msgstr ""
 
 #: includes/admin/views/settings.php:199
-#: includes/class-ldbtn-elementor-widget.php:122
+#: includes/class-likenook-elementor-widget.php:122
 #: blocks/buttons/index.js:65
 msgid "Size"
 msgstr ""
 
 #: includes/admin/views/settings.php:201
-#: includes/class-ldbtn-blocks.php:59
-#: includes/class-ldbtn-elementor-widget.php:124
-#: includes/class-ldbtn-widgets.php:183
+#: includes/class-likenook-blocks.php:59
+#: includes/class-likenook-elementor-widget.php:124
+#: includes/class-likenook-widgets.php:183
 msgid "Small"
 msgstr ""
 
 #: includes/admin/views/settings.php:202
-#: includes/class-ldbtn-blocks.php:60
-#: includes/class-ldbtn-elementor-widget.php:125
-#: includes/class-ldbtn-widgets.php:184
+#: includes/class-likenook-blocks.php:60
+#: includes/class-likenook-elementor-widget.php:125
+#: includes/class-likenook-widgets.php:184
 msgid "Medium"
 msgstr ""
 
 #: includes/admin/views/settings.php:203
-#: includes/class-ldbtn-blocks.php:61
-#: includes/class-ldbtn-elementor-widget.php:126
-#: includes/class-ldbtn-widgets.php:185
+#: includes/class-likenook-blocks.php:61
+#: includes/class-likenook-elementor-widget.php:126
+#: includes/class-likenook-widgets.php:185
 msgid "Large"
 msgstr ""
 
 #: includes/admin/views/settings.php:208
-#: includes/class-ldbtn-elementor-widget.php:131
+#: includes/class-likenook-elementor-widget.php:131
 msgid "Alignment"
 msgstr ""
 
 #: includes/admin/views/settings.php:210
-#: includes/class-ldbtn-elementor-widget.php:133
-#: includes/class-ldbtn-widgets.php:196
+#: includes/class-likenook-elementor-widget.php:133
+#: includes/class-likenook-widgets.php:196
 msgid "Left"
 msgstr ""
 
 #: includes/admin/views/settings.php:211
-#: includes/class-ldbtn-elementor-widget.php:134
-#: includes/class-ldbtn-widgets.php:197
+#: includes/class-likenook-elementor-widget.php:134
+#: includes/class-likenook-widgets.php:197
 msgid "Center"
 msgstr ""
 
 #: includes/admin/views/settings.php:212
-#: includes/class-ldbtn-elementor-widget.php:135
-#: includes/class-ldbtn-widgets.php:198
+#: includes/class-likenook-elementor-widget.php:135
+#: includes/class-likenook-widgets.php:198
 msgid "Right"
 msgstr ""
 
 #: includes/admin/views/settings.php:217
-#: includes/class-ldbtn-elementor-widget.php:140
+#: includes/class-likenook-elementor-widget.php:140
 #: blocks/buttons/index.js:66
 msgid "Layout"
 msgstr ""
 
 #: includes/admin/views/settings.php:219
-#: includes/class-ldbtn-blocks.php:66
-#: includes/class-ldbtn-elementor-widget.php:142
-#: includes/class-ldbtn-widgets.php:209
+#: includes/class-likenook-blocks.php:66
+#: includes/class-likenook-elementor-widget.php:142
+#: includes/class-likenook-widgets.php:209
 msgid "Side by side"
 msgstr ""
 
 #: includes/admin/views/settings.php:220
-#: includes/class-ldbtn-blocks.php:67
-#: includes/class-ldbtn-elementor-widget.php:143
-#: includes/class-ldbtn-widgets.php:210
+#: includes/class-likenook-blocks.php:67
+#: includes/class-likenook-elementor-widget.php:143
+#: includes/class-likenook-widgets.php:210
 msgid "Stacked"
 msgstr ""
 
@@ -542,33 +542,33 @@ msgid "Screen readers always hear the labels, even when they are hidden."
 msgstr ""
 
 #: includes/admin/views/settings.php:243
-#: includes/class-ldbtn-elementor-widget.php:175
+#: includes/class-likenook-elementor-widget.php:175
 #: blocks/buttons/index.js:89
 msgid "Like label"
 msgstr ""
 
 #: includes/admin/views/settings.php:243
 #: includes/admin/views/settings.php:275
-#: includes/class-ldbtn-elementor-widget.php:201
-#: includes/class-ldbtn-settings.php:163
+#: includes/class-likenook-elementor-widget.php:201
+#: includes/class-likenook-settings.php:163
 msgid "Like"
 msgstr ""
 
 #: includes/admin/views/settings.php:244
-#: includes/class-ldbtn-elementor-widget.php:176
+#: includes/class-likenook-elementor-widget.php:176
 #: blocks/buttons/index.js:99
 msgid "Dislike label"
 msgstr ""
 
 #: includes/admin/views/settings.php:244
 #: includes/admin/views/settings.php:276
-#: includes/class-ldbtn-elementor-widget.php:202
-#: includes/class-ldbtn-settings.php:163
+#: includes/class-likenook-elementor-widget.php:202
+#: includes/class-likenook-settings.php:163
 msgid "Dislike"
 msgstr ""
 
 #: includes/admin/views/settings.php:249
-#: includes/class-ldbtn-elementor-widget.php:146
+#: includes/class-likenook-elementor-widget.php:146
 #: blocks/buttons/index.js:67
 msgid "Counts"
 msgstr ""
@@ -586,7 +586,7 @@ msgid "Question and thank-you"
 msgstr ""
 
 #: includes/admin/views/settings.php:263
-#: includes/class-ldbtn-elementor-widget.php:177
+#: includes/class-likenook-elementor-widget.php:177
 #: blocks/buttons/index.js:78
 msgid "Question above the buttons"
 msgstr ""
@@ -600,7 +600,7 @@ msgid "Message after voting"
 msgstr ""
 
 #: includes/admin/views/settings.php:269
-#: includes/class-ldbtn-elementor-widget.php:195
+#: includes/class-likenook-elementor-widget.php:195
 msgid "Colours"
 msgstr ""
 
@@ -609,14 +609,14 @@ msgid "Leave empty to use colours that suit the icon set and your theme. Text an
 msgstr ""
 
 #: includes/admin/views/settings.php:277
-#: includes/class-ldbtn-elementor-widget.php:169
-#: includes/class-ldbtn-elementor-widget.php:203
+#: includes/class-likenook-elementor-widget.php:169
+#: includes/class-likenook-elementor-widget.php:203
 #: blocks/buttons/index.js:74
 msgid "Text"
 msgstr ""
 
 #: includes/admin/views/settings.php:278
-#: includes/class-ldbtn-elementor-widget.php:204
+#: includes/class-likenook-elementor-widget.php:204
 msgid "Button background"
 msgstr ""
 
@@ -665,7 +665,7 @@ msgid "Also show on blog and archive pages that display full posts"
 msgstr ""
 
 #: includes/admin/views/settings.php:316
-msgid "Block themes can add the Like Dislike Buttons block to a Query Loop instead."
+msgid "Block themes can add the Likenook Buttons block to a Query Loop instead."
 msgstr ""
 
 #: includes/admin/views/settings.php:321
@@ -705,7 +705,7 @@ msgid "Block"
 msgstr ""
 
 #: includes/admin/views/settings.php:347
-msgid "Like Dislike Buttons and Most Liked Posts, in the Widgets category. Both work in posts, Query Loop, the site editor and widget areas."
+msgid "Likenook Buttons and Most Liked Posts, in the Widgets category. Both work in posts, Query Loop, the site editor and widget areas."
 msgstr ""
 
 #: includes/admin/views/settings.php:348
@@ -713,7 +713,7 @@ msgid "Widgets"
 msgstr ""
 
 #: includes/admin/views/settings.php:349
-msgid "Classic themes get Like Dislike Buttons and Most Liked Posts widgets. In a sidebar, the buttons belong to the post being viewed and hide on blog and archive pages."
+msgid "Classic themes get Likenook Buttons and Most Liked Posts widgets. In a sidebar, the buttons belong to the post being viewed and hide on blog and archive pages."
 msgstr ""
 
 #: includes/admin/views/settings.php:350
@@ -833,7 +833,7 @@ msgid "Add like and dislike totals to the REST API"
 msgstr ""
 
 #: includes/admin/views/settings.php:425
-msgid "Adds an ldbtn_votes field to enabled post types, for headless sites and apps."
+msgid "Adds an likenook_votes field to enabled post types, for headless sites and apps."
 msgstr ""
 
 #: includes/admin/views/settings.php:426
@@ -1131,7 +1131,7 @@ msgid "Blocks and widgets"
 msgstr ""
 
 #: includes/admin/views/welcome.php:181
-msgid "Search “Like Dislike” in the block inserter. Works in Query Loop, the site editor and sidebars, and Elementor has its own widgets."
+msgid "Search “Likenook” in the block inserter. Works in Query Loop, the site editor and sidebars, and Elementor has its own widgets."
 msgstr ""
 
 #: includes/admin/views/welcome.php:187
@@ -1151,325 +1151,325 @@ msgstr ""
 msgid "Your chart and top posts appear here after the first vote."
 msgstr ""
 
-#: includes/class-ldbtn-blocks.php:81
+#: includes/class-likenook-blocks.php:81
 msgid "Soft"
 msgstr ""
 
-#: includes/class-ldbtn-blocks.php:82
+#: includes/class-likenook-blocks.php:82
 msgid "Outline"
 msgstr ""
 
-#: includes/class-ldbtn-blocks.php:83
+#: includes/class-likenook-blocks.php:83
 msgid "Pill"
 msgstr ""
 
-#: includes/class-ldbtn-blocks.php:84
+#: includes/class-likenook-blocks.php:84
 msgid "Minimal"
 msgstr ""
 
-#: includes/class-ldbtn-blocks.php:85
+#: includes/class-likenook-blocks.php:85
 msgid "Solid"
 msgstr ""
 
-#: includes/class-ldbtn-blocks.php:86
+#: includes/class-likenook-blocks.php:86
 msgid "Glass"
 msgstr ""
 
-#: includes/class-ldbtn-blocks.php:97
+#: includes/class-likenook-blocks.php:97
 msgid "Show counts"
 msgstr ""
 
-#: includes/class-ldbtn-blocks.php:98
+#: includes/class-likenook-blocks.php:98
 msgid "Hide counts"
 msgstr ""
 
-#: includes/class-ldbtn-blocks.php:99
+#: includes/class-likenook-blocks.php:99
 msgid "Show after voting"
 msgstr ""
 
-#: includes/class-ldbtn-blocks.php:100
+#: includes/class-likenook-blocks.php:100
 msgid "Percentages"
 msgstr ""
 
-#: includes/class-ldbtn-blocks.php:101
+#: includes/class-likenook-blocks.php:101
 msgid "Score (likes minus dislikes)"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-most-liked.php:31
-#: includes/class-ldbtn-widgets.php:250
+#: includes/class-likenook-elementor-most-liked.php:31
+#: includes/class-likenook-widgets.php:250
 #: blocks/most-liked/index.js:106
 msgid "Most Liked Posts"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-most-liked.php:91
+#: includes/class-likenook-elementor-most-liked.php:91
 #: blocks/most-liked/index.js:44
 msgid "Number of posts"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-most-liked.php:101
+#: includes/class-likenook-elementor-most-liked.php:101
 #: blocks/most-liked/index.js:55
 msgid "Post type"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-most-liked.php:115
-#: includes/class-ldbtn-widgets.php:334
+#: includes/class-likenook-elementor-most-liked.php:115
+#: includes/class-likenook-widgets.php:334
 #: blocks/most-liked/index.js:69
 msgid "Last 7 days"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-most-liked.php:116
-#: includes/class-ldbtn-widgets.php:335
+#: includes/class-likenook-elementor-most-liked.php:116
+#: includes/class-likenook-widgets.php:335
 #: blocks/most-liked/index.js:70
 msgid "Last 30 days"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-most-liked.php:117
-#: includes/class-ldbtn-widgets.php:336
+#: includes/class-likenook-elementor-most-liked.php:117
+#: includes/class-likenook-widgets.php:336
 #: blocks/most-liked/index.js:71
 msgid "Last 12 months"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-most-liked.php:124
-#: includes/class-ldbtn-widgets.php:339
+#: includes/class-likenook-elementor-most-liked.php:124
+#: includes/class-likenook-widgets.php:339
 #: blocks/most-liked/index.js:79
 msgid "Show like count"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-most-liked.php:132
-#: includes/class-ldbtn-widgets.php:340
+#: includes/class-likenook-elementor-most-liked.php:132
+#: includes/class-likenook-widgets.php:340
 #: blocks/most-liked/index.js:87
 msgid "Show featured image"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-most-liked.php:155
+#: includes/class-likenook-elementor-most-liked.php:155
 #: blocks/most-liked/index.js:107
 msgid "No liked posts yet for this post type and period. The list fills in as visitors vote."
 msgstr ""
 
-#: includes/class-ldbtn-elementor-widget.php:30
-#: includes/class-ldbtn-widgets.php:129
+#: includes/class-likenook-elementor-widget.php:30
+#: includes/class-likenook-widgets.php:129
 #: blocks/buttons/index.js:128
-msgid "Like Dislike Buttons"
+msgid "Likenook Buttons"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-widget.php:92
-#: includes/class-ldbtn-elementor-widget.php:186
-#: includes/class-ldbtn-widgets.php:114
+#: includes/class-likenook-elementor-widget.php:92
+#: includes/class-likenook-elementor-widget.php:186
+#: includes/class-likenook-widgets.php:114
 #: blocks/buttons/index.js:13
 msgid "Use plugin setting"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-widget.php:112
+#: includes/class-likenook-elementor-widget.php:112
 msgid "Post ID"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-widget.php:114
+#: includes/class-likenook-elementor-widget.php:114
 msgid "Leave empty for the current post."
 msgstr ""
 
-#: includes/class-ldbtn-elementor-widget.php:119
+#: includes/class-likenook-elementor-widget.php:119
 #: blocks/buttons/index.js:64
 msgid "Button style"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-widget.php:149
+#: includes/class-likenook-elementor-widget.php:149
 #: blocks/buttons/index.js:68
 msgid "Labels"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-widget.php:151
-#: includes/class-ldbtn-elementor-widget.php:159
+#: includes/class-likenook-elementor-widget.php:151
+#: includes/class-likenook-elementor-widget.php:159
 #: blocks/buttons/index.js:37
 msgid "Show"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-widget.php:152
-#: includes/class-ldbtn-elementor-widget.php:160
+#: includes/class-likenook-elementor-widget.php:152
+#: includes/class-likenook-elementor-widget.php:160
 #: blocks/buttons/index.js:38
 msgid "Hide"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-widget.php:157
+#: includes/class-likenook-elementor-widget.php:157
 #: blocks/buttons/index.js:69
 msgid "Like ratio bar"
 msgstr ""
 
-#: includes/class-ldbtn-elementor-widget.php:178
+#: includes/class-likenook-elementor-widget.php:178
 #: blocks/buttons/index.js:109
 msgid "Thank-you message"
 msgstr ""
 
-#: includes/class-ldbtn-icons.php:26
+#: includes/class-likenook-icons.php:26
 msgid "Thumbs"
 msgstr ""
 
-#: includes/class-ldbtn-icons.php:36
+#: includes/class-likenook-icons.php:36
 msgid "Up / down"
 msgstr ""
 
-#: includes/class-ldbtn-icons.php:41
+#: includes/class-likenook-icons.php:41
 msgid "Smileys"
 msgstr ""
 
-#: includes/class-ldbtn-icons.php:46
+#: includes/class-likenook-icons.php:46
 msgid "Yes / no"
 msgstr ""
 
-#: includes/class-ldbtn-icons.php:51
+#: includes/class-likenook-icons.php:51
 msgid "Hot / not"
 msgstr ""
 
-#: includes/class-ldbtn-icons.php:62
+#: includes/class-likenook-icons.php:62
 msgid "Text only"
 msgstr ""
 
-#: includes/class-ldbtn-icons.php:65
+#: includes/class-likenook-icons.php:65
 msgid "Your own images"
 msgstr ""
 
-#: includes/class-ldbtn-importer.php:49
-msgid "Like / Dislike Button 2.x (this plugin’s old version)"
+#: includes/class-likenook-importer.php:49
+msgid "Like / Dislike Button 2.x (the earlier version of Likenook)"
 msgstr ""
 
-#: includes/class-ldbtn-importer.php:120
+#: includes/class-likenook-importer.php:120
 msgid "Nothing to import from this plugin."
 msgstr ""
 
 #. translators: %s: number of likes
-#: includes/class-ldbtn-most-liked.php:134
+#: includes/class-likenook-most-liked.php:134
 #, php-format
 msgid "%s like"
 msgid_plural "%s likes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-ldbtn-privacy.php:31
-msgid "When you like or dislike a post or comment, we store your reaction and the date. If you are logged in, the vote is linked to your account. If you are not, we store either a random ID from a cookie named ldbtn_vid or a one-way hash of your IP address, so each person votes once. Your IP address itself is never stored. No vote data is sent to other services."
+#: includes/class-likenook-privacy.php:31
+msgid "When you like or dislike a post or comment, we store your reaction and the date. If you are logged in, the vote is linked to your account. If you are not, we store either a random ID from a cookie named likenook_vid or a one-way hash of your IP address, so each person votes once. Your IP address itself is never stored. No vote data is sent to other services."
 msgstr ""
 
-#: includes/class-ldbtn-privacy.php:43
-#: includes/class-ldbtn-privacy.php:57
-#: includes/class-ldbtn-privacy.php:86
+#: includes/class-likenook-privacy.php:43
+#: includes/class-likenook-privacy.php:57
+#: includes/class-likenook-privacy.php:86
 msgid "Likes and dislikes"
 msgstr ""
 
-#: includes/class-ldbtn-privacy.php:90
+#: includes/class-likenook-privacy.php:90
 msgid "Item"
 msgstr ""
 
-#: includes/class-ldbtn-privacy.php:94
+#: includes/class-likenook-privacy.php:94
 msgid "Reaction"
 msgstr ""
 
-#: includes/class-ldbtn-privacy.php:98
+#: includes/class-likenook-privacy.php:98
 msgid "Date (UTC)"
 msgstr ""
 
-#: includes/class-ldbtn-render.php:108
-#: includes/class-ldbtn-votes.php:353
+#: includes/class-likenook-render.php:108
+#: includes/class-likenook-votes.php:353
 msgid "You have already voted."
 msgstr ""
 
 #. translators: %s: login link
-#: includes/class-ldbtn-render.php:110
+#: includes/class-likenook-render.php:110
 #, php-format
 msgid "Please %s to vote."
 msgstr ""
 
-#: includes/class-ldbtn-render.php:111
+#: includes/class-likenook-render.php:111
 msgid "log in"
 msgstr ""
 
-#: includes/class-ldbtn-render.php:112
+#: includes/class-likenook-render.php:112
 msgid "Your vote was removed."
 msgstr ""
 
-#: includes/class-ldbtn-render.php:355
+#: includes/class-likenook-render.php:355
 msgid "Rate this comment"
 msgstr ""
 
-#: includes/class-ldbtn-render.php:355
+#: includes/class-likenook-render.php:355
 msgid "Rate this content"
 msgstr ""
 
-#: includes/class-ldbtn-rest.php:82
+#: includes/class-likenook-rest.php:85
 msgid "Like and dislike totals."
 msgstr ""
 
-#: includes/class-ldbtn-votes.php:103
+#: includes/class-likenook-votes.php:103
 msgid "This item can no longer be voted on."
 msgstr ""
 
-#: includes/class-ldbtn-votes.php:135
+#: includes/class-likenook-votes.php:135
 msgid "Please log in to vote."
 msgstr ""
 
-#: includes/class-ldbtn-votes.php:139
+#: includes/class-likenook-votes.php:139
 msgid "Your account can’t vote on this site."
 msgstr ""
 
-#: includes/class-ldbtn-votes.php:314
+#: includes/class-likenook-votes.php:314
 msgid "This reaction is turned off."
 msgstr ""
 
-#: includes/class-ldbtn-votes.php:334
+#: includes/class-likenook-votes.php:334
 msgid "Your vote could not be recorded. Please allow cookies and try again."
 msgstr ""
 
-#: includes/class-ldbtn-votes.php:425
+#: includes/class-likenook-votes.php:425
 msgid "Too many votes in a short time. Please wait a minute and try again."
 msgstr ""
 
-#: includes/class-ldbtn-widgets.php:131
+#: includes/class-likenook-widgets.php:131
 msgid "Like and dislike buttons for the post being viewed. Hidden on blog and archive pages."
 msgstr ""
 
-#: includes/class-ldbtn-widgets.php:172
-#: includes/class-ldbtn-widgets.php:324
+#: includes/class-likenook-widgets.php:172
+#: includes/class-likenook-widgets.php:324
 msgid "Title:"
 msgstr ""
 
-#: includes/class-ldbtn-widgets.php:173
+#: includes/class-likenook-widgets.php:173
 msgid "Question above the buttons (optional):"
 msgstr ""
 
-#: includes/class-ldbtn-widgets.php:174
+#: includes/class-likenook-widgets.php:174
 msgid "Icons:"
 msgstr ""
 
-#: includes/class-ldbtn-widgets.php:175
+#: includes/class-likenook-widgets.php:175
 msgid "Button style:"
 msgstr ""
 
-#: includes/class-ldbtn-widgets.php:180
+#: includes/class-likenook-widgets.php:180
 msgid "Size:"
 msgstr ""
 
-#: includes/class-ldbtn-widgets.php:193
+#: includes/class-likenook-widgets.php:193
 msgid "Alignment:"
 msgstr ""
 
-#: includes/class-ldbtn-widgets.php:206
+#: includes/class-likenook-widgets.php:206
 msgid "Layout:"
 msgstr ""
 
-#: includes/class-ldbtn-widgets.php:214
+#: includes/class-likenook-widgets.php:214
 msgid "Counts:"
 msgstr ""
 
-#: includes/class-ldbtn-widgets.php:252
+#: includes/class-likenook-widgets.php:252
 msgid "Your most liked posts, all time or for a recent period."
 msgstr ""
 
-#: includes/class-ldbtn-widgets.php:325
+#: includes/class-likenook-widgets.php:325
 msgid "Number of posts:"
 msgstr ""
 
-#: includes/class-ldbtn-widgets.php:326
+#: includes/class-likenook-widgets.php:326
 msgid "Post type:"
 msgstr ""
 
-#: includes/class-ldbtn-widgets.php:331
+#: includes/class-likenook-widgets.php:331
 msgid "Period:"
 msgstr ""
 
@@ -1491,7 +1491,7 @@ msgstr ""
 
 #: blocks/buttons/block.json
 msgctxt "block title"
-msgid "Like Dislike Buttons"
+msgid "Likenook Buttons"
 msgstr ""
 
 #: blocks/buttons/block.json

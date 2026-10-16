@@ -1,8 +1,8 @@
 <?php
 /**
- * REST API: `ldbtn/v1/state`, `ldbtn/v1/vote` and the `ldbtn_votes` field.
+ * REST API: `likenook/v1/state`, `likenook/v1/vote` and the `likenook_votes` field.
  *
- * @package LikeDislikeButton
+ * @package Likenook
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -10,9 +10,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * REST routes used by the buttons, open to visitors by design.
  */
-class LDBTN_Rest {
+class Likenook_Rest {
 
-	const NS = 'ldbtn/v1';
+	const NS = 'likenook/v1';
 
 	/**
 	 * Hooks into WordPress.
@@ -31,6 +31,9 @@ class LDBTN_Rest {
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( __CLASS__, 'state' ),
+				// Public by design: buttons on cached pages load their counts here for logged-out
+				// visitors. It only answers for items anyone can already see (see state()), and
+				// returns only their like/dislike totals plus the caller's own vote.
 				'permission_callback' => '__return_true',
 				'args'                => array(
 					'items' => array(
@@ -48,12 +51,12 @@ class LDBTN_Rest {
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( __CLASS__, 'vote' ),
-				// Anyone may vote; LDBTN_Votes::cast() applies the login and role rules from settings.
+				// Anyone may vote; Likenook_Votes::cast() applies the login and role rules from settings.
 				'permission_callback' => '__return_true',
 				'args'                => array(
 					'type'     => array(
 						'type'    => 'string',
-						'enum'    => LDBTN_Votes::object_types(),
+						'enum'    => Likenook_Votes::object_types(),
 						'default' => 'post',
 					),
 					'id'       => array(
@@ -63,23 +66,23 @@ class LDBTN_Rest {
 					),
 					'reaction' => array(
 						'type'     => 'string',
-						'enum'     => LDBTN_Votes::REACTIONS,
+						'enum'     => Likenook_Votes::REACTIONS,
 						'required' => true,
 					),
 				),
 			)
 		);
 
-		if ( LDBTN_Settings::get( 'rest_field' ) ) {
+		if ( Likenook_Settings::get( 'rest_field' ) ) {
 			register_rest_field(
-				(array) LDBTN_Settings::get( 'post_types' ),
-				'ldbtn_votes',
+				(array) Likenook_Settings::get( 'post_types' ),
+				'likenook_votes',
 				array(
 					'get_callback' => function ( $post ) {
-						return LDBTN_Votes::counts( 'post', (int) $post['id'] );
+						return Likenook_Votes::counts( 'post', (int) $post['id'] );
 					},
 					'schema'       => array(
-						'description' => __( 'Like and dislike totals.', 'like-dislike-button' ),
+						'description' => __( 'Like and dislike totals.', 'likenook' ),
 						'type'        => 'object',
 						'context'     => array( 'view', 'edit' ),
 						'readonly'    => true,
@@ -103,10 +106,30 @@ class LDBTN_Rest {
 		$items = array();
 		foreach ( array_slice( explode( ',', (string) $request['items'] ), 0, 100 ) as $pair ) {
 			$parts = explode( ':', trim( $pair ) );
-			if ( 2 === count( $parts ) && in_array( $parts[0], LDBTN_Votes::object_types(), true ) && absint( $parts[1] ) ) {
+			if ( 2 === count( $parts ) && in_array( $parts[0], Likenook_Votes::object_types(), true ) && absint( $parts[1] ) ) {
 				$items[ $parts[0] . ':' . absint( $parts[1] ) ] = array( $parts[0], absint( $parts[1] ) );
 			}
 		}
+
+		$ids = array();
+		foreach ( $items as $item ) {
+			$ids[ $item[0] ][] = $item[1];
+		}
+		if ( ! empty( $ids['post'] ) ) {
+			_prime_post_caches( $ids['post'] );
+		}
+		if ( ! empty( $ids['comment'] ) ) {
+			_prime_comment_caches( $ids['comment'] );
+		}
+
+		// Only items a visitor could see anyway: published, publicly viewable posts that are
+		// not password protected, and approved comments on them. Anything else is left out.
+		$items = array_filter(
+			$items,
+			function ( $item ) {
+				return true === Likenook_Votes::validate_object( $item[0], $item[1] );
+			}
+		);
 
 		$ids = array();
 		foreach ( $items as $item ) {
@@ -116,12 +139,12 @@ class LDBTN_Rest {
 			update_meta_cache( $type, $list );
 		}
 
-		$voter = LDBTN_Votes::voter();
-		$votes = LDBTN_Votes::votes_for( array_values( $items ), $voter['key'] );
+		$voter = Likenook_Votes::voter();
+		$votes = Likenook_Votes::votes_for( array_values( $items ), $voter['key'] );
 
 		$out = array();
 		foreach ( $items as $key => $item ) {
-			$out[ $key ] = LDBTN_Votes::counts( $item[0], $item[1] ) + array( 'vote' => isset( $votes[ $key ] ) ? $votes[ $key ] : '' );
+			$out[ $key ] = Likenook_Votes::counts( $item[0], $item[1] ) + array( 'vote' => isset( $votes[ $key ] ) ? $votes[ $key ] : '' );
 		}
 
 		$response = rest_ensure_response( array( 'items' => (object) $out ) );
@@ -136,7 +159,7 @@ class LDBTN_Rest {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function vote( WP_REST_Request $request ) {
-		$result = LDBTN_Votes::cast( $request['type'], (int) $request['id'], $request['reaction'] );
+		$result = Likenook_Votes::cast( $request['type'], (int) $request['id'], $request['reaction'] );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
